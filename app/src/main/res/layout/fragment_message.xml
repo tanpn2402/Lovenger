@@ -1,0 +1,31 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.tanpn.messenger.fragments.FragmentMessage">
+
+
+
+    <include
+        layout="@layout/layout_typing"
+        android:layout_width="match_parent"
+        android:id="@+id/typing_area"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:gravity="bottom" />
+
+    <ListView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/messageList"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:divider="@null"
+        android:stackFromBottom="true"
+        android:transcriptMode="alwaysScroll"
+        android:layout_above="@+id/typing_area"
+        android:background="#ffffff"
+        android:layout_marginBottom="5dp" />
+
+</RelativeLayout>

@@ -1,0 +1,38 @@
+<android.support.design.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FFF">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:id="@+id/layout"
+        android:background="#FFF">
+
+        <GridView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/photoList"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:numColumns="auto_fit" />
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fab_upload"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:src="@android:drawable/stat_sys_upload"
+            app:layout_anchor="@id/layout"
+            app:layout_anchorGravity="bottom|right|end"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="15dp" />
+
+
+    </RelativeLayout>
+
+</android.support.design.widget.CoordinatorLayout>

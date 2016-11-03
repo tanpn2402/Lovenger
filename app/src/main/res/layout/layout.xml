@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="#FFF">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:id="@+id/relativeLayout4">
+
+        <ImageView
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:id="@+id/ibtVoice"
+            android:layout_centerVertical="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:src="@drawable/ic_voice_gray"
+            android:scaleType="center" />
+
+        <ImageView
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:id="@+id/ibtPicture"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@+id/ibtVoice"
+            android:layout_toEndOf="@+id/ibtVoice"
+            android:scaleType="center"
+            android:src="@drawable/ic_pic_gray" />
+
+        <ImageView
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:id="@+id/ibtVideo"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@+id/ibtPicture"
+            android:layout_toEndOf="@+id/ibtPicture"
+            android:scaleType="center"
+            android:src="@drawable/ic_video_gray" />
+
+        <ImageView
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:id="@+id/ibtDraw"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@+id/ibtVideo"
+            android:layout_toEndOf="@+id/ibtVideo"
+            android:scaleType="center"
+            android:src="@drawable/ic_draw_gray" />
+
+        <ImageView
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:id="@+id/ibtCamera"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@+id/ibtDraw"
+            android:layout_toEndOf="@+id/ibtDraw"
+            android:scaleType="center"
+            android:src="@drawable/ic_camera_gray" />
+
+        <ImageView
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:id="@+id/ibtSetting"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:scaleType="center"
+            android:src="@drawable/ic_setting_gray" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_below="@+id/relativeLayout4"
+        android:layout_centerHorizontal="true">
+
+        <ImageView
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:id="@+id/ibtSend"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:src="@drawable/ic_send_gray"
+            android:scaleType="center" />
+
+        <ImageView
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:id="@+id/ibtEmoji"
+            android:src="@drawable/ic_emoji_gray"
+            android:scaleType="center"
+            android:layout_centerVertical="true"
+            android:layout_toLeftOf="@+id/ibtSend"
+            android:layout_toStartOf="@+id/ibtSend" />
+
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:background="@drawable/layout_typing"
+            android:id="@+id/edtTyping"
+            android:hint="@string/message_hint"
+            android:layout_centerVertical="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:textSize="15dp"
+            android:maxLines="4"
+            android:autoText="false"
+            android:autoLink="phone|web|map|email"
+            android:minLines="1"
+            android:padding="6dp"
+            android:layout_toStartOf="@+id/ibtEmoji"
+            android:gravity="bottom"
+            android:layout_toLeftOf="@+id/ibtEmoji" />
+    </RelativeLayout>
+</RelativeLayout>

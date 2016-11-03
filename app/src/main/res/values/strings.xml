@@ -1,0 +1,67 @@
+<resources>
+    <string name="app_name">Messenger</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <!--Trong file main-->
+    <string name="fragment_event">Sự kiện</string>
+    <string name="fragment_picture">Ảnh</string>
+    <string name="fragment_message">Tin nhắn</string>
+    <string name="fragment_setting">Cài đặt</string>
+
+
+    <!-- trong file setting.xml -->
+    <string name="setting_lock_enable">Khóa ứng dụng </string>
+    <string name="setting_lock_type">Loại Khóa</string>
+    <string name="setting_lock_background">Màu nền</string>
+    <string name="setting_lock_background_summary">Màu nền để hiển thị trong khi đang khóa ứng dụng</string>
+    <string name="setting_title_password">Cài đặt mật khẩu</string>
+    <string name="setting_vibration">Rung</string>
+    <string name="setting_vibration_summary">Rung khi nhập sai mật khẩu</string>
+    <string name="setting_change_password">Đổi mật khẩu</string>
+
+    <string name="setting_title_patern">Cài đặt khóa hình</string>
+    <string name="setting_change_patern">Đổi hình</string>
+
+    <string name="setting_title_general">Cài đặt chung</string>
+    <string name="setting_general_start_at_boot">Khóa ứng dụng ngay sau khi khởi động máy</string>
+    <string name="setting_general_relock_after_screen_off">Khóa ứng dụng ngay sau khi tắt màn hình</string>
+    <string name="setting_general_wrong_time_title">Số lần sai mật khẩu</string>
+    <string name="setting_general_wrong_time_input">Nhập số lần sai mật khẩu</string>
+
+    <string name="setting_title_user">Cài đặt tài khoản</string>
+    <string name="setting_user_name">Tên tài khoản</string>
+    <string name="setting_user_name_summary">tanpn2402</string>
+
+    <string name="setting_user_full_name">Họ tên</string>
+    <string name="setting_user_full_name_summary">Phạm Nhật Tân</string>
+    <string name="setting_user_email">Email hồi phục</string>
+    <string name="setting_user_email_summary">tan******@*****.com</string>
+    <string name="setting_user_phone">Số điện thoại hồi phục</string>
+    <string name="setting_user_phone_summary">090********</string>
+    <string name="setting_user_chang_info">Thay đổi thông tin</string>
+
+
+    <!--trong event-->
+    <string name="event_day">ngày</string>
+    <string name="event_title">Sự kiện</string>
+    <string name="event_hint">Nhập bình luận...</string>
+    <string name="event_remind">Nhắc nhở</string>
+    <string name="event_voice">Ghi âm</string>
+    <string name="event_picture">Ảnh</string>
+    <string name="event_video">Video</string>
+
+
+
+    <string name="message_hint">Viết tin nhắn...</string>
+
+
+    <string name="message_status_delivered">Đã gửi</string>
+    <string name="message_status_received">Đã nhận</string>
+    <string name="message_status_seen">Đã xem</string>
+    <string name="message_status_sending">Đang gửi</string>
+    <string name="message_status_error">Lỗi!</string>
+    <string name="message_status_typing">Đang nhập...</string>
+
+</resources>
