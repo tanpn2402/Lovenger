@@ -1,11 +1,15 @@
 package com.tanpn.messenger.photo;
 
 import android.content.Context;
+import android.view.Display;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
+
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,17 +49,24 @@ public class PhotoListAdapter extends BaseAdapter {
     public View getView(int i, View view, ViewGroup viewGroup) {
         ImageView imgView;
         if(view == null){
-            imgView=new ImageView(context);
+            imgView = new ImageView(context);
             //can chỉnh lại hình cho đẹp
-            imgView.setLayoutParams(new GridView.LayoutParams(85, 85));
+
+
+            Display display = ((WindowManager) context.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
+
+            int mWidthScreen = display.getWidth();
+            int imageSize = mWidthScreen / 4 - 4;
+
+            imgView.setLayoutParams(new GridView.LayoutParams(imageSize, imageSize));
             imgView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-            imgView.setPadding(8, 8, 8, 8);
+            //imgView.setPadding(8, 8, 8, 8);
         }else{
             imgView=(ImageView) view;
         }
-        //lấy đúng vị trí hình ảnh được chọn
-        //gán lại ImageResource
-        imgView.setImageResource(resID[i]);
+
+        Picasso.with(context).load("https://firebasestorage.googleapis.com/v0/b/messenger-d08e4.appspot.com/o/tcu7xozdgqxoxmm5ieyh-1473826982014.jpg?alt=media&token=c4f072a2-2fec-4c68-9673-0c50202c4e83").into(imgView);
+
         return imgView;
     }
 }

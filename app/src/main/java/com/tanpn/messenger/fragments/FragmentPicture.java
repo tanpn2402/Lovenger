@@ -1,14 +1,18 @@
 package com.tanpn.messenger.fragments;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
+import android.widget.AdapterView;
 import android.widget.GridView;
 
 import com.tanpn.messenger.R;
+import com.tanpn.messenger.photo.ActivityViewPhoto;
 import com.tanpn.messenger.photo.PhotoListAdapter;
 
 /**
@@ -34,11 +38,8 @@ public class FragmentPicture extends Fragment {
         photoList = (GridView) v.findViewById(R.id.photoList);
 
         Integer[] photos = new Integer[]{
-                R.drawable.ic_birthday_gray,
-                R.drawable.ic_birthday_gray,
-                R.drawable.ic_birthday_gray,
-                R.drawable.ic_birthday_gray,
-                R.drawable.ic_birthday_gray
+                1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
+                1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1
 
 
         };
@@ -47,7 +48,25 @@ public class FragmentPicture extends Fragment {
         photoList.setAdapter(adapter);
 
 
+        photoList.setOnScrollListener(new AbsListView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(AbsListView absListView, int i) {
 
+            }
+
+            @Override
+            public void onScroll(AbsListView absListView, int i, int i1, int i2) {
+
+            }
+        });
+
+        photoList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Intent viewPhoto = new Intent(getContext(), ActivityViewPhoto.class);
+                startActivity(viewPhoto);
+            }
+        });
 
         return v;
     }

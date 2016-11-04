@@ -45,6 +45,8 @@ public class MainActivity extends AppCompatActivity {
 
         changeTab(1);
 
+        final View appbar = findViewById(R.id.appBar);
+
         viewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -55,6 +57,14 @@ public class MainActivity extends AppCompatActivity {
             public void onPageSelected(int position) {
                 changeTab(position + 1);
                 Log.i(TAG, position+ "");
+
+                if(position == 2){
+                    // tab chat --> hide tabbar
+                    //appbar.setVisibility(View.GONE);
+                }
+                else{
+                    //appbar.setVisibility(View.VISIBLE);
+                }
             }
 
             @Override
