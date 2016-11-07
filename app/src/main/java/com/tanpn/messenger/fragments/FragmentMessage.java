@@ -1,9 +1,13 @@
 package com.tanpn.messenger.fragments;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -12,9 +16,11 @@ import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.tanpn.messenger.R;
 import com.tanpn.messenger.message.*;
+import com.tanpn.messenger.paint.ActivityPaint;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -51,12 +57,42 @@ public class FragmentMessage extends Fragment implements MessageListAdapter.OnEv
         ibtDraw.setOnTouchListener(this);
         ibtSetting.setOnTouchListener(this);
 
+        ibtSend.setEnabled(false);
 
 
 
         edtTyping = (EditText) view.findViewById(R.id.edtTyping);
+        edtTyping.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
+                if(textView.getText().equals(""))
+                    ibtSend.setEnabled(false);
+                else
+                    ibtSend.setEnabled(true);
 
+                return false;
+            }
+        });
 
+        edtTyping.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                if(edtTyping.getText().equals(""))
+                    ibtSend.setEnabled(false);
+                else
+                    ibtSend.setEnabled(true);
+            }
+        });
     }
 
     @Override

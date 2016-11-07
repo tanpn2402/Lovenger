@@ -20,6 +20,8 @@ public class PhotoViewAdapter extends PagerAdapter {
     private Context context;
     private Integer[] resID;
 
+    private String[] photoPaths;
+
     public PhotoViewAdapter(Context _context){
         context = _context;
         resID = null;
@@ -30,9 +32,14 @@ public class PhotoViewAdapter extends PagerAdapter {
         resID = i;
     }
 
+    public PhotoViewAdapter(Context _context, String[] i){
+        context = _context;
+        photoPaths = i;
+    }
+
     @Override
     public int getCount() {
-        return resID.length;
+        return photoPaths.length;
     }
 
     @Override
@@ -45,8 +52,7 @@ public class PhotoViewAdapter extends PagerAdapter {
         // set resource
         //photo.setBackgroundResource(resID[position]);
 
-        Picasso.with(context).load(
-                "https://firebasestorage.googleapis.com/v0/b/messenger-d08e4.appspot.com/o/tcu7xozdgqxoxmm5ieyh-1473826982014.jpg?alt=media&token=c4f072a2-2fec-4c68-9673-0c50202c4e83").into(photo);
+        Picasso.with(context).load(photoPaths[position]).into(photo);
 
 
         // add into view pager

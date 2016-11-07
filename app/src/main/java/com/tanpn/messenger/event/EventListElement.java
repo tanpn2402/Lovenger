@@ -19,5 +19,7 @@ public class EventListElement {
         days = _days;
         type = _type;
         status = _status;
+
+
     }
 }

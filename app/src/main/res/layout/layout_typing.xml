@@ -82,7 +82,7 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="wrap_content"
         android:layout_below="@+id/relativeLayout4"
         android:layout_centerHorizontal="true">
 
@@ -108,21 +108,21 @@
 
         <EditText
             android:layout_width="wrap_content"
-            android:layout_height="fill_parent"
+            android:layout_height="wrap_content"
             android:background="@drawable/layout_typing"
             android:id="@+id/edtTyping"
             android:hint="@string/message_hint"
-            android:layout_centerVertical="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
             android:textSize="15dp"
-            android:maxLines="4"
+            android:maxLines="3"
             android:autoText="false"
             android:autoLink="phone|web|map|email"
             android:minLines="1"
             android:padding="6dp"
-            android:layout_toStartOf="@+id/ibtEmoji"
-            android:gravity="bottom"
-            android:layout_toLeftOf="@+id/ibtEmoji" />
+            android:gravity="top|bottom"
+            android:layout_centerVertical="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_toLeftOf="@+id/ibtEmoji"
+            android:layout_toStartOf="@+id/ibtEmoji" />
     </RelativeLayout>
 </RelativeLayout>

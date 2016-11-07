@@ -20,7 +20,7 @@ import java.util.List;
 public class PhotoListAdapter extends BaseAdapter {
     private Context context;
     private Integer[] resID;
-
+    private String[] photoPaths;
     public PhotoListAdapter(Context _context){
         context = _context;
     }
@@ -30,9 +30,14 @@ public class PhotoListAdapter extends BaseAdapter {
         resID = res;
     }
 
+    public PhotoListAdapter(Context _context, String[] res){
+        context = _context;
+        photoPaths = res;
+    }
+
     @Override
     public int getCount() {
-        return resID.length;
+        return photoPaths.length;
     }
 
     @Override
@@ -47,6 +52,7 @@ public class PhotoListAdapter extends BaseAdapter {
 
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
+        
         ImageView imgView;
         if(view == null){
             imgView = new ImageView(context);
@@ -65,7 +71,7 @@ public class PhotoListAdapter extends BaseAdapter {
             imgView=(ImageView) view;
         }
 
-        Picasso.with(context).load("https://firebasestorage.googleapis.com/v0/b/messenger-d08e4.appspot.com/o/tcu7xozdgqxoxmm5ieyh-1473826982014.jpg?alt=media&token=c4f072a2-2fec-4c68-9673-0c50202c4e83").into(imgView);
+        Picasso.with(context).load(photoPaths[i]).into(imgView);
 
         return imgView;
     }

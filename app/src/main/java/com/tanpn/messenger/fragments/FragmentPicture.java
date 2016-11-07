@@ -28,6 +28,12 @@ public class FragmentPicture extends Fragment {
 
     private GridView photoList;
 
+    private final String[] photo = new String[]{
+            "https://firebasestorage.googleapis.com/v0/b/messenger-d08e4.appspot.com/o/tcu7xozdgqxoxmm5ieyh-1473826982014.jpg?alt=media&token=c4f072a2-2fec-4c68-9673-0c50202c4e83",
+            "https://firebasestorage.googleapis.com/v0/b/messenger-d08e4.appspot.com/o/48.png?alt=media&token=389b9a15-20d4-4aed-a756-4bb42cf370f4",
+            "https://firebasestorage.googleapis.com/v0/b/messenger-d08e4.appspot.com/o/photo%2FC360_2016-02-08-10-45-46-090.jpg?alt=media&token=8c1295e6-20c4-49b1-8b82-497bfbcc07c6"
+
+    };
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -44,7 +50,7 @@ public class FragmentPicture extends Fragment {
 
         };
 
-        PhotoListAdapter adapter = new PhotoListAdapter(getContext(), photos);
+        PhotoListAdapter adapter = new PhotoListAdapter(getContext(), photo);
         photoList.setAdapter(adapter);
 
 

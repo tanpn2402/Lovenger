@@ -67,7 +67,7 @@
         <ImageView
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:id="@+id/imageView2"
+            android:id="@+id/ibtDraw"
             android:layout_centerVertical="true"
             android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true"

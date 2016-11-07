@@ -19,7 +19,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".ui.ActivityAddEvent" />
-        <activity android:name=".photo.ActivityViewPhoto"></activity>
+        <activity android:name=".photo.ActivityViewPhoto" />
+        <activity android:name=".paint.ActivityPaint"></activity>
     </application>
 
 </manifest>
