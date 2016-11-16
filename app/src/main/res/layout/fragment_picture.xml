@@ -37,8 +37,10 @@
             app:layout_anchor="@id/layout"
             app:layout_anchorGravity="bottom|right|end"
             android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true"
-            android:layout_marginBottom="15dp" />
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginBottom="12dp"
+            android:layout_marginRight="12dp" />
 
 
     </RelativeLayout>

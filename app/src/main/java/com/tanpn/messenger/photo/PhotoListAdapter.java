@@ -1,6 +1,7 @@
 package com.tanpn.messenger.photo;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.Display;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,34 +11,50 @@ import android.widget.GridView;
 import android.widget.ImageView;
 
 import com.squareup.picasso.Picasso;
+import com.tanpn.messenger.R;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by phamt_000 on 11/3/16.
  */
 public class PhotoListAdapter extends BaseAdapter {
     private Context context;
-    private Integer[] resID;
-    private String[] photoPaths;
+    private Map<String, PhotoElement> photoPaths;
+    private List<String> keyPath;
     public PhotoListAdapter(Context _context){
         context = _context;
+        photoPaths = new HashMap<>();
+        keyPath = new ArrayList<>();
     }
 
-    public PhotoListAdapter(Context _context, Integer[] res){
-        context = _context;
-        resID = res;
+
+    private OnEventListener mListener;
+
+    public void setOnEventListener(OnEventListener listener) {
+        mListener = listener;
     }
 
-    public PhotoListAdapter(Context _context, String[] res){
-        context = _context;
-        photoPaths = res;
+    public interface OnEventListener {
+
+        public void onDirtyStateChanged(boolean dirty);
+    }
+
+
+    private void notifyDirtyStateChanged(boolean dirty) {
+
+        if (mListener != null) {
+            mListener.onDirtyStateChanged(dirty);
+        }
+
     }
 
     @Override
     public int getCount() {
-        return photoPaths.length;
+        return photoPaths.size();
     }
 
     @Override
@@ -71,8 +88,45 @@ public class PhotoListAdapter extends BaseAdapter {
             imgView=(ImageView) view;
         }
 
-        Picasso.with(context).load(photoPaths[i]).into(imgView);
+        long scale = photoPaths.get(keyPath.get(i)).size / 1000000;
+        int reSize = 100;
+        if(scale >= 2)
+            reSize = 80;
+        else if(scale >= 4)
+            reSize = 60;
+        else if(scale >= 6)
+            reSize = 40;
+        else if(scale >= 8)
+            reSize = 20;
+
+        Log.i("SCALE", "scale = " + reSize);
+
+        Picasso.with(context)
+                .load(photoPaths.get(keyPath.get(i)).url)
+                .resize(reSize, reSize)
+                .centerCrop()
+                .placeholder(R.drawable.ic_picture_gray)
+                .error(R.drawable.ic_picture_gray)
+                .into(imgView);
 
         return imgView;
+    }
+
+    public void add(String key, PhotoElement element){
+        if(!photoPaths.containsKey(key)){
+            keyPath.add(key);
+            photoPaths.put(key, element);
+
+            notifyDataSetChanged();
+        }
+    }
+
+    public void delete(String key){
+        if(photoPaths.containsKey(key)){
+            photoPaths.remove(key);
+            keyPath.remove(key);
+
+            notifyDirtyStateChanged(true);
+        }
     }
 }
