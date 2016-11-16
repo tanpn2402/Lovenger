@@ -1,25 +1,45 @@
 package com.tanpn.messenger.event;
 
+import com.tanpn.messenger.utils.utils;
+
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+
 /**
  * Created by phamt_000 on 11/2/16.
  */
 public class EventListElement {
-
+    public String id;
     public String title;
-    public String date;
     public String creater;
-    public String days;
+    public Calendar datetime;
     public Event.EventType type;
-    public Event.EventStatus status;
+    public List<String> pictures;
+    public Event.Reminder remind;
+    public boolean notify;
+    public int days = 0;
 
-    public EventListElement(String _title, String _date, String _creater, String _days, Event.EventType _type, Event.EventStatus _status){
+    public EventListElement(String _id, String _title, Event.EventType _type, String _date, String _time, String _creater, Event.Reminder _remind, boolean _notify, List<String> _pictures){
+        id = _id;
         title = _title;
-        date = _date;
-        creater = _creater;
-        days = _days;
-        type = _type;
-        status = _status;
 
+        datetime = utils.stringToCalendar(_date, _time);
+
+        creater = _creater;
+        type = _type;
+
+        pictures = new ArrayList<>(_pictures);
+
+        remind = _remind;
+        notify = _notify;
+
+
+        days = utils.getDiffDays(datetime);
 
     }
 }

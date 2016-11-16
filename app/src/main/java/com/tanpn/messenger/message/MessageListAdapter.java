@@ -20,6 +20,7 @@ public class MessageListAdapter extends BaseAdapter {
 
     private List<MessageListElement> messagelist;
     private Context context;
+
     public MessageListAdapter(Context _context, List<MessageListElement> list){
         context = _context;
         messagelist = new ArrayList<>(list);

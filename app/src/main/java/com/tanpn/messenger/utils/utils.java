@@ -5,15 +5,24 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.util.Log;
 
 import com.tanpn.messenger.R;
 import com.tanpn.messenger.event.Event;
 import com.tanpn.messenger.event.Event.EventStatus;
+import com.tanpn.messenger.event.EventListElement;
 import com.tanpn.messenger.message.MessageListElement;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.ByteArrayOutputStream;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -103,6 +112,22 @@ public class utils {
         return 1;
     }
 
+    public static Event.EventType getEventCategoryName(int id){
+        switch (id){
+
+            case 0:
+                return Event.EventType.ANNIVERSARY;
+            case 1:
+                return Event.EventType.BIRTHDAY;
+            case 2:
+                return Event.EventType.HOLIDAY;
+            case 4:
+                return Event.EventType.LIFE;
+            case 3:
+                return Event.EventType.TRIP;
+        }
+        return Event.EventType.ANNIVERSARY;
+    }
     public static int getEventCategoryResourceID(Event.EventType type){
         switch (type){
 
@@ -118,6 +143,179 @@ public class utils {
                 return R.drawable.ic_trip_gray;
         }
         return R.drawable.ic_anniversary_gray;
+    }
+
+    public static int getEventStatusResourceID(EventStatus status){
+        switch (status) {
+            case FURTURE:
+                return R.drawable.ic_day_coming;
+            case PASS:
+                return R.drawable.ic_day_pass;
+        }
+
+        return R.drawable.ic_up_pink;
+    }
+
+    public static  String getMonth(int mMonth){
+        switch (mMonth){
+            case 1:
+                return "Jan";
+            case 2:
+                return "Feb";
+            case 3:
+                return "Mar";
+            case 4:
+                return "Apr";
+            case 5:
+                return "May";
+            case 6:
+                return "Jun";
+            case 7:
+                return "Jul";
+            case 8:
+                return "Aug";
+            case 9:
+                return "Sep";
+            case 10:
+                return "Oct";
+            case 11:
+                return "Nov";
+            case 12:
+                return "Dec";
+
+        }
+        return "";
+    }
+
+    private static int getMonth(String mMonth){
+        switch (mMonth){
+            case "Jan":
+                return 1;
+            case "Feb":
+                return 2;
+            case "Mar":
+                return 3;
+            case "Apr":
+                return 4;
+            case "May":
+                return 8;
+            case "Jun":
+                return 6;
+            case "Jul":
+                return 7;
+            case "Aug":
+                return 8;
+            case "Sep":
+                return 9;
+            case "Oct":
+                return 10;
+            case "Nov":
+                return 11;
+            case "Dec":
+                return 12;
+
+        }
+        return 1;
+    }
+
+    public static int getDiffDays(Calendar datetime){
+        Calendar today = Calendar.getInstance();
+        SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
+
+        try {
+            Date dt1 = sdf.parse(String.valueOf((today.get(Calendar.MONTH) + 1)) + "/" + today.get(Calendar.DAY_OF_MONTH) + "/" + today.get(Calendar.YEAR));
+            Date dt2 = sdf.parse(String.valueOf((datetime.get(Calendar.MONTH) + 1)) + "/" + datetime.get(Calendar.DAY_OF_MONTH) + "/" + datetime.get(Calendar.YEAR));
+            long diff = dt1.getTime() - dt2.getTime();
+            return ((int) (diff / (24 * 60 * 60 * 1000)));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        return 0;
+    }
+
+
+    public static Calendar stringToCalendar(String date, String time){
+
+        Calendar calendar = Calendar.getInstance();
+
+        // date format MMM dd, yyyy
+        // ex: Nov 02, 2016
+        String s = date.replaceAll(",", ""); // delete "," --> Nov 02 2016
+        String a[] = s.split(" ");       // -> [0] = Nov, [1] = 02, [2] = 2016
+
+        String t[] = time.split(":");
+
+        calendar.set(Calendar.MONTH, getMonth(a[0]) - 1);
+        calendar.set(Calendar.DAY_OF_MONTH, Integer.parseInt(a[1]));        // date of month format
+        calendar.set(Calendar.YEAR, Integer.parseInt(a[2]));
+        calendar.set(Calendar.HOUR_OF_DAY, Integer.parseInt(t[0]));         // 24h format
+        calendar.set(Calendar.MINUTE, Integer.parseInt(t[1]));
+
+        return calendar;
+    }
+
+    public static String calendarToDateString(Calendar c){
+        return getMonth(c.get(Calendar.MONTH) +1) + " " + c.get(Calendar.DAY_OF_MONTH) + ", " + c.get(Calendar.YEAR);
+    }
+
+    public static String calendarToTimeString(Calendar c){
+        return c.get(Calendar.HOUR_OF_DAY) + ":" + c.get(Calendar.MINUTE);
+    }
+
+
+    public static Event.Reminder getReminder(int i){
+        switch (i){
+            case 0:
+                return Event.Reminder.NONE;
+            case 1:
+                return Event.Reminder.FIFTEEN_MINUTE;
+            case 2:
+                return Event.Reminder.THIRDTY_MINUTE;
+            case 3:
+                return Event.Reminder.ONE_HOUR;
+            case 4:
+                return Event.Reminder.ONE_DAY;
+            case 5:
+                return Event.Reminder.ONE_WEEK;
+            case 6:
+                return Event.Reminder.ONE_MONTH;
+
+        }
+        return Event.Reminder.FIFTEEN_MINUTE;
+    }
+
+    public static EventListElement readJSONString(String s){
+
+        try {
+
+            JSONObject json = new JSONObject(s);
+
+            List<String> pictures = new ArrayList<>();
+            JSONArray list = json.getJSONArray("picture");
+            for(int i = 0; i < list.length(); i++){
+                pictures.add(list.getString(i));
+            }
+
+            EventListElement event = new EventListElement(
+                    json.getString("id"),
+                    json.getString("title"),
+                    utils.getEventCategoryName(json.getInt("category")),
+                    json.getString("date"),
+                    json.getString("time"),
+                    json.getString("creater"),
+                    utils.getReminder(json.getInt("remind")),
+                    json.getBoolean("notification"),
+                    pictures
+            );
+
+           return event;
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        return null;
     }
 
 }

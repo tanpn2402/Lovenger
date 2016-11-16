@@ -7,7 +7,8 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:layout_gravity="center_horizontal">
+        android:layout_gravity="center_horizontal"
+        android:id="@+id/select1">
 
         <TextView
             android:layout_width="wrap_content"
@@ -31,7 +32,7 @@
         <ImageView
             android:layout_width="20dp"
             android:layout_height="20dp"
-            android:id="@+id/imageView21"
+            android:id="@+id/imSelected1"
             android:layout_centerVertical="true"
             android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true"
@@ -43,7 +44,8 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:layout_gravity="center_horizontal">
+        android:layout_gravity="center_horizontal"
+        android:id="@+id/select2">
 
         <TextView
             android:layout_width="wrap_content"
@@ -67,7 +69,8 @@
         <ImageView
             android:layout_width="20dp"
             android:layout_height="20dp"
-            android:id="@+id/imageView14"
+            android:id="@+id/imSelected2"
+            android:src="@drawable/abc_btn_radio_material"
             android:layout_centerVertical="true"
             android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true"
@@ -77,7 +80,8 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="50dp">
+        android:layout_height="50dp"
+        android:id="@+id/select3">
 
         <TextView
             android:layout_width="wrap_content"
@@ -101,18 +105,20 @@
         <ImageView
             android:layout_width="20dp"
             android:layout_height="20dp"
-            android:id="@+id/imageView15"
-            android:layout_marginRight="20dp"
+            android:id="@+id/imSelected3"
+            android:src="@drawable/abc_btn_radio_material"
             android:layout_centerVertical="true"
             android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true"
-            android:layout_marginEnd="20dp" />
+            android:layout_marginRight="20dp" />
+
     </RelativeLayout>
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:layout_gravity="center_horizontal" >
+        android:layout_gravity="center_horizontal"
+        android:id="@+id/select4">
 
         <TextView
             android:layout_width="wrap_content"
@@ -136,23 +142,26 @@
         <ImageView
             android:layout_width="20dp"
             android:layout_height="20dp"
-            android:id="@+id/imageView16"
+            android:id="@+id/imSelected4"
+            android:src="@drawable/abc_btn_radio_material"
             android:layout_centerVertical="true"
             android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true"
             android:layout_marginRight="20dp" />
+
     </RelativeLayout>
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:layout_gravity="center_horizontal" >
+        android:layout_gravity="center_horizontal"
+        android:id="@+id/select5">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="Trước 2 giờ"
+            android:text="Trước 1 ngày"
             android:id="@+id/textView13"
             android:layout_centerVertical="true"
             android:layout_marginLeft="60dp" />
@@ -170,23 +179,26 @@
         <ImageView
             android:layout_width="20dp"
             android:layout_height="20dp"
-            android:id="@+id/imageView17"
+            android:id="@+id/imSelected5"
+            android:src="@drawable/abc_btn_radio_material"
             android:layout_centerVertical="true"
             android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true"
             android:layout_marginRight="20dp" />
+
     </RelativeLayout>
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:layout_gravity="right" >
+        android:layout_gravity="right"
+        android:id="@+id/select6">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="Trước 1 ngày"
+            android:text="Trước 1 tuần"
             android:id="@+id/textView14"
             android:layout_centerVertical="true"
             android:layout_marginLeft="60dp" />
@@ -204,11 +216,13 @@
         <ImageView
             android:layout_width="20dp"
             android:layout_height="20dp"
-            android:id="@+id/imageView18"
+            android:id="@+id/imSelected6"
+            android:src="@drawable/abc_btn_radio_material"
             android:layout_centerVertical="true"
             android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true"
             android:layout_marginRight="20dp" />
+
     </RelativeLayout>
 
 </LinearLayout>

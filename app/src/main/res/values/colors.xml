@@ -12,4 +12,8 @@
     <color name="right">#1abc9c</color>
 
     <color name="transparent">#00000000</color>
+
+    <!-- days counter color -->
+    <color name="day_coming">#c0392b</color>
+    <color name="day_pass">#2980b9</color>
 </resources>

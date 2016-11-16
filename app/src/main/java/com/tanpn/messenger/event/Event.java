@@ -23,4 +23,14 @@ public class Event {
         PASS
     }
 
+    public enum Reminder{
+        NONE,
+        FIFTEEN_MINUTE,
+        THIRDTY_MINUTE,
+        ONE_HOUR,
+        ONE_DAY,
+        ONE_WEEK,
+        ONE_MONTH
+    }
+
 }

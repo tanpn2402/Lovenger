@@ -50,7 +50,7 @@
                 android:layout_width="20dp"
                 android:layout_height="20dp"
                 android:id="@+id/imEventStatus"
-                android:src="@drawable/ic_up_white"
+                android:src="@drawable/ic_day_pass"
                 android:layout_marginLeft="17dp"
                 android:layout_marginStart="17dp"
                 android:layout_centerVertical="true"
@@ -86,8 +86,10 @@
             android:src="@drawable/ic_add_white_24dp"
             app:layout_anchor="@id/layout"
             app:layout_anchorGravity="bottom|right|end"
-            android:layout_alignBottom="@+id/lvEventList"
-            android:layout_centerHorizontal="true" />
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="10dp"
+            android:layout_marginBottom="10dp" />
     </RelativeLayout>
 
 </android.support.design.widget.CoordinatorLayout>

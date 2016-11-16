@@ -202,7 +202,7 @@ public class FragmentMessage extends Fragment implements MessageListAdapter.OnEv
                 if(isPress)
                     ibtSend.setImageResource(R.drawable.ic_send_pink);
                 else
-                ibtSend.setImageResource(R.drawable.ic_send_gray);
+                    ibtSend.setImageResource(R.drawable.ic_send_gray);
                 break;
             case R.id.ibtSetting:
 

@@ -61,26 +61,6 @@
         android:layout_toEndOf="@+id/textView5"
         android:textSize="12dp" />
 
-    <ImageView
-        android:layout_width="15dp"
-        android:layout_height="15dp"
-        android:id="@+id/imEventStatus"
-        android:layout_centerVertical="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:src="@drawable/ic_up_pink"
-        android:layout_marginRight="5dp" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="15"
-        android:id="@+id/tvEventDays"
-        android:layout_centerVertical="true"
-        android:layout_toLeftOf="@+id/imEventStatus"
-        android:layout_toStartOf="@+id/imEventStatus" />
-
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="1dp"
@@ -88,5 +68,28 @@
         android:layout_alignLeft="@+id/textView5"
         android:layout_alignStart="@+id/textView5"
         android:background="#717171"
-        android:layout_marginTop="9dp"></RelativeLayout>
+        android:layout_marginTop="9dp">
+
+    </RelativeLayout>
+
+    <ImageView
+        android:layout_width="15dp"
+        android:layout_height="15dp"
+        android:id="@+id/imEStatus"
+        android:layout_centerVertical="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginRight="20dp"
+        android:src="@drawable/ic_day_pass" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="Small Text"
+        android:id="@+id/tvEDays"
+        android:layout_centerVertical="true"
+        android:layout_toLeftOf="@+id/imEStatus"
+        android:layout_toStartOf="@+id/imEStatus"
+        android:layout_marginRight="10dp" />
 </RelativeLayout>

@@ -21,6 +21,7 @@ import android.widget.TimePicker;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.tanpn.messenger.R;
+import com.tanpn.messenger.event.Event;
 import com.tanpn.messenger.fragment_dialog.EventCategoryDialog;
 import com.tanpn.messenger.fragment_dialog.EventRemindDialog;
 import com.tanpn.messenger.utils.utils;
@@ -34,7 +35,9 @@ import java.util.Calendar;
 public class ActivityAddEvent extends AppCompatActivity implements View.OnClickListener {
 
 
-    private TextView tvEventTitle, tvEventDate, tvEventCategory, tvEventRemind, tvSetEvTime, tvSetEvDate;
+    private TextView tvEventTitle, tvEventDate,  tvSetEvTime, tvSetEvDate;
+
+    public static TextView tvEventCategory, tvEventRemind;
 
     private EditText edtEventTitle;
 
@@ -92,6 +95,25 @@ public class ActivityAddEvent extends AppCompatActivity implements View.OnClickL
         });
 
 
+        //init fragment dialog
+        eventCategoryDialog = new EventCategoryDialog();
+        eventRemindDialog = new EventRemindDialog();
+
+
+        // init date time of now
+        final Calendar c = Calendar.getInstance();
+        mYear = c.get(Calendar.YEAR);
+        mMonth = c.get(Calendar.MONTH);
+        mDay = c.get(Calendar.DAY_OF_MONTH);
+        mHour = c.get(Calendar.HOUR_OF_DAY);
+        mMinute = c.get(Calendar.MINUTE);
+
+        // set date
+        tvSetEvDate.setText(utils.getMonth(mMonth + 1) + " " + mDay + ", " + mYear);
+        tvEventDate.setText(utils.getMonth(mMonth+1) + " " + mDay + ", " + mYear);
+
+        // set time
+        tvSetEvTime.setText(mHour + ":" + mMinute);
     }
 
     private DatabaseReference eventRef;
@@ -110,18 +132,19 @@ public class ActivityAddEvent extends AppCompatActivity implements View.OnClickL
         initFirebase();
 
     }
-
+    private EventCategoryDialog eventCategoryDialog;
+    private EventRemindDialog eventRemindDialog;
     @Override
     public void onClick(View view) {
         switch (view.getId()){
             case R.id.tvEventCategory:
-                EventCategoryDialog eventCategoryDialog = EventCategoryDialog.createInstance("");
+                eventCategoryDialog.setCategory(eventCategoryDialog.getCategory());
                 eventCategoryDialog.show(getSupportFragmentManager(), "dialog");
 
 
                 break;
             case R.id.tvEventRemind:
-                EventRemindDialog eventRemindDialog = new EventRemindDialog();
+                eventRemindDialog.setReminder(eventRemindDialog.getReminder());
                 eventRemindDialog.show(getSupportFragmentManager(), "dialog");
                 break;
             case R.id.tvSetEvTime:
@@ -147,14 +170,8 @@ public class ActivityAddEvent extends AppCompatActivity implements View.OnClickL
 
     private int mYear, mMonth, mDay, mHour, mMinute;
 
+
     private void showDatePicker(){
-        // Get Current Date
-        final Calendar c = Calendar.getInstance();
-        mYear = c.get(Calendar.YEAR);
-        mMonth = c.get(Calendar.MONTH);
-        mDay = c.get(Calendar.DAY_OF_MONTH);
-
-
         DatePickerDialog datePickerDialog = new DatePickerDialog(this,
                 new DatePickerDialog.OnDateSetListener() {
 
@@ -163,49 +180,16 @@ public class ActivityAddEvent extends AppCompatActivity implements View.OnClickL
                                           int monthOfYear, int dayOfMonth) {
 
 
-                        tvSetEvDate.setText(getMonth(monthOfYear +1) + " " + dayOfMonth + ", " + year);
-                        tvEventDate.setText(getMonth(monthOfYear +1) + " " + dayOfMonth + ", " + year);
+                        tvSetEvDate.setText(utils.getMonth(monthOfYear +1) + " " + dayOfMonth + ", " + year);
+                        tvEventDate.setText(utils.getMonth(monthOfYear +1) + " " + dayOfMonth + ", " + year);
                     }
                 }, mYear, mMonth, mDay);
         datePickerDialog.show();
     }
 
-    private String getMonth(int mMonth){
-        switch (mMonth){
-            case 1:
-                return "Jan";
-            case 2:
-                return "Feb";
-            case 3:
-                return "Mar";
-            case 4:
-                return "Apr";
-            case 5:
-                return "May";
-            case 6:
-                return "Jun";
-            case 7:
-                return "Jul";
-            case 8:
-                return "Aug";
-            case 9:
-                return "Sep";
-            case 10:
-                return "Oct";
-            case 11:
-                return "Nov";
-            case 12:
-                return "Dec";
 
-        }
-        return "";
-    }
 
     private void showTimePicker(){
-        // Get Current Time
-        final Calendar c = Calendar.getInstance();
-        mHour = c.get(Calendar.HOUR_OF_DAY);
-        mMinute = c.get(Calendar.MINUTE);
 
         // Launch Time Picker Dialog
         TimePickerDialog timePickerDialog = new TimePickerDialog(this,
@@ -231,10 +215,11 @@ public class ActivityAddEvent extends AppCompatActivity implements View.OnClickL
         String eID = utils.generateEventId();
         event.put("id", eID);
         event.put("title", tvEventTitle.getText().toString());
-        event.put("category", 1);
+        event.put("category", Event.EventType.valueOf(eventCategoryDialog.getCategory().toString()).ordinal());
         event.put("date", tvEventDate.getText().toString());
         event.put("time", tvSetEvTime.getText().toString());
-        event.put("remind", 2);
+        event.put("creater", "Tan Pham");
+        event.put("remind", Event.Reminder.valueOf(eventRemindDialog.getReminder().toString()).ordinal());
         event.put("notification", swEventNotify.isChecked());
 
         JSONArray list = new JSONArray();
@@ -246,6 +231,8 @@ public class ActivityAddEvent extends AppCompatActivity implements View.OnClickL
 
 
         eventRef.child(eID).setValue(event.toString());
+
+        onBackPressed();
 
     }
 

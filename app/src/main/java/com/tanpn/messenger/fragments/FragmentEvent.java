@@ -7,37 +7,101 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.firebase.client.core.view.Event;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.tanpn.messenger.R;
 import com.tanpn.messenger.event.EventListAdapter;
 import com.tanpn.messenger.event.EventListElement;
 import com.tanpn.messenger.ui.ActivityAddEvent;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import com.tanpn.messenger.event.Event.EventStatus;
 import com.tanpn.messenger.event.Event.EventType;
+import com.tanpn.messenger.event.Event.Reminder;
+import com.tanpn.messenger.utils.utils;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 /**
  * A simple {@link Fragment} subclass.
  */
-public class FragmentEvent extends Fragment {
+public class FragmentEvent extends Fragment implements EventListAdapter.OnEventListener, AdapterView.OnItemClickListener {
 
 
     private FloatingActionButton fabAdd;
     private ListView lvEventList;
     private TextView tvEventDays;
+    private EventListAdapter eventListAdapter;
+    private DatabaseReference eventRef;
 
     public FragmentEvent() {
         // Required empty public constructor
     }
+
+    private void initFirebase(){
+        FirebaseDatabase root = FirebaseDatabase.getInstance();
+        eventRef = root.getReference("event");
+
+        eventRef.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                List<String> im = new ArrayList<>();
+                im.add("d");
+                //eventListAdapter.add(new EventListElement("183123", "tan", EventType.BIRTHDAY, "Nov 02, 2015", "16:03", "tan", true, true, im));
+                //eventListAdapter.add(new EventListElement("183128", "tan", EventType.BIRTHDAY, "Nov 02, 2015", "16:03", "tan", true, true, im));
+
+
+                Log.i("TAG", dataSnapshot.getValue().toString());
+                EventListElement event = utils.readJSONString(dataSnapshot.getValue().toString());
+                if(event != null)
+                {
+                    Log.i("TAG", "child added :" );
+
+                    eventListAdapter.add(event);
+                }
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                Log.i("TAG", "child changed");
+
+                EventListElement event = utils.readJSONString(dataSnapshot.getValue().toString());
+                if(event != null)
+                    eventListAdapter.edit(event);
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+                // dataSnapshot.getKey() = event ID
+                eventListAdapter.delete(dataSnapshot.getKey());
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {}
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {}
+        });
+    }
+
 
 
     @Override
@@ -60,21 +124,26 @@ public class FragmentEvent extends Fragment {
 
 
         tvEventDays = (TextView) v.findViewById(R.id.tvEventDays);
+
+        Calendar c = Calendar.getInstance();
+        c.set(2013,2,14);
+        tvEventDays.setText("" + utils.getDiffDays(c));
+
+
         lvEventList = (ListView) v.findViewById(R.id.lvEventList);
 
-        List<EventListElement> eventList = new ArrayList<>();
-        eventList.add(new EventListElement("Untitled 1", "Nov, 02 2016", "Tan Pham", "1023", EventType.HOLIDAY, EventStatus.FURTURE));
-        eventList.add(new EventListElement("Untitled 2", "Nov, 05 2016", "Tan Pham", "1023", EventType.TRIP, EventStatus.FURTURE));
-        eventList.add(new EventListElement("Untitled 3", "Nov, 08 2016", "Tan Pham", "1023", EventType.HOLIDAY, EventStatus.FURTURE));
-        eventList.add(new EventListElement("Untitled 4", "Nov, 07 2016", "Tan Pham", "1023", EventType.BIRTHDAY, EventStatus.PASS));
-        eventList.add(new EventListElement("Untitled 5", "Nov, 05 2016", "Tan Pham", "1023", EventType.ANNIVERSARY, EventStatus.FURTURE));
-        eventList.add(new EventListElement("Untitled 1", "Nov, 02 2016", "Tan Pham", "1023", EventType.HOLIDAY, EventStatus.PASS));
-        eventList.add(new EventListElement("Untitled 2", "Nov, 05 2016", "Tan Pham", "1023", EventType.LIFE, EventStatus.FURTURE));
-        eventList.add(new EventListElement("Untitled 3", "Nov, 08 2016", "Tan Pham", "1023", EventType.ANNIVERSARY, EventStatus.PASS));
+        eventListAdapter = new EventListAdapter(getContext());
 
-        EventListAdapter adapter = new EventListAdapter(getContext(), eventList);
+        List<String> im = new ArrayList<>();
+        im.add("d");
 
-        lvEventList.setAdapter(adapter);
+        EventListElement event1 = new EventListElement("183124", "tai", EventType.BIRTHDAY, "Nov 03, 2017", "17:03", "tan",Reminder.FIFTEEN_MINUTE, true, im);
+
+        eventListAdapter.add(event1);
+
+        initFirebase();
+
+        lvEventList.setAdapter(eventListAdapter);
 
         // set background
         setBackGround(v);
@@ -88,4 +157,14 @@ public class FragmentEvent extends Fragment {
         ((RelativeLayout)view.findViewById(R.id.layout)).setBackgroundResource(R.drawable.image_background);
     }
 
+    @Override
+    public void onLoadComplete() {}
+
+    @Override
+    public void onDirtyStateChanged(boolean dirty) {}
+
+    @Override
+    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+
+    }
 }
