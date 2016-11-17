@@ -4,19 +4,19 @@ package com.tanpn.messenger.fragments;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Environment;
+import android.os.SystemClock;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.GridView;
-import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -30,6 +30,7 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.tanpn.messenger.R;
 import com.tanpn.messenger.photo.ActivityViewPhoto;
+import com.tanpn.messenger.photo.GalleryPicker;
 import com.tanpn.messenger.photo.PhotoElement;
 import com.tanpn.messenger.photo.PhotoListAdapter;
 import com.tanpn.messenger.utils.utils;
@@ -38,9 +39,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class FragmentPicture extends Fragment implements PhotoListAdapter.OnEventListener {
@@ -108,12 +108,12 @@ public class FragmentPicture extends Fragment implements PhotoListAdapter.OnEven
     };*/
 
 
-
+    private View v;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View v = inflater.inflate(R.layout.fragment_picture, container, false);
+        v = inflater.inflate(R.layout.fragment_picture, container, false);
 
         photoList = (GridView) v.findViewById(R.id.photoList);
         fabUpload = (FloatingActionButton) v.findViewById(R.id.fab_upload);
@@ -135,7 +135,35 @@ public class FragmentPicture extends Fragment implements PhotoListAdapter.OnEven
         photoList.setOnScrollListener(new AbsListView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(AbsListView absListView, int i) {
+                absListView.setOnTouchListener(new View.OnTouchListener() {
+                    private float mInitialY;
 
+                    @Override
+                    public boolean onTouch(View v, MotionEvent event) {
+                        switch (event.getAction()) {
+                            case MotionEvent.ACTION_DOWN:
+                                mInitialY = event.getY();
+                                return false;
+                            case MotionEvent.ACTION_MOVE:
+                                final float y = event.getY();
+                                final float yDiff = y - mInitialY;
+                                mInitialY = y;
+                                if (yDiff > 0.0) {
+                                    // scroll down
+                                    fabUpload.show();
+                                    break;
+
+                                } else if (yDiff < 0.0) {
+                                    // scroll up
+                                    fabUpload.hide();
+                                    break;
+
+                                }
+                                break;
+                        }
+                        return false;
+                    }
+                });
             }
 
             @Override
@@ -148,6 +176,10 @@ public class FragmentPicture extends Fragment implements PhotoListAdapter.OnEven
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 Intent viewPhoto = new Intent(getContext(), ActivityViewPhoto.class);
+
+                //Map<String, PhotoElement> map = (Map<String, PhotoElement>) adapter.getItem(i);
+
+                //viewPhoto.putExtra("PATH", adapter.getItem(i).toString());
                 startActivity(viewPhoto);
             }
         });
@@ -159,7 +191,7 @@ public class FragmentPicture extends Fragment implements PhotoListAdapter.OnEven
 
     private final int GALLERY_CODE = 43;
     private void choosePhotoFromGallery(){
-        Intent imagePicker = new Intent(Intent.ACTION_PICK);
+        /*Intent imagePicker = new Intent(Intent.ACTION_PICK);
 
         File imgDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS);
         String imgPath = imgDir.getPath();
@@ -167,64 +199,104 @@ public class FragmentPicture extends Fragment implements PhotoListAdapter.OnEven
         Uri uri = Uri.parse(imgPath);
         imagePicker.setDataAndType(uri, "image/*");
 
-        startActivityForResult(imagePicker, GALLERY_CODE);
+        startActivityForResult(imagePicker, GALLERY_CODE);*/
+
+        Intent intent = new Intent(getContext(),GalleryPicker.class);
+        startActivityForResult(intent,GALLERY_CODE);
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if(requestCode == GALLERY_CODE){
-            Uri uri = data.getData();
+            /*Uri uri = data.getData();
 
             try {
                 InputStream inputStream = getContext().getContentResolver().openInputStream(uri);
                 Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
-
-
-                ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
-                final byte[] bytes = baos.toByteArray();
-
-
-                final String photoName = utils.generateEventId();
-
-                new Thread(){
-                    @Override
-                    public void run() {
-                        super.run();
-
-                        UploadTask uploadTask = imageRef.child(photoName).putBytes(bytes);
-                        uploadTask.addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception exception) {
-                                // Handle unsuccessful uploads
-                            }
-                        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                            @Override
-                            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                                // taskSnapshot.getMetadata() contains file metadata such as size, content-type, and download URL.
-
-                                JSONObject obj = new JSONObject();
-                                try {
-                                    obj.put("size", taskSnapshot.getBytesTransferred());
-                                    obj.put("url", taskSnapshot.getDownloadUrl().toString());
-
-                                    photoRef.child(photoName).setValue(obj.toString());
-                                } catch (JSONException e) {
-                                    e.printStackTrace();
-                                }
-
-
-                            }
-                        });
-                    }
-                }.start();
-
+                new uploadPhoto().execute(bitmap);
 
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
+            }*/
+
+            List<String> imagesPathList = new ArrayList<String>();
+            String[] imagesPath = data.getStringExtra("data").split("\\|");
+            List<Bitmap> photos = new ArrayList<>();
+
+            for (int i=0; i<imagesPath.length; i++){
+                imagesPathList.add(imagesPath[i]);
+                photos.add(BitmapFactory.decodeFile(imagesPath[i]));
+
             }
+
+            new uploadPhoto().execute(photos);
+
+
         }
     }
+
+    class uploadPhoto extends AsyncTask<List<Bitmap>, Void, Boolean>{
+
+        @Override
+        protected Boolean doInBackground(List<Bitmap>... lists) {
+            List<Bitmap> photos = lists[0];
+            SystemClock.sleep(50);
+
+
+            for(int i = 0 ; i < photos.size(); i++){
+                ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                photos.get(i).compress(Bitmap.CompressFormat.PNG, 100, baos);   // full quality 100
+                byte[] bytes = baos.toByteArray();
+
+                final String photoName = utils.generatePhotoName();
+                UploadTask uploadTask = imageRef.child(photoName).putBytes(bytes);
+
+                uploadTask.addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception exception) {}
+                }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                        // taskSnapshot.getMetadata() contains file metadata such as size, content-type, and download URL.
+
+                        JSONObject obj = new JSONObject();
+                        try {
+                            obj.put("size", taskSnapshot.getBytesTransferred());
+                            obj.put("url", taskSnapshot.getDownloadUrl().toString());
+
+                            photoRef.child(photoName).setValue(obj.toString());
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+
+                    }
+                });
+
+                SystemClock.sleep(100);
+            }
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Boolean aBoolean) {
+            super.onPostExecute(aBoolean);
+
+            /*Snackbar snackbar = Snackbar
+                    .make(v.findViewById(R.id.fragment_picture), "Message is deleted", Snackbar.LENGTH_LONG)
+                    .setAction("UNDO", new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            Snackbar snackbar1 = Snackbar.make(v.findViewById(R.id.fragment_picture), "Message is restored!", Snackbar.LENGTH_SHORT);
+                            snackbar1.show();
+                        }
+                    });
+
+            snackbar.show();*/
+        }
+    }
+
 
     @Override
     public void onDirtyStateChanged(boolean dirty) {}

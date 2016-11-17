@@ -37,12 +37,6 @@ public class ActivityViewPhoto extends AppCompatActivity implements View.OnClick
         ibtDraw = (ImageView) findViewById(R.id.ibtDraw);
         ibtDraw.setOnClickListener(this);
 
-        final Integer[] photos = new Integer[]{
-                1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
-                1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1
-
-        };
-
 
         PhotoViewAdapter adapter = new PhotoViewAdapter(this, photo);
         photoView.setAdapter(adapter);

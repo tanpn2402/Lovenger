@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:orientation="vertical">
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:id="@+id/layout"
+        android:background="#FFF">
+        <android.support.design.widget.AppBarLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:id="@+id/view">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:text="Đã chọn: "
+                    android:id="@+id/textView3"
+                    android:layout_centerVertical="true"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
+                    android:layout_marginLeft="20dp"
+                    android:textColor="#FFF" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:text="0"
+                    android:id="@+id/tvPhotoSelected"
+                    android:layout_centerVertical="true"
+                    android:layout_toRightOf="@+id/textView3"
+                    android:layout_toEndOf="@+id/textView3"
+                    android:textColor="#FFF" />
+            </RelativeLayout>
+
+        </android.support.design.widget.AppBarLayout>
+
+        <GridView
+            android:id="@+id/grdImages"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:numColumns="auto_fit"
+            android:verticalSpacing="2dp"
+            android:horizontalSpacing="2dp"
+            android:columnWidth="100dp"
+            android:minHeight="100dp"
+            android:stretchMode="columnWidth"
+            android:gravity="center"
+            android:layout_below="@+id/view" />
+
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fab_ok"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:src="@drawable/ic_add_white_24dp"
+            app:layout_anchor="@id/layout"
+            app:layout_anchorGravity="bottom|right|end"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginBottom="12dp"
+            android:layout_marginRight="12dp"
+            android:background="#c0392b" />
+
+        </RelativeLayout>
+
+
+</android.support.design.widget.CoordinatorLayout>

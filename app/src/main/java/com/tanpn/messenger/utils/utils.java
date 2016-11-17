@@ -83,14 +83,21 @@ public class utils {
 
     public static String generateEventId(){
         Calendar calendar = Calendar.getInstance();
-        /*calendar.get(Calendar.DATE);
+        calendar.get(Calendar.DATE);
         calendar.get(Calendar.MONTH);
         calendar.get(Calendar.YEAR);
         calendar.get(Calendar.HOUR_OF_DAY);
         calendar.get(Calendar.MINUTE);
-        calendar.get(Calendar.SECOND);*/
+        calendar.get(Calendar.SECOND);
+        calendar.get(Calendar.MILLISECOND);
 
         return "e-" + calendar.get(Calendar.DATE) + "" + calendar.get(Calendar.MONTH) + calendar.get(Calendar.YEAR) + "-" + calendar.get(Calendar.HOUR_OF_DAY) + "" + calendar.get(Calendar.MINUTE) + "" + calendar.get(Calendar.SECOND);
+
+    }
+
+    public static String generatePhotoName(){
+        Calendar calendar = Calendar.getInstance();
+        return "c-" + calendar.get(Calendar.DATE) + "" + calendar.get(Calendar.MONTH) + calendar.get(Calendar.YEAR) + "-" + calendar.get(Calendar.HOUR_OF_DAY) + "" + calendar.get(Calendar.MINUTE) + "" + calendar.get(Calendar.SECOND) + "" + calendar.get(Calendar.MILLISECOND);
 
     }
 

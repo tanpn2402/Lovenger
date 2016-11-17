@@ -3,6 +3,7 @@
     package="com.tanpn.messenger">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
 
     <application
         android:allowBackup="true"
@@ -20,7 +21,8 @@
         </activity>
         <activity android:name=".ui.ActivityAddEvent" />
         <activity android:name=".photo.ActivityViewPhoto" />
-        <activity android:name=".paint.ActivityPaint"></activity>
+        <activity android:name=".paint.ActivityPaint" />
+        <activity android:name=".photo.GalleryPicker"></activity>
     </application>
 
 </manifest>

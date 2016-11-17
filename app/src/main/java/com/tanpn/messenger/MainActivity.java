@@ -1,6 +1,7 @@
 package com.tanpn.messenger;
 
 import android.graphics.Color;
+import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -57,6 +58,7 @@ public class MainActivity extends AppCompatActivity {
             public void onPageSelected(int position) {
                 changeTab(position + 1);
                 Log.i(TAG, position+ "");
+
 
                 if(position == 2){
                     // tab chat --> hide tabbar

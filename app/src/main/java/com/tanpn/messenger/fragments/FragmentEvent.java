@@ -9,8 +9,10 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
@@ -137,13 +139,52 @@ public class FragmentEvent extends Fragment implements EventListAdapter.OnEventL
         List<String> im = new ArrayList<>();
         im.add("d");
 
-        EventListElement event1 = new EventListElement("183124", "tai", EventType.BIRTHDAY, "Nov 03, 2017", "17:03", "tan",Reminder.FIFTEEN_MINUTE, true, im);
-
-        eventListAdapter.add(event1);
+        //EventListElement event1 = new EventListElement("183124", "tai", EventType.BIRTHDAY, "Nov 03, 2017", "17:03", "tan",Reminder.FIFTEEN_MINUTE, true, im);
+        //eventListAdapter.add(event1);
 
         initFirebase();
 
         lvEventList.setAdapter(eventListAdapter);
+        lvEventList.setOnScrollListener(new AbsListView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(AbsListView absListView, int i) {
+                absListView.setOnTouchListener(new View.OnTouchListener() {
+                    private float mInitialY;
+
+                    @Override
+                    public boolean onTouch(View v, MotionEvent event) {
+                        switch (event.getAction()) {
+                            case MotionEvent.ACTION_DOWN:
+                                mInitialY = event.getY();
+                                return false;
+                            case MotionEvent.ACTION_MOVE:
+                                final float y = event.getY();
+                                final float yDiff = y - mInitialY;
+                                mInitialY = y;
+                                if (yDiff > 0.0) {
+                                    //Log.d("SCROLL", "SCROLL DOWN");
+                                    fabAdd.show();
+                                    break;
+
+                                } else if (yDiff < 0.0) {
+                                    //Log.d("SCROLL", "SCROLL up");
+                                    fabAdd.hide();
+                                    break;
+
+                                }
+                                break;
+                        }
+                        return false;
+                    }
+                });
+            }
+
+
+            @Override
+            public void onScroll(AbsListView absListView, int i, int i1, int i2) {
+
+            }
+        });
 
         // set background
         setBackGround(v);
