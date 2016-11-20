@@ -5,6 +5,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.os.Environment;
 import android.util.Log;
 
 import com.tanpn.messenger.R;
@@ -18,12 +19,15 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by phamt_000 on 11/1/16.
@@ -80,24 +84,35 @@ public class utils {
         return bmp;
     }
 
+    public static String getCurrentTimeStamp() {
+        return new SimpleDateFormat("yyyy:MM:dd-HH:mm:ss:SSS").format(new Date()).replaceAll(":", "");
+    }
 
     public static String generateEventId(){
-        Calendar calendar = Calendar.getInstance();
-        calendar.get(Calendar.DATE);
-        calendar.get(Calendar.MONTH);
-        calendar.get(Calendar.YEAR);
-        calendar.get(Calendar.HOUR_OF_DAY);
-        calendar.get(Calendar.MINUTE);
-        calendar.get(Calendar.SECOND);
-        calendar.get(Calendar.MILLISECOND);
-
-        return "e-" + calendar.get(Calendar.DATE) + "" + calendar.get(Calendar.MONTH) + calendar.get(Calendar.YEAR) + "-" + calendar.get(Calendar.HOUR_OF_DAY) + "" + calendar.get(Calendar.MINUTE) + "" + calendar.get(Calendar.SECOND);
+        return "e-" + getCurrentTimeStamp();
 
     }
 
-    public static String generatePhotoName(){
-        Calendar calendar = Calendar.getInstance();
-        return "c-" + calendar.get(Calendar.DATE) + "" + calendar.get(Calendar.MONTH) + calendar.get(Calendar.YEAR) + "-" + calendar.get(Calendar.HOUR_OF_DAY) + "" + calendar.get(Calendar.MINUTE) + "" + calendar.get(Calendar.SECOND) + "" + calendar.get(Calendar.MILLISECOND);
+    public static String generatePhotoId(){
+        return "p-" + getCurrentTimeStamp();
+    }
+
+    public static String generateVoiceId(){
+        return "v-" + getCurrentTimeStamp();
+    }
+
+    public static String generaMessageId(){
+        return "m-" + getCurrentTimeStamp();
+
+    }
+
+    public static String generateVideoId(){
+        return "vi-" + getCurrentTimeStamp();
+
+    }
+
+    public static String generatePaintId(){
+        return "pa-" + getCurrentTimeStamp();
 
     }
 
@@ -298,12 +313,18 @@ public class utils {
 
             JSONObject json = new JSONObject(s);
 
-            List<String> pictures = new ArrayList<>();
+            Map<String, String> pictures = new HashMap();
             JSONArray list = json.getJSONArray("picture");
+
             for(int i = 0; i < list.length(); i++){
-                pictures.add(list.getString(i));
+                JSONObject o = (JSONObject) list.get(i);
+
+                pictures.put(o.getString("photoid"), o.getString("photopath"));
             }
 
+            /**
+             * see structure at: https://docs.google.com/document/d/1T2ExfSOEW9y38x1IRbLjA8UTiRNZWQLjCkeTe9vgKmA/edit?usp=sharing
+             * */
             EventListElement event = new EventListElement(
                     json.getString("id"),
                     json.getString("title"),
@@ -325,4 +346,65 @@ public class utils {
         return null;
     }
 
+    public static JSONObject eventToJSONObject(EventListElement e){
+        JSONObject obj = new JSONObject();
+        try {
+
+            obj.put("id", e.id);
+            obj.put("title", e.title);
+            obj.put("category", e.type.ordinal());
+            obj.put("date", calendarToDateString(e.datetime));
+            obj.put("time", calendarToTimeString(e.datetime));
+            obj.put("creater", e.creater);
+            obj.put("remind", e.remind.ordinal());
+            obj.put("notification", e.notify);
+
+            JSONArray list = new JSONArray();
+            for(Map.Entry<String, String> s : e.pictures.entrySet()){
+                JSONObject o = new JSONObject();
+                o.put("photoid", s.getKey());
+                o.put("photopath", s.getValue());
+                list.put(o);
+            }
+
+            obj.put("picture", list);
+
+            return obj;
+        } catch (JSONException e1) {
+            e1.printStackTrace();
+        }
+        return null;
+    }
+
+
+    /**
+     * lấy đường dẫn của từng thư mục con
+     * */
+    public static String getFolderPath(String folder){
+        File root = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/Lovessenger");
+        boolean success = true;
+        if(!root.exists()){
+            // chua co folder ten như v thi tao moi
+            success = root.mkdir();
+        }
+
+        if(success){
+            // tao folder root thanh cong
+            // tao folder con
+            File voice = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/Lovessenger/" + folder + "/");
+
+            if(!voice.exists()){
+                success = voice.mkdir();
+            }
+
+            if(success){
+                return Environment.getExternalStorageDirectory().getAbsolutePath() + "/Lovessenger/" + folder + "/";
+            }
+            else
+                return Environment.getExternalStorageDirectory().getAbsolutePath() + "/Lovessenger/";
+        }
+        else
+            return Environment.getExternalStorageDirectory().getAbsolutePath() + "/";
+
+    }
 }

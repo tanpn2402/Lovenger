@@ -13,6 +13,7 @@ import android.widget.ImageView;
 import com.squareup.picasso.Picasso;
 import com.tanpn.messenger.R;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -20,6 +21,7 @@ import java.util.Map;
 
 /**
  * Created by phamt_000 on 11/3/16.
+ * Adapter này được dùng để hiện thji hình ảnh lên grid view
  */
 public class PhotoListAdapter extends BaseAdapter {
     private Context context;
@@ -59,7 +61,10 @@ public class PhotoListAdapter extends BaseAdapter {
 
     @Override
     public Object getItem(int i) {
-        return null;
+        // return photo element
+        // map chỉ get valuse thôi hở
+
+        return photoPaths.get(keyPath.get(i));
     }
 
     @Override
@@ -101,13 +106,25 @@ public class PhotoListAdapter extends BaseAdapter {
 
         Log.i("SCALE", "scale = " + reSize);
 
-        Picasso.with(context)
-                .load(photoPaths.get(keyPath.get(i)).url)
-                .resize(reSize, reSize)
-                .centerCrop()
-                .placeholder(R.drawable.ic_picture_gray)
-                .error(R.drawable.ic_picture_gray)
-                .into(imgView);
+        File file = new File(photoPaths.get(keyPath.get(i)).url);
+        if(file.exists()){
+            Picasso.with(context)
+                    .load(file)
+                    .placeholder(R.drawable.ic_picture_gray)
+                    .error(R.drawable.ic_picture_gray)
+                    .into(imgView);
+
+        }
+        else{
+            // load photo tu firebase
+            Picasso.with(context)
+                    .load(photoPaths.get(keyPath.get(i)).url)
+                    .resize(reSize, reSize)
+                    .centerCrop()
+                    .placeholder(R.drawable.ic_picture_gray)
+                    .error(R.drawable.ic_picture_gray)
+                    .into(imgView);
+        }
 
         return imgView;
     }
@@ -128,5 +145,12 @@ public class PhotoListAdapter extends BaseAdapter {
 
             notifyDirtyStateChanged(true);
         }
+    }
+
+    public boolean contain(PhotoElement element){
+        if(keyPath.contains(element.id))
+            return true;
+
+        return false;
     }
 }

@@ -1,0 +1,60 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    tools:context="com.tanpn.messenger.message.VoiceRecorder">
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true">
+
+        <ImageButton
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:id="@+id/ibtVoice"
+            android:src="@drawable/ic_record_pink"
+            android:layout_below="@+id/tvVoiceStatus"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="101dp"
+            android:layout_marginBottom="20dp"
+            android:scaleType="fitCenter" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="Nhấn giữ để ghi âm"
+            android:id="@+id/tvVoiceStatus"
+            android:layout_marginTop="31dp"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true" />
+
+        <ImageButton
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:id="@+id/ibtSend"
+            android:src="@drawable/ic_sent_pink"
+            android:layout_alignBottom="@+id/ibtVoice"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginRight="10dp"
+            android:scaleType="fitCenter" />
+
+        <ImageButton
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:id="@+id/ibtPlay"
+            android:src="@drawable/ic_play_pink"
+            android:layout_alignBottom="@+id/ibtVoice"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_marginLeft="10dp"
+            android:scaleType="fitCenter" />
+
+    </RelativeLayout>
+
+
+</RelativeLayout>

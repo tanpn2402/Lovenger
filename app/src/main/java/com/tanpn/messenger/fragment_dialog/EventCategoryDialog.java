@@ -8,15 +8,13 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
 import com.tanpn.messenger.R;
 import com.tanpn.messenger.event.Event;
-import com.tanpn.messenger.ui.ActivityAddEvent;
+import com.tanpn.messenger.event.EventDetail;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -114,23 +112,23 @@ public class EventCategoryDialog extends DialogFragment implements View.OnClickL
         switch (view.getId()){
             case R.id.select1:
                 category = Event.EventType.ANNIVERSARY;
-                ActivityAddEvent.tvEventCategory.setText("Kỉ niệm");
+                EventDetail.tvEventCategory.setText("Kỉ niệm");
                 this.dismiss(); break;
             case R.id.select2:
                 category = Event.EventType.BIRTHDAY;
-                ActivityAddEvent.tvEventCategory.setText("Sinh nhật");
+                EventDetail.tvEventCategory.setText("Sinh nhật");
                 this.dismiss(); break;
             case R.id.select3:
                 category = Event.EventType.HOLIDAY;
-                ActivityAddEvent.tvEventCategory.setText("Ngày nghỉ");
+                EventDetail.tvEventCategory.setText("Ngày nghỉ");
                 this.dismiss(); break;
             case R.id.select4:
                 category = Event.EventType.TRIP;
-                ActivityAddEvent.tvEventCategory.setText("Du lịch");
+                EventDetail.tvEventCategory.setText("Du lịch");
                 this.dismiss();break;
             case R.id.select5:
                 category = Event.EventType.LIFE;
-                ActivityAddEvent.tvEventCategory.setText("Đời sống");
+                EventDetail.tvEventCategory.setText("Đời sống");
                 this.dismiss(); break;
             case 6:
                 // tao them category

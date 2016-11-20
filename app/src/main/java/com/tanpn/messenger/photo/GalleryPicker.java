@@ -18,10 +18,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.AbsListView;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.GridView;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -53,6 +55,7 @@ public class GalleryPicker extends AppCompatActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_gallery);
 
         grdImages= (GridView) findViewById(R.id.grdImages);
@@ -120,29 +123,25 @@ public class GalleryPicker extends AppCompatActivity {
             }
         });
 
+
         // btn select photo
         fabOK.setOnClickListener(new View.OnClickListener() {
 
             public void onClick(View v) {
                 final int len = thumbnailsselection.length;
-                int cnt = 0;
                 String selectImages = "";
                 for (int i = 0; i < len; i++) {
                     if (thumbnailsselection[i]) {
-                        cnt++;
                         selectImages = selectImages + arrPath[i] + "|";
+                        // format:  path1|path2|path3|....|path(n)
                     }
                 }
-                if (cnt == 0) {
-                    Toast.makeText(getApplicationContext(), "Please select at least one image", Toast.LENGTH_LONG).show();
-                } else {
 
-                    Log.d("SelectedImages", selectImages);
-                    Intent i = new Intent();
-                    i.putExtra("data", selectImages);
-                    setResult(Activity.RESULT_OK, i);
-                    finish();
-                }
+                Intent i = new Intent();
+                i.putExtra("data", selectImages);
+                setResult(Activity.RESULT_OK, i);
+                finish();
+
             }
         });
     }
@@ -177,7 +176,7 @@ public class GalleryPicker extends AppCompatActivity {
             return position;
         }
 
-        public View getView(int position, View convertView, ViewGroup parent) {
+        public View getView(final int position, View convertView, ViewGroup parent) {
 
             final ViewHolder holder;
 
@@ -227,6 +226,19 @@ public class GalleryPicker extends AppCompatActivity {
                         photoSelected++;
                         tvPhotoSelected.setText("" + photoSelected);
                     }
+                }
+            });
+
+            holder.imgThumb.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View view) {
+                    Log.i("TAG", "onlongclick");
+
+                    PreviewPhoto previewPhoto = new PreviewPhoto();
+                    previewPhoto.setPath(arrPath[position]);
+                    previewPhoto.show(getFragmentManager(), "dialog");
+
+                    return true;
                 }
             });
 

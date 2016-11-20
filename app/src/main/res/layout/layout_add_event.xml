@@ -5,7 +5,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.tanpn.messenger.ui.ActivityAddEvent"
+    tools:context=".event.EventDetail"
+    android:id="@+id/layout_add_event"
     android:background="#FFF">
 
 
@@ -186,7 +187,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:text="09:30 AM"
+                    android:text="09:30"
                     android:id="@+id/tvSetEvTime"
                     android:textColor="#3498db"
                     android:layout_centerVertical="true"
@@ -263,7 +264,32 @@
                     android:layout_marginRight="30dp"
                     android:layout_marginEnd="30dp"
                     android:checked="true" />
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="#7f8c8d"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginLeft="20dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentEnd="true" />
             </RelativeLayout>
+
+            <GridView
+                android:id="@+id/photoList"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:horizontalSpacing="4dp"
+                android:columnWidth="80dp"
+                android:drawSelectorOnTop="true"
+                android:gravity="center"
+                android:numColumns="auto_fit"
+                android:stretchMode="columnWidth"
+                android:verticalSpacing="4dp"
+                android:focusable="true"
+                android:clickable="true"
+                android:layout_marginTop="2dp"
+                android:layout_marginBottom="2dp" />
         </LinearLayout>
 
 

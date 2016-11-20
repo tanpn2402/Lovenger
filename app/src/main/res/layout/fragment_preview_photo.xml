@@ -1,0 +1,53 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.tanpn.messenger.photo.PreviewPhoto">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <android.support.design.widget.AppBarLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:id="@+id/view2">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <ImageButton
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:id="@+id/ibtBack"
+                    android:src="@drawable/abc_ic_ab_back_material"
+                    android:layout_marginLeft="5dp" />
+
+                <ImageButton
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:id="@+id/ibtDelete"
+                    android:src="@drawable/abc_ic_clear_material"
+                    android:layout_centerVertical="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginRight="5dp"
+                    android:visibility="invisible"/>
+
+            </RelativeLayout>
+
+        </android.support.design.widget.AppBarLayout>
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/imPreview"
+            android:layout_below="@+id/view2"
+            android:layout_centerHorizontal="true"
+            android:background="#000" />
+
+
+    </RelativeLayout>
+
+</RelativeLayout>

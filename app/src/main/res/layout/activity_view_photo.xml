@@ -38,7 +38,7 @@
         <ImageView
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:id="@+id/imageView5"
+            android:id="@+id/ibtEventDetail"
             android:src="@android:drawable/ic_menu_info_details"
             android:scaleType="center"
             android:layout_centerVertical="true"
@@ -87,7 +87,7 @@
         <ImageView
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:id="@+id/imageView4"
+            android:id="@+id/ibtEventShare"
             android:src="@drawable/ic_send_gray"
             android:scaleType="center"
             android:layout_alignParentTop="true"

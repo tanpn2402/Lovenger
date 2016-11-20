@@ -1,6 +1,7 @@
 package com.tanpn.messenger.fragments;
 
 
+import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -10,6 +11,7 @@ import android.os.SystemClock;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -73,7 +75,7 @@ public class FragmentPicture extends Fragment implements PhotoListAdapter.OnEven
 
                     adapter.add(
                             dataSnapshot.getKey(),
-                            new PhotoElement(obj.getLong("size"), obj.getString("url"))
+                            new PhotoElement(obj.getString("id"), obj.getLong("size"), obj.getString("path"))
                     );
 
                 } catch (JSONException e) {
@@ -99,13 +101,6 @@ public class FragmentPicture extends Fragment implements PhotoListAdapter.OnEven
         });
 
     }
-
-    /*private final String[] photo = new String[]{
-            "https://firebasestorage.googleapis.com/v0/b/messenger-d08e4.appspot.com/o/tcu7xozdgqxoxmm5ieyh-1473826982014.jpg?alt=media&token=c4f072a2-2fec-4c68-9673-0c50202c4e83",
-            "https://firebasestorage.googleapis.com/v0/b/messenger-d08e4.appspot.com/o/48.png?alt=media&token=389b9a15-20d4-4aed-a756-4bb42cf370f4",
-            "gs://messenger-d08e4.appspot.com/photo/C360_2016-02-08-10-45-13-975.jpg"
-
-    };*/
 
 
     private View v;
@@ -177,9 +172,6 @@ public class FragmentPicture extends Fragment implements PhotoListAdapter.OnEven
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 Intent viewPhoto = new Intent(getContext(), ActivityViewPhoto.class);
 
-                //Map<String, PhotoElement> map = (Map<String, PhotoElement>) adapter.getItem(i);
-
-                //viewPhoto.putExtra("PATH", adapter.getItem(i).toString());
                 startActivity(viewPhoto);
             }
         });
@@ -189,17 +181,8 @@ public class FragmentPicture extends Fragment implements PhotoListAdapter.OnEven
 
 
 
-    private final int GALLERY_CODE = 43;
+    private final int GALLERY_CODE = 1;
     private void choosePhotoFromGallery(){
-        /*Intent imagePicker = new Intent(Intent.ACTION_PICK);
-
-        File imgDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS);
-        String imgPath = imgDir.getPath();
-
-        Uri uri = Uri.parse(imgPath);
-        imagePicker.setDataAndType(uri, "image/*");
-
-        startActivityForResult(imagePicker, GALLERY_CODE);*/
 
         Intent intent = new Intent(getContext(),GalleryPicker.class);
         startActivityForResult(intent,GALLERY_CODE);
@@ -207,22 +190,13 @@ public class FragmentPicture extends Fragment implements PhotoListAdapter.OnEven
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if(requestCode == GALLERY_CODE){
-            /*Uri uri = data.getData();
-
-            try {
-                InputStream inputStream = getContext().getContentResolver().openInputStream(uri);
-                Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
-                new uploadPhoto().execute(bitmap);
-
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            }*/
-
-            List<String> imagesPathList = new ArrayList<String>();
+        Log.i("SIZE", "size = " + requestCode + resultCode);
+        if(resultCode == Activity.RESULT_OK && requestCode == GALLERY_CODE){
+            Log.i("SIZE", "OK");
+            List<String> imagesPathList = new ArrayList<>();
             String[] imagesPath = data.getStringExtra("data").split("\\|");
             List<Bitmap> photos = new ArrayList<>();
-
+            Log.i("SIZE", "size = " + imagesPath.length);
             for (int i=0; i<imagesPath.length; i++){
                 imagesPathList.add(imagesPath[i]);
                 photos.add(BitmapFactory.decodeFile(imagesPath[i]));
@@ -248,7 +222,7 @@ public class FragmentPicture extends Fragment implements PhotoListAdapter.OnEven
                 photos.get(i).compress(Bitmap.CompressFormat.PNG, 100, baos);   // full quality 100
                 byte[] bytes = baos.toByteArray();
 
-                final String photoName = utils.generatePhotoName();
+                final String photoName = utils.generatePhotoId();
                 UploadTask uploadTask = imageRef.child(photoName).putBytes(bytes);
 
                 uploadTask.addOnFailureListener(new OnFailureListener() {
@@ -261,8 +235,9 @@ public class FragmentPicture extends Fragment implements PhotoListAdapter.OnEven
 
                         JSONObject obj = new JSONObject();
                         try {
+                            obj.put("id", photoName);
                             obj.put("size", taskSnapshot.getBytesTransferred());
-                            obj.put("url", taskSnapshot.getDownloadUrl().toString());
+                            obj.put("path", taskSnapshot.getDownloadUrl().toString());
 
                             photoRef.child(photoName).setValue(obj.toString());
                         } catch (JSONException e) {

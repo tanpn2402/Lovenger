@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context="com.tanpn.messenger.event.EventView">
+
+    <android.support.v4.view.ViewPager
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/photoView"
+        android:background="#000">
+
+    </android.support.v4.view.ViewPager>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:background="#00ffffff">
+
+        <ImageView
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:id="@+id/ibtEventDetail"
+            android:src="@android:drawable/ic_menu_info_details"
+            android:scaleType="center"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true" />
+
+        <ImageView
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:id="@+id/imageView6"
+            android:src="@drawable/abc_ic_ab_back_material"
+            android:scaleType="center"
+            android:layout_centerVertical="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_marginLeft="10dp" />
+
+        <ImageView
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:id="@+id/ibtEventShare"
+            android:src="@drawable/ic_send_gray"
+            android:scaleType="center"
+            android:layout_alignParentTop="true"
+            android:layout_toLeftOf="@+id/ibtEventDetail"
+            android:layout_toStartOf="@+id/ibtEventDetail" />
+
+        <ImageView
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:id="@+id/ibtEventDelete"
+            android:src="@android:drawable/ic_menu_delete"
+            android:scaleType="center"
+            android:layout_alignParentTop="true"
+            android:layout_toLeftOf="@+id/ibtEventShare"
+            android:layout_toStartOf="@+id/ibtEventShare" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:background="#00ffffff">
+
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:id="@+id/relativeLayout7">
+
+            <ImageView
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:id="@+id/imEventCategory"
+                android:layout_centerVertical="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_marginLeft="30dp"
+                android:src="@drawable/ic_heart_pink" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="142"
+                android:id="@+id/tvEventDays"
+                android:layout_toRightOf="@+id/imEventCategory"
+                android:layout_toEndOf="@+id/imEventCategory"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="10dp"
+                android:textSize="50dp"
+                android:textColor="#FFF" />
+
+            <ImageView
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:id="@+id/imEventDayStatus"
+                android:layout_toRightOf="@+id/tvEventDays"
+                android:layout_toEndOf="@+id/tvEventDays"
+                android:layout_centerVertical="true"
+                android:src="@drawable/ic_day_coming" />
+        </RelativeLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="Untitled Event"
+            android:id="@+id/tvEventTitle"
+            android:layout_below="@+id/relativeLayout7"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_marginLeft="30dp"
+            android:layout_marginStart="30dp"
+            android:layout_marginBottom="5dp"
+            android:textColor="#FFF" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="Date"
+            android:id="@+id/tvEventDate"
+            android:layout_below="@+id/tvEventTitle"
+            android:layout_alignLeft="@+id/tvEventTitle"
+            android:layout_alignStart="@+id/tvEventTitle"
+            android:layout_marginBottom="5dp"
+            android:textSize="18dp"
+            android:textColor="#FFF" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="Time"
+            android:id="@+id/tvEventTime"
+            android:layout_below="@+id/tvEventDate"
+            android:layout_alignLeft="@+id/tvEventDate"
+            android:layout_alignStart="@+id/tvEventDate"
+            android:layout_marginBottom="5dp"
+            android:textSize="18dp"
+            android:textColor="#FFF" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="Create by"
+            android:id="@+id/tvEventCreated"
+            android:layout_below="@+id/tvEventTime"
+            android:layout_alignLeft="@+id/tvEventTime"
+            android:layout_alignStart="@+id/tvEventTime"
+            android:layout_marginBottom="5dp"
+            android:textSize="18dp"
+            android:textColor="#FFF" />
+    </RelativeLayout>
+
+</RelativeLayout>

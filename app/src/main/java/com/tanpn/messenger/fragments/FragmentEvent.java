@@ -18,7 +18,6 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.firebase.client.core.view.Event;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -27,19 +26,15 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.tanpn.messenger.R;
 import com.tanpn.messenger.event.EventListAdapter;
 import com.tanpn.messenger.event.EventListElement;
-import com.tanpn.messenger.ui.ActivityAddEvent;
+import com.tanpn.messenger.event.EventView;
+import com.tanpn.messenger.event.EventDetail;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-import com.tanpn.messenger.event.Event.EventStatus;
-import com.tanpn.messenger.event.Event.EventType;
-import com.tanpn.messenger.event.Event.Reminder;
 import com.tanpn.messenger.utils.utils;
 
-import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 /**
@@ -67,9 +62,6 @@ public class FragmentEvent extends Fragment implements EventListAdapter.OnEventL
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 List<String> im = new ArrayList<>();
                 im.add("d");
-                //eventListAdapter.add(new EventListElement("183123", "tan", EventType.BIRTHDAY, "Nov 02, 2015", "16:03", "tan", true, true, im));
-                //eventListAdapter.add(new EventListElement("183128", "tan", EventType.BIRTHDAY, "Nov 02, 2015", "16:03", "tan", true, true, im));
-
 
                 Log.i("TAG", dataSnapshot.getValue().toString());
                 EventListElement event = utils.readJSONString(dataSnapshot.getValue().toString());
@@ -86,14 +78,17 @@ public class FragmentEvent extends Fragment implements EventListAdapter.OnEventL
                 Log.i("TAG", "child changed");
 
                 EventListElement event = utils.readJSONString(dataSnapshot.getValue().toString());
-                if(event != null)
+                if(event != null){
                     eventListAdapter.edit(event);
+                    eventListAdapter.notifyDataSetChanged();
+                }
             }
 
             @Override
             public void onChildRemoved(DataSnapshot dataSnapshot) {
                 // dataSnapshot.getKey() = event ID
                 eventListAdapter.delete(dataSnapshot.getKey());
+                eventListAdapter.notifyDataSetChanged();
             }
 
             @Override
@@ -119,7 +114,7 @@ public class FragmentEvent extends Fragment implements EventListAdapter.OnEventL
         fabAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent createNewEvent = new Intent(getContext(), ActivityAddEvent.class);
+                Intent createNewEvent = new Intent(getContext(), EventDetail.class);
                 startActivity(createNewEvent);
             }
         });
@@ -186,6 +181,8 @@ public class FragmentEvent extends Fragment implements EventListAdapter.OnEventL
             }
         });
 
+        lvEventList.setOnItemClickListener(this);
+
         // set background
         setBackGround(v);
 
@@ -199,13 +196,22 @@ public class FragmentEvent extends Fragment implements EventListAdapter.OnEventL
     }
 
     @Override
-    public void onLoadComplete() {}
-
-    @Override
     public void onDirtyStateChanged(boolean dirty) {}
 
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+        EventListElement element = (EventListElement) adapterView.getItemAtPosition(i);
+
+        Intent in = new Intent(getContext(), EventView.class);
+        JSONObject object = utils.eventToJSONObject(element);
+        if(object != null){
+            in.putExtra("data", object.toString());
+        }
+        else
+            in.putExtra("data", "null");
+
+
+        startActivity(in);
 
     }
 }

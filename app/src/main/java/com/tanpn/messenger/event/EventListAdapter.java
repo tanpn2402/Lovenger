@@ -53,8 +53,6 @@ public class EventListAdapter extends BaseAdapter {
     }
 
     public interface OnEventListener {
-        public void onLoadComplete();
-
         public void onDirtyStateChanged(boolean dirty);
     }
 
@@ -120,61 +118,7 @@ public class EventListAdapter extends BaseAdapter {
         eDate.setText(utils.calendarToDateString(eventList.get(i).datetime));
         eCreatedBy.setText(eventList.get(i).creater);
 
-
-        // tinh ngay
-
-
-        /*Calendar today = Calendar.getInstance();
-        Calendar c = eventList.get(i).datetime;
-        SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
-        Log.i("HANG", "day = " + "dd");
-        try {
-            Date dt1 = sdf.parse(String.valueOf((today.get(Calendar.MONTH) + 1)) + "/" + today.get(Calendar.DAY_OF_MONTH) + "/" + today.get(Calendar.YEAR));
-            Date dt2 = sdf.parse(String.valueOf((c.get(Calendar.MONTH) + 1)) + "/" + c.get(Calendar.DAY_OF_MONTH) + "/" + c.get(Calendar.YEAR));
-            long diff = dt1.getTime() - dt2.getTime();
-            int days =  (int) (diff / (24 * 60 * 60 * 1000));
-            Log.i("HANG", "day = " + days);
-            if(days >= 0){
-                // su kien da tao trong qua khu va dang tiep dien ra
-                eStatus.setImageResource(utils.getEventStatusResourceID(Event.EventStatus.PASS));
-                eDays.setText("1");
-                eDays.setTextColor(Color.argb(1,23,235,56));
-            }
-            else{
-                // su kien da tao trong tuong lai
-                eStatus.setImageResource(utils.getEventStatusResourceID(Event.EventStatus.FURTURE));
-                eDays.setText("1");
-                eDays.setTextColor(Color.argb(1,23,0,56));
-            }
-
-        } catch (ParseException e) {
-            Log.i("HANG", "exception");
-            eDays.setText("error");
-            eDays.setTextColor(Color.argb(1,23,0,56));
-            e.printStackTrace();
-        }*/
-
-
         return v;
-    }
-
-    private int caculateDays(Calendar c){
-        Calendar today = Calendar.getInstance();
-        String dateformat = "MM/dd/yyy";
-        SimpleDateFormat sdf = new SimpleDateFormat(dateformat);
-
-        try {
-            Date dt1 = sdf.parse(String.valueOf((today.get(Calendar.MONTH) + 1)) + "/" + today.get(Calendar.DAY_OF_MONTH) + "/" + today.get(Calendar.YEAR));
-            Date dt2 = sdf.parse(String.valueOf((c.get(Calendar.MONTH) + 1)) + "/" + c.get(Calendar.DAY_OF_MONTH) + "/" + c.get(Calendar.YEAR));
-            long diff = dt1.getTime() - dt2.getTime();
-            return (int) (diff / (24 * 60 * 60 * 1000));
-
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-
-
-        return 0;
     }
 
     public void add(EventListElement event){

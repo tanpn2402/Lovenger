@@ -1,0 +1,58 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.tanpn.messenger.message.VoicePlayer">
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true">
+
+        <ImageButton
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:id="@+id/ibtPlay"
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true"
+            android:src="@drawable/ic_play_pink"
+            android:scaleType="fitCenter" />
+
+        <ImageButton
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:id="@+id/ibtStop"
+            android:src="@drawable/ic_stop_pink"
+            android:layout_alignBottom="@+id/ibtPlay"
+            android:layout_toLeftOf="@+id/ibtPlay"
+            android:layout_toStartOf="@+id/ibtPlay"
+            android:layout_marginRight="20dp"
+            android:scaleType="fitCenter" />
+
+        <SeekBar
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/progressBar"
+            android:layout_above="@+id/ibtPlay"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="15dp"
+            android:indeterminate="false" />
+
+        <ImageButton
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:id="@+id/ibtDownload"
+            android:src="@drawable/ic_stop_pink"
+            android:scaleType="fitCenter"
+            android:layout_alignBottom="@+id/ibtPlay"
+            android:layout_toRightOf="@+id/ibtPlay"
+            android:layout_toEndOf="@+id/ibtPlay"
+            android:layout_marginLeft="20dp"
+            android:layout_marginStart="20dp" />
+
+    </RelativeLayout>
+</RelativeLayout>

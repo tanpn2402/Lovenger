@@ -3,7 +3,9 @@
     package="com.tanpn.messenger">
 
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
         android:allowBackup="true"
@@ -19,10 +21,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.ActivityAddEvent" />
+        <activity android:name=".event.EventDetail" />
         <activity android:name=".photo.ActivityViewPhoto" />
         <activity android:name=".paint.ActivityPaint" />
-        <activity android:name=".photo.GalleryPicker"></activity>
+        <activity android:name=".photo.GalleryPicker" />
+        <activity android:name=".event.EventView"></activity>
     </application>
 
 </manifest>

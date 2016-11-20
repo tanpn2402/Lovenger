@@ -1,8 +1,12 @@
 package com.tanpn.messenger.fragments;
 
 
+import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -18,17 +22,38 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 import com.tanpn.messenger.R;
 import com.tanpn.messenger.message.*;
 import com.tanpn.messenger.paint.ActivityPaint;
+import com.tanpn.messenger.photo.GalleryPicker;
+import com.tanpn.messenger.photo.PreviewPhoto;
+import com.tanpn.messenger.utils.utils;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class FragmentMessage extends Fragment implements MessageListAdapter.OnEventListener, AdapterView.OnItemClickListener, View.OnTouchListener {
+public class FragmentMessage extends Fragment implements MessageListAdapter.OnEventListener, AdapterView.OnItemClickListener, View.OnTouchListener, View.OnClickListener {
     public FragmentMessage() {
         // Required empty public constructor
     }
@@ -42,7 +67,13 @@ public class FragmentMessage extends Fragment implements MessageListAdapter.OnEv
 
     private MessageListAdapter messageListAdapter;
 
+    // dialog fragment
+    private VoiceRecorder voiceRecorder;    // dialog voice recorder
+
     private void init(View view){
+
+        voiceRecorder = new VoiceRecorder();
+
         ibtCamera = (ImageView) view.findViewById(R.id.ibtCamera);
         ibtSend = (ImageView) view.findViewById(R.id.ibtSend);
         ibtVoice = (ImageView) view.findViewById(R.id.ibtVoice);
@@ -56,6 +87,13 @@ public class FragmentMessage extends Fragment implements MessageListAdapter.OnEv
         ibtPicture.setOnTouchListener(this);
         ibtDraw.setOnTouchListener(this);
         ibtSetting.setOnTouchListener(this);
+
+        ibtCamera.setOnClickListener(this);
+        ibtSend.setOnClickListener(this);
+        ibtVoice.setOnClickListener(this);
+        ibtPicture.setOnClickListener(this);
+        ibtDraw.setOnClickListener(this);
+        ibtSetting.setOnClickListener(this);
 
         ibtSend.setEnabled(false);
 
@@ -95,6 +133,63 @@ public class FragmentMessage extends Fragment implements MessageListAdapter.OnEv
         });
     }
 
+    private StorageReference photoRef;  // reference to storage
+    private DatabaseReference messageRef; // reference to database
+    private StorageReference voiceRef;
+
+    private void initFirebase(){
+        FirebaseStorage storage = FirebaseStorage.getInstance();
+        photoRef = storage.getReferenceFromUrl("gs://messenger-d08e4.appspot.com/message/");    // photo trong message khac voi photo trong PHOTO
+        voiceRef = storage.getReferenceFromUrl("gs://messenger-d08e4.appspot.com/voice/");
+
+
+        FirebaseDatabase root = FirebaseDatabase.getInstance();
+        messageRef = root.getReference("message");
+        messageRef.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                try {
+                    JSONObject obj = new JSONObject(dataSnapshot.getValue().toString());
+
+                    JSONObject o = (JSONObject) obj.get("message");
+                    Map<String, String> m = new HashMap<>();
+                    m.put(o.getString("id"), o.getString("path"));
+
+                    MessageListElement msg = new MessageListElement(
+                            obj.getString("id"),
+                            true,
+                            obj.getString("name"),
+                            MessageListElement.MESSAGE_TYPE.values()[obj.getInt("type")],
+                            m,
+                            null,
+                            MessageListElement.MESSAGE_STATUS.values()[obj.getInt("status")],
+                            obj.getString("sentDate"),
+                            obj.getString("receiveDate")
+                    );
+
+                    messageListAdapter.add(msg);
+
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {}
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {}
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {}
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {}
+        });
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -104,41 +199,45 @@ public class FragmentMessage extends Fragment implements MessageListAdapter.OnEv
         init(layout_typing);
 
         messageList = (ListView) v.findViewById(R.id.messageList);
+        messageListAdapter = new MessageListAdapter(getContext());
 
-        List<MessageListElement> list = new ArrayList<>();
-        list.add(new MessageListElement(true, "tan", "chap em yeu 1", null, getString(R.string.message_status_sending), "12:00 20/10/2016", null));
-        list.add(new MessageListElement(false, "hang", "chao anh yeu 1", null, getString(R.string.message_status_delivered), "12:00 20/10/2016", null));
-        list.add(new MessageListElement(false, "hang", "chao anh yeu 2", null, getString(R.string.message_status_delivered), "12:00 20/10/2016", null));
-        list.add(new MessageListElement(false, "hang", "chao anh yeu 3", null, getString(R.string.message_status_delivered), "12:00 20/10/2016", null));
-        list.add(new MessageListElement(false, "hang", "chao anh yeu 4", null, getString(R.string.message_status_delivered), "12:00 20/10/2016", null));
-        list.add(new MessageListElement(false, "hang", "chao anh yeu 5", null, getString(R.string.message_status_sending), "12:00 20/10/2016", null));
-        list.add(new MessageListElement(true, "tan", "chap em yeu 2", null, getString(R.string.message_status_delivered), "12:00 20/10/2016", null));
-        list.add(new MessageListElement(true, "tan", "chap em yeu 3", null, getString(R.string.message_status_delivered), "12:00 20/10/2016", null));
-        list.add(new MessageListElement(true, "tan", "chap em yeu 4", null, getString(R.string.message_status_delivered), "12:00 20/10/2016", null));
-        list.add(new MessageListElement(true, "tan", "chap em yeu 5", null, getString(R.string.message_status_sending), "12:00 20/10/2016", null));
+        //messageListAdapter.add(new MessageListElement("id",true, "tan", MessageListElement.MESSAGE_TYPE.TEXT ,"chap em yeu 1", null, MessageListElement.MESSAGE_STATUS.RECEIVE, "12:00 20/10/2016", null));
+        //.add(new MessageListElement("id",false, "hang",MessageListElement.MESSAGE_TYPE.TEXT, "chao anh yeu 1", null, MessageListElement.MESSAGE_STATUS.RECEIVE, "12:00 20/10/2016", null));
+        //messageListAdapter.add(new MessageListElement("id",false, "hang",MessageListElement.MESSAGE_TYPE.TEXT, "chao anh yeu 2", null,MessageListElement.MESSAGE_STATUS.RECEIVE, "12:00 20/10/2016", null));
+        //messageListAdapter.add(new MessageListElement("id",true, "tan",MessageListElement.MESSAGE_TYPE.TEXT, "chap em yeu 5", null, MessageListElement.MESSAGE_STATUS.RECEIVE, "12:00 20/10/2016", null));
 
-        messageListAdapter = new MessageListAdapter(getContext(), list);
+
 
         messageList.setAdapter(messageListAdapter);
 
+        // firebase
+        initFirebase();
+
         messageList.setOnItemClickListener(this);
-
-        ibtSend.setOnClickListener(new View.OnClickListener() {
+        messageList.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
-            public void onClick(View view) {
-                String me = edtTyping.getText().toString();
-                messageListAdapter.add(new MessageListElement(true, "",me, null, getString(R.string.message_status_sending),"",""));
+            public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
 
+                MessageListElement item = (MessageListElement) adapterView.getItemAtPosition(i);
+                if(item.messageType == MessageListElement.MESSAGE_TYPE.PHOTO){
+                    PreviewPhoto preview = new PreviewPhoto();
 
-            }
-        });
+                    /**
+                     * Vì message này chỉ chứa 1 element duy nhất nên dùng cái này được, k ảnh hưởng nhiều đến thời gian
+                     * do có thể download hình này về device nên truyền tham số Map
+                     * */
 
-        ibtVoice.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                messageListAdapter.modifyStatus(messageListAdapter.getCount()-1, getString(R.string.message_status_seen));
+                    preview.setPhotoDetail(item.message);
+                    preview.show(getActivity().getFragmentManager(),  "dialog");
+                }
 
-                onDirtyStateChanged(true);
+                else if(item.messageType == MessageListElement.MESSAGE_TYPE.VOICE){
+                    VoicePlayer preview = new VoicePlayer();
+                    preview.setVoiceDetail(item.message);
+                    preview.show(getActivity().getFragmentManager(),  "dialog");
+                }
+
+                return true;
             }
         });
 
@@ -149,10 +248,6 @@ public class FragmentMessage extends Fragment implements MessageListAdapter.OnEv
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
         MessageListElement item = (MessageListElement) adapterView.getItemAtPosition(i);
-
-
-
-        Log.i("TAN", item.message);
     }
 
     @Override
@@ -181,6 +276,7 @@ public class FragmentMessage extends Fragment implements MessageListAdapter.OnEv
         return false;
     }
 
+
     private void changeStatus(View view, boolean isPress){
         switch (view.getId()){
             case R.id.ibtCamera:
@@ -208,5 +304,265 @@ public class FragmentMessage extends Fragment implements MessageListAdapter.OnEv
 
                 break;
         }
+    }
+
+    private final int PAINT_CODE = 1;
+    private final int GALLERY_CODE = 2;
+    private final int CAMERA_CODE = 3;
+    private final int VOICE_CODE = 4;
+    private final int VIDEO_CODE = 4;
+
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()){
+            case R.id.ibtCamera:
+                Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+                startActivityForResult(cameraIntent, CAMERA_CODE);
+                break;
+            case R.id.ibtVideo:
+
+                break;
+            case R.id.ibtDraw:
+                // open paint
+                Intent paint = new Intent(getContext(), ActivityPaint.class);
+                startActivityForResult(paint, 1);
+                break;
+            case R.id.ibtEmoji:
+
+                break;
+            case R.id.ibtPicture:
+                // photo
+                Intent photo = new Intent(getContext(), GalleryPicker.class);
+                startActivityForResult(photo, GALLERY_CODE);
+                break;
+            case R.id.ibtSend:
+                String me = edtTyping.getText().toString();
+                sendTextMessage(me);
+                break;
+            case R.id.ibtSetting:
+
+                break;
+            case R.id.ibtVoice:
+                voiceRecorder.show(getActivity().getSupportFragmentManager(), "dialog");
+                voiceRecorder.setTargetFragment(this, VOICE_CODE);
+                /*
+                * see at: http://stackoverflow.com/questions/10905312/receive-result-from-dialogfragment
+                * */
+                break;
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if(resultCode != Activity.RESULT_OK)
+            return;
+
+        if(requestCode == GALLERY_CODE){
+            sendPhotoMessage(data);
+        }
+        else if(requestCode == PAINT_CODE){
+            sendPaintMessage(data);
+        }
+
+        else if(requestCode == CAMERA_CODE){
+            sendCameraMessage(data);
+        }
+        else if(requestCode == VOICE_CODE){
+            Log.i("REQ", "voice");
+            sendVoiceMessage(data);
+        }
+        else if(requestCode == VIDEO_CODE){
+            sendVideoMessage(data);
+        }
+
+    }
+
+    private void sendTextMessage(String me){
+        Map<String, String> m = new HashMap<>();
+        m.put("null", me);
+        String mID = generateMessageID();
+        messageListAdapter.add(
+                new MessageListElement(
+                        mID,
+                        true,
+                        "",                                         // avatar
+                        MessageListElement.MESSAGE_TYPE.TEXT,
+                        m,
+                        null,
+                        MessageListElement.MESSAGE_STATUS.SENDING,
+                        "",                                         // sentDate
+                        ""));                                       // receiveDate
+
+
+        // upload lên database
+
+    }
+
+    private void sendPaintMessage(Intent data){
+
+    }
+
+    private void sendPhotoMessage(Intent data){
+        String[] imagesPath = data.getStringExtra("data").split("\\|");
+        for(int i = 0; i < imagesPath.length; i++){
+
+            // upload to storage
+            Uri uri = Uri.fromFile(new File(imagesPath[i]));
+            final String photoID = utils.generatePhotoId();
+            UploadTask uploadTask = photoRef.child(photoID).putFile(uri);
+            uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                    // upload to storage success
+                    // now, next to  upload message to message in database
+                    Map<String, String> ms = new HashMap<String, String>();
+                    ms.put(photoID, taskSnapshot.getDownloadUrl().toString());
+
+                    JSONObject msg = makeMessage(ms, MessageListElement.MESSAGE_TYPE.PHOTO);
+                    if(msg != null){
+                        try {
+                            messageRef.child(msg.getString("id").toString()).setValue(msg.toString()); // upload leen database
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+                        // add to adapter
+                        messageListAdapter.add(new MessageListElement(msg.toString()));
+
+                        Log.i("loi", "ok");
+                    }
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Log.i("loi", "loi");
+                }
+            });
+
+        }
+    }
+
+    private void sendVoiceMessage(Intent data){
+        String voicePath =  data.getStringExtra("data");
+        Uri uri = Uri.fromFile(new File(voicePath));
+        final String voiceID = utils.generatePhotoId();
+
+        UploadTask uploadTask = voiceRef.child(voiceID).putFile(uri);
+        uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                // upload to storage success
+                // now, next to  upload message to message in database
+                Map<String, String> ms = new HashMap<String, String>();
+                ms.put(voiceID, taskSnapshot.getDownloadUrl().toString());
+
+                JSONObject msg = makeMessage(ms, MessageListElement.MESSAGE_TYPE.VOICE);
+                if(msg != null){
+                    try {
+                        messageRef.child(msg.getString("id").toString()).setValue(msg.toString()); // upload leen database
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                    // add to adapter
+                    messageListAdapter.add(new MessageListElement(msg.toString()));
+
+                    Log.i("loi", "ok");
+                }
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.i("loi", "loi");
+            }
+        });
+    }
+
+    private void sendCameraMessage(Intent data){
+        Bitmap photo = (Bitmap) data.getExtras().get("data");
+
+        if(photo == null)
+            return;
+
+        // hien thi len man hinh
+
+
+        // convert to upload to storage
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        photo.compress(Bitmap.CompressFormat.PNG, 100, baos);   // full quality 100
+        byte[] bytes = baos.toByteArray();
+
+        final String photoName = utils.generatePhotoId();
+        UploadTask uploadTask = photoRef.child(photoName).putBytes(bytes);  // upload len storage
+
+        uploadTask.addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception exception) {}
+        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                // taskSnapshot.getMetadata() contains file metadata such as size, content-type, and download URL.
+                Map<String, String> ms = new HashMap<String, String>();
+                ms.put(photoName, taskSnapshot.getDownloadUrl().toString());
+                JSONObject msg = makeMessage(ms, MessageListElement.MESSAGE_TYPE.PHOTO);
+                if(msg != null)
+                    try {
+                        messageRef.child(msg.getString("id").toString()).setValue(msg.toString()); // upload leen database
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+            }
+        });
+    }
+
+    private void sendVideoMessage(Intent data){
+
+    }
+
+    private String generateMessageID(){
+        Calendar calendar = Calendar.getInstance();
+
+        return "m-" + calendar.get(Calendar.DATE) + "" + calendar.get(Calendar.MONTH) + calendar.get(Calendar.YEAR) + "-" + calendar.get(Calendar.HOUR_OF_DAY) + "" + calendar.get(Calendar.MINUTE) + "" + calendar.get(Calendar.SECOND) + "" + calendar.get(Calendar.MILLISECOND);
+
+    }
+
+    private String getTimeSent(){
+        Calendar calendar = Calendar.getInstance();
+        return "" + calendar.get(Calendar.DATE) + "/" + calendar.get(Calendar.MONTH) +"/"+ calendar.get(Calendar.YEAR) + " " + calendar.get(Calendar.HOUR_OF_DAY) + ":" + calendar.get(Calendar.MINUTE);
+
+    }
+
+    private JSONObject makeMessage(Map<String, String> msg, MessageListElement.MESSAGE_TYPE type){
+        JSONObject obj = new JSONObject();
+
+
+        try {
+            obj.put("id", generateMessageID());
+            obj.put("name", "tan");
+            obj.put("type", type.ordinal());
+
+            JSONObject o = new JSONObject();
+            for( Map.Entry<String, String> m : msg.entrySet() ){
+                o.put("id", m.getKey());
+                o.put("path", m.getValue());
+            }
+
+
+            obj.put("message", msg);
+            obj.put("avatar", null);
+            obj.put("sentDate", getTimeSent());
+            obj.put("receiveDate", "14/11/2016 9:31");
+            obj.put("status", MessageListElement.MESSAGE_STATUS.RECEIVE.ordinal());
+
+            return obj;
+
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        return null;
     }
 }

@@ -12,15 +12,22 @@ import android.widget.ImageView.ScaleType;
 
 import com.squareup.picasso.Picasso;
 
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by phamt_000 on 11/4/16.
+ * Adapter nay được dùng để hiện thị ảnh lên View Pager
+ *
+ * vi chỉ dùng để hiện thị ảnh nên chỉ cần truyền arraylist photo path, không phải map<String, String>
  */
 public class PhotoViewAdapter extends PagerAdapter {
 
     private Context context;
     private Integer[] resID;
 
-    private String[] photoPaths;
+    private List<String> photoPaths;
 
     public PhotoViewAdapter(Context _context){
         context = _context;
@@ -32,14 +39,14 @@ public class PhotoViewAdapter extends PagerAdapter {
         resID = i;
     }
 
-    public PhotoViewAdapter(Context _context, String[] i){
+    public PhotoViewAdapter(Context _context, List<String> i){
         context = _context;
-        photoPaths = i;
+        photoPaths = new ArrayList<>(i);
     }
 
     @Override
     public int getCount() {
-        return photoPaths.length;
+        return photoPaths.size();
     }
 
     @Override
@@ -47,12 +54,22 @@ public class PhotoViewAdapter extends PagerAdapter {
         ImageView photo = new ImageView(context);
         // chinh sua image
         photo.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
-        photo.setScaleType(ScaleType.CENTER);
+        photo.setScaleType(ScaleType.CENTER_INSIDE);
 
         // set resource
         //photo.setBackgroundResource(resID[position]);
 
-        Picasso.with(context).load(photoPaths[position]).into(photo);
+        File file = new File(photoPaths.get(position));
+        if(file.exists()){
+            Picasso.with(context)
+                    .load(file)
+                    .into(photo);
+        }
+        else{
+            Picasso.with(context)
+                    .load(photoPaths.get(position))
+                    .into(photo);
+        }
 
 
         // add into view pager

@@ -7,15 +7,13 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
 import com.tanpn.messenger.R;
 import com.tanpn.messenger.event.Event;
-import com.tanpn.messenger.ui.ActivityAddEvent;
+import com.tanpn.messenger.event.EventDetail;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -107,27 +105,27 @@ public class EventRemindDialog extends DialogFragment implements View.OnClickLis
         switch (view.getId()){
             case R.id.select1:
                 reminder = Event.Reminder.NONE;
-                ActivityAddEvent.tvEventRemind.setText("Không");
+                EventDetail.tvEventRemind.setText("Không");
                 this.dismiss(); break;
             case R.id.select2:
                 reminder = Event.Reminder.FIFTEEN_MINUTE;
-                ActivityAddEvent.tvEventRemind.setText("Trước 15 phút");
+                EventDetail.tvEventRemind.setText("Trước 15 phút");
                 this.dismiss(); break;
             case R.id.select3:
                 reminder = Event.Reminder.THIRDTY_MINUTE;
-                ActivityAddEvent.tvEventRemind.setText("Trước 30 phút");
+                EventDetail.tvEventRemind.setText("Trước 30 phút");
                 this.dismiss(); break;
             case R.id.select4:
                 reminder = Event.Reminder.ONE_HOUR;
-                ActivityAddEvent.tvEventRemind.setText("Trước 1 giờ");
+                EventDetail.tvEventRemind.setText("Trước 1 giờ");
                 this.dismiss();break;
             case R.id.select5:
                 reminder = Event.Reminder.ONE_DAY;
-                ActivityAddEvent.tvEventRemind.setText("Trước 1 ngày");
+                EventDetail.tvEventRemind.setText("Trước 1 ngày");
                 this.dismiss(); break;
             case R.id.select6:
                 reminder = Event.Reminder.ONE_WEEK;
-                ActivityAddEvent.tvEventRemind.setText("Trước 1 tuần");
+                EventDetail.tvEventRemind.setText("Trước 1 tuần");
                 this.dismiss(); break;
         }
     }

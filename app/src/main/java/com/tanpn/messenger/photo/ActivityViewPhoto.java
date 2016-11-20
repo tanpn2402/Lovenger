@@ -38,9 +38,9 @@ public class ActivityViewPhoto extends AppCompatActivity implements View.OnClick
         ibtDraw.setOnClickListener(this);
 
 
-        PhotoViewAdapter adapter = new PhotoViewAdapter(this, photo);
-        photoView.setAdapter(adapter);
-        photoView.setCurrentItem(currentPhoto);
+        //PhotoViewAdapter adapter = new PhotoViewAdapter(this, photo);
+        //photoView.setAdapter(adapter);
+        //photoView.setCurrentItem(currentPhoto);
 
         photoView.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
