@@ -380,23 +380,35 @@ public class FragmentMessage extends Fragment implements MessageListAdapter.OnEv
     }
 
     private void sendTextMessage(String me){
+
+
         Map<String, String> m = new HashMap<>();
         m.put("null", me);
-        String mID = generateMessageID();
-        messageListAdapter.add(
-                new MessageListElement(
-                        mID,
-                        true,
-                        "",                                         // avatar
-                        MessageListElement.MESSAGE_TYPE.TEXT,
-                        m,
-                        null,
-                        MessageListElement.MESSAGE_STATUS.SENDING,
-                        "",                                         // sentDate
-                        ""));                                       // receiveDate
+
+        JSONObject obj = makeMessage(m, MessageListElement.MESSAGE_TYPE.TEXT);
+
+        try {
+            messageListAdapter.add(
+                    new MessageListElement(
+                            obj.getString("id"),
+                            true,
+                            "",                                         // avatar
+                            MessageListElement.MESSAGE_TYPE.TEXT,
+                            m,
+                            null,
+                            MessageListElement.MESSAGE_STATUS.SENDING,
+                            "",                                         // sentDate
+                            ""));                                       // receiveDate
 
 
-        // upload lên database
+            // upload lên database
+            messageRef.child(obj.getString("id")).setValue(obj.toString()); // upload leen database
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+
 
     }
 
@@ -423,7 +435,7 @@ public class FragmentMessage extends Fragment implements MessageListAdapter.OnEv
                     JSONObject msg = makeMessage(ms, MessageListElement.MESSAGE_TYPE.PHOTO);
                     if(msg != null){
                         try {
-                            messageRef.child(msg.getString("id").toString()).setValue(msg.toString()); // upload leen database
+                            messageRef.child(msg.getString("id")).setValue(msg.toString()); // upload leen database
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -486,9 +498,6 @@ public class FragmentMessage extends Fragment implements MessageListAdapter.OnEv
         if(photo == null)
             return;
 
-        // hien thi len man hinh
-
-
         // convert to upload to storage
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         photo.compress(Bitmap.CompressFormat.PNG, 100, baos);   // full quality 100
@@ -550,7 +559,7 @@ public class FragmentMessage extends Fragment implements MessageListAdapter.OnEv
             }
 
 
-            obj.put("message", msg);
+            obj.put("message", o);
             obj.put("avatar", null);
             obj.put("sentDate", getTimeSent());
             obj.put("receiveDate", "14/11/2016 9:31");
