@@ -1,0 +1,9 @@
+<resources>
+    <!-- Keys -->
+    <string translatable="false" name="pref_key_password">com.tanpn.messenger.pref.passwd</string>
+    <string translatable="false" name="pref_key_email">com.tanpn.messenger.pref.email</string>
+    <string translatable="false" name="pref_key_username">com.tanpn.messenger.pref.username</string>
+    <string translatable="false" name="pref_key_uid">com.tanpn.messenger.pref.uid</string>
+    <string translatable="false" name="pref_key_user_photo">com.tanpn.messenger.pref.user_photo</string>
+
+</resources>

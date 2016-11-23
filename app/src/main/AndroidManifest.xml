@@ -25,7 +25,8 @@
         <activity android:name=".photo.ActivityViewPhoto" />
         <activity android:name=".paint.ActivityPaint" />
         <activity android:name=".photo.GalleryPicker" />
-        <activity android:name=".event.EventView"></activity>
+        <activity android:name=".event.EventView" />
+        <activity android:name=".login.SignIn"></activity>
     </application>
 
 </manifest>
