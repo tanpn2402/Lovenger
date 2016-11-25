@@ -1,10 +1,14 @@
 package com.tanpn.messenger.utils;
 
+import android.app.Activity;
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Environment;
 import android.util.Log;
 
@@ -101,7 +105,7 @@ public class utils {
         return "v-" + getCurrentTimeStamp();
     }
 
-    public static String generaMessageId(){
+    public static String generateMessageId(){
         return "m-" + getCurrentTimeStamp();
 
     }
@@ -405,6 +409,22 @@ public class utils {
         }
         else
             return Environment.getExternalStorageDirectory().getAbsolutePath() + "/";
+
+    }
+
+    /**
+     * checking connected internet
+     * */
+
+    public static boolean connected(Activity act)
+    {
+        ConnectivityManager cm = (ConnectivityManager)act.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo netInfo = cm.getActiveNetworkInfo();
+        if (netInfo != null && netInfo.isConnectedOrConnecting())
+        {
+            return true;
+        }
+        return false;
 
     }
 }

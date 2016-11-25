@@ -14,7 +14,7 @@
         android:largeHeap="true"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity">
+        <activity android:name=".login.SignIn">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -26,7 +26,7 @@
         <activity android:name=".paint.ActivityPaint" />
         <activity android:name=".photo.GalleryPicker" />
         <activity android:name=".event.EventView" />
-        <activity android:name=".login.SignIn"></activity>
+        <activity android:name=".MainActivity"></activity>
     </application>
 
 </manifest>

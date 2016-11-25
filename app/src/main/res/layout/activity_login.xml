@@ -61,7 +61,7 @@
                     <EditText
                         android:layout_width="300dp"
                         android:layout_height="50dp"
-                        android:id="@+id/edtFullName"
+                        android:id="@+id/edtUsername"
                         android:layout_alignParentTop="false"
                         android:drawableLeft="@drawable/ic_username"
                         android:textColor="#FFF"
@@ -76,8 +76,8 @@
                     <EditText
                         android:layout_width="300dp"
                         android:layout_height="50dp"
-                        android:id="@+id/edtUsername"
-                        android:layout_below="@+id/edtFullName"
+                        android:id="@+id/edtPassword"
+                        android:layout_below="@+id/edtUsername"
                         android:textColor="#FFF"
                         android:textColorHint="#FFF"
                         android:hint="mật khẩu"
@@ -95,7 +95,7 @@
                         android:layout_height="wrap_content"
                         android:text="Đăng nhập"
                         android:id="@+id/btnSignIn"
-                        android:layout_below="@+id/edtUsername"
+                        android:layout_below="@+id/edtPassword"
                         android:layout_marginTop="30dp"
                         android:background="@drawable/button_login"
                         android:textColor="#FFF"

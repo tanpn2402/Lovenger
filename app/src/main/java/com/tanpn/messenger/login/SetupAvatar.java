@@ -32,6 +32,7 @@ public class SetupAvatar extends DialogFragment {
     interface OnSetupCompletion{
         void OnCompleteWithBitmap(Bitmap b);
         void OnCompleteWithUri(Uri u);
+        void OnSkip(boolean skip);
     }
 
     public SetupAvatar() {
@@ -53,6 +54,9 @@ public class SetupAvatar extends DialogFragment {
         tvSkip.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+                OnSetupCompletion complete = (OnSetupCompletion)getActivity();
+                complete.OnSkip(true);
                 cancel();
             }
 
@@ -94,7 +98,7 @@ public class SetupAvatar extends DialogFragment {
     }
 
     private final int CAMERA_CODE = 1;
-    private final int GALLERY_CODE = 1;
+    private final int GALLERY_CODE = 2;
 
 
     private void takeAPhoto(){

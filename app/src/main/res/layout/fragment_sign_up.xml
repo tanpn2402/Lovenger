@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -7,7 +8,8 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context=".login.SignIn">
+    tools:context="com.tanpn.messenger.login.SignUp"
+    android:background="#c0392b">
 
     <ImageView
         android:layout_width="match_parent"
@@ -15,9 +17,8 @@
         android:id="@+id/imageView4"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:src="@drawable/image_background_blur"
         android:scaleType="centerCrop"
-        android:background="#c0392b" />
+        android:background="#399a93" />
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -25,16 +26,16 @@
 
 
         <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:fitsSystemWindows="true">
 
             <LinearLayout
                 android:orientation="vertical"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingLeft="24dp"
-                android:paddingRight="24dp">
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp">
 
                 <RelativeLayout
                     android:layout_width="match_parent"
@@ -47,7 +48,7 @@
                     <EditText
                         android:layout_width="300dp"
                         android:layout_height="50dp"
-                        android:id="@+id/edtFullName"
+                        android:id="@+id/edtFullname"
                         android:layout_alignParentTop="false"
                         android:drawableLeft="@drawable/ic_username"
                         android:textColor="#FFF"
@@ -64,7 +65,7 @@
                         android:layout_width="300dp"
                         android:layout_height="50dp"
                         android:id="@+id/edtUsername"
-                        android:layout_below="@+id/edtFullName"
+                        android:layout_below="@+id/edtFullname"
                         android:textColor="#FFF"
                         android:textColorHint="#FFF"
                         android:hint="email"
@@ -81,7 +82,7 @@
                         android:layout_height="wrap_content"
                         android:text="đăng kí"
                         android:id="@+id/btnCreate"
-                        android:background="@drawable/button_login"
+                        android:background="#2980b9"
                         android:textColor="#FFF"
                         android:layout_below="@+id/edtRepeatPassword"
                         android:layout_marginTop="30dp"

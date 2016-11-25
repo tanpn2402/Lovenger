@@ -7,9 +7,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 
@@ -38,7 +36,7 @@ public class SignUp extends DialogFragment implements View.OnClickListener {
 
     private void init(View v){
         edtUsername = (EditText) v.findViewById(R.id.edtUsername);
-        edtFullname = (EditText) v.findViewById(R.id.edtFullName);
+        edtFullname = (EditText) v.findViewById(R.id.edtFullname);
         edtPassword = (EditText) v.findViewById(R.id.edtPassword);
         edtRepeat = (EditText) v.findViewById(R.id.edtRepeatPassword);
 
@@ -124,7 +122,7 @@ public class SignUp extends DialogFragment implements View.OnClickListener {
     }
 
     public boolean valaditeSamePassword(EditText e1, EditText e2){
-        if(e1.getText().equals(e2.getText()))
+        if(e1.getText().toString().equals(e2.getText().toString()))
             return true;
 
         return false;
