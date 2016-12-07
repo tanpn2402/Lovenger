@@ -530,12 +530,7 @@ public class FragmentMessage extends Fragment implements MessageListAdapter.OnEv
 
     }
 
-    private String generateMessageID(){
-        Calendar calendar = Calendar.getInstance();
 
-        return "m-" + calendar.get(Calendar.DATE) + "" + calendar.get(Calendar.MONTH) + calendar.get(Calendar.YEAR) + "-" + calendar.get(Calendar.HOUR_OF_DAY) + "" + calendar.get(Calendar.MINUTE) + "" + calendar.get(Calendar.SECOND) + "" + calendar.get(Calendar.MILLISECOND);
-
-    }
 
     private String getTimeSent(){
         Calendar calendar = Calendar.getInstance();
@@ -548,7 +543,7 @@ public class FragmentMessage extends Fragment implements MessageListAdapter.OnEv
 
 
         try {
-            obj.put("id", generateMessageID());
+            obj.put("id", utils.generateMessageId());
             obj.put("name", "tan");
             obj.put("type", type.ordinal());
 

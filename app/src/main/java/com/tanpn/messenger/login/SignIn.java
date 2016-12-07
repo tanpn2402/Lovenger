@@ -1,12 +1,12 @@
 package com.tanpn.messenger.login;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -23,17 +23,12 @@ import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.tanpn.messenger.MainActivity;
 import com.tanpn.messenger.R;
-import com.tanpn.messenger.message.MessageListElement;
 import com.tanpn.messenger.utils.PrefUtil;
 import com.tanpn.messenger.utils.utils;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.io.ByteArrayOutputStream;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -77,6 +72,15 @@ public class SignIn extends AppCompatActivity implements View.OnClickListener, S
                 signinStatus.dismiss();
             }
         });
+
+
+        /**
+         * checking internet connected
+         * */
+
+        if(!utils.connected(this)){
+            signinStatus.setText("không thể kết nối đến internet.").setDuration(Snackbar.LENGTH_INDEFINITE).show();
+        }
 
     }
     /**
@@ -181,12 +185,12 @@ public class SignIn extends AppCompatActivity implements View.OnClickListener, S
          * Tai sao k de firebase validate luon?
          * lam nhu the nay se tiet kiem 1 buoc neu user nhap email sai -> do ton dung luong
          * */
-        if(!validateEmail(edtUsername))
+        if(!validateEmail(edtUsername) || edtPassword.getText().toString().isEmpty())
             return;
 
         if(signinStatus.isShown())
             signinStatus.dismiss();
-        signinStatus.setText("đang đăng nhập...").show();
+        signinStatus.setText("đang đăng nhập...").setDuration(Snackbar.LENGTH_INDEFINITE).show();
 
         mAuth.signInWithEmailAndPassword(edtUsername.getText().toString(), edtPassword.getText().toString())
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
@@ -196,13 +200,13 @@ public class SignIn extends AppCompatActivity implements View.OnClickListener, S
                             // sign in fail
                             if(signinStatus.isShown())
                                 signinStatus.dismiss();
-                            signinStatus.setText("đăng nhập thất bại, vui lòng thử lại.").show();
+                            signinStatus.setText("đăng nhập thất bại, vui lòng thử lại.").setDuration(Snackbar.LENGTH_INDEFINITE).show();
                         }
                         else {
                             // User is signed in
                             if(signinStatus.isShown())
                                 signinStatus.dismiss();
-                            signinStatus.setText("đăng nhập thành công").show();
+                            signinStatus.setText("đăng nhập thành công").setDuration(Snackbar.LENGTH_LONG).show();
 
                             FirebaseUser user = task.getResult().getUser();
                             // lấy thông tin của user
@@ -215,8 +219,11 @@ public class SignIn extends AppCompatActivity implements View.OnClickListener, S
                             prefUtil.put(R.string.pref_key_email, email);
                             prefUtil.put(R.string.pref_key_password, edtPassword.getText().toString());
                             prefUtil.put(R.string.pref_key_uid, uid);
-                            prefUtil.put(R.string.pref_key_user_photo, photoUrl);
-                            prefUtil.put(R.string.pref_key_username, name);
+                            if(photoUrl != null)
+                                prefUtil.put(R.string.pref_key_user_photo, photoUrl.toString());
+
+                            if(name != null)
+                                prefUtil.put(R.string.pref_key_username, name);
 
                             prefUtil.apply();
 
@@ -235,9 +242,10 @@ public class SignIn extends AppCompatActivity implements View.OnClickListener, S
             // lan dau su dung thi huong dan chon avatar
             actionSetupAvatar();
         }
-
-        // chuyen den Main Activity
-
+        else{
+            // chuyen den Main Activity
+            gotoMainAvtivity();
+        }
     }
 
     private void signup(){
@@ -273,6 +281,12 @@ public class SignIn extends AppCompatActivity implements View.OnClickListener, S
     private String email;
     private String password;
 
+    private void setNotification(String text, int lenght){
+        if(signinStatus.isShown())
+            signinStatus.dismiss();
+        signinStatus.setText(text).setDuration(lenght).show();
+    }
+
 
     @Override
     public void onResult(String data) {
@@ -294,9 +308,7 @@ public class SignIn extends AppCompatActivity implements View.OnClickListener, S
                         // the auth state listener will be notified and logic to handle the
                         // signed in user can be handled in the listener.
                         if (!task.isSuccessful()) {
-                            if(signinStatus.isShown())
-                                signinStatus.dismiss();
-                            signinStatus.setText("tạo tài khoản mới thất bại.").show();
+                            setNotification("tạo tài khoản mới thất bại.", Snackbar.LENGTH_INDEFINITE);
 
                         }
                         else {
@@ -304,6 +316,8 @@ public class SignIn extends AppCompatActivity implements View.OnClickListener, S
 
                             // quay trở lại màn hình đăng nhập
                             // sẽ điền trước email, và user sẽ nhập mật khẩu và log in
+                            setNotification("tạo tài khoản mới thành công.", Snackbar.LENGTH_INDEFINITE);
+
                             edtUsername.setText(user.getEmail());
                             newbie = true;
                         }
@@ -373,6 +387,17 @@ public class SignIn extends AppCompatActivity implements View.OnClickListener, S
         });
     }
 
+    @Override
+    public void OnSkip(boolean skip) {
+        if(skip)
+            gotoMainAvtivity();
+    }
+
+    private void gotoMainAvtivity() {
+        Intent in = new Intent(this, MainActivity.class);
+        startActivity(in);
+    }
+
     private void setupFirebaseAuth(String photoPath){
         UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
                 .setDisplayName(fullname)
@@ -389,8 +414,8 @@ public class SignIn extends AppCompatActivity implements View.OnClickListener, S
                             if (task.isSuccessful()) {
 
                                 // hien thi thong bao snackbar
-                                if(signinStatus.isShown())
-                                    signinStatus.dismiss();
+                                //if(signinStatus.isShown())
+                                //    signinStatus.dismiss();
                                 signinStatus.setText("cập nhật thông tin thành công").show();
 
                                 // chuyen qua main screen
