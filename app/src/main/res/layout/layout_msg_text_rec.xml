@@ -35,7 +35,7 @@
                 android:layout_centerVertical="true"
                 android:layout_toRightOf="@+id/imAvatar"
                 android:layout_toEndOf="@+id/imAvatar"
-                android:layout_marginLeft="20dp" />
+                android:layout_marginLeft="10dp" />
 
             <ImageView
                 android:layout_width="40dp"

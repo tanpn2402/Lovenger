@@ -8,10 +8,6 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
-import com.firebase.ui.storage.images.FirebaseImageLoader;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
 import com.squareup.picasso.Picasso;
 import com.tanpn.messenger.R;
 
@@ -191,9 +187,9 @@ public class MessageListAdapter extends BaseAdapter {
     private View generateMsgText(boolean isSender, MessageListElement msg, LayoutInflater inflater, ViewGroup viewGroup){
         View v;
         if(isSender)
-            v = inflater.inflate(R.layout.layout_msg_sender, viewGroup, false);
+            v = inflater.inflate(R.layout.layout_msg_text_sender, viewGroup, false);
         else
-            v = inflater.inflate(R.layout.layout_msg_receiver, viewGroup, false);
+            v = inflater.inflate(R.layout.layout_msg_text_rec, viewGroup, false);
 
         // display message
         TextView tvMessage = (TextView) v.findViewById(R.id.tvMessage);
@@ -222,7 +218,7 @@ public class MessageListAdapter extends BaseAdapter {
         if(isSender)
             v = inflater.inflate(R.layout.layout_msg_photo_sender, viewGroup, false);
         else
-            v = inflater.inflate(R.layout.layout_msg_receiver, viewGroup, false);
+            v = inflater.inflate(R.layout.layout_msg_photo_rec, viewGroup, false);
 
         // display photo
         ImageView im = (ImageView) v.findViewById(R.id.imMsgPhoto);

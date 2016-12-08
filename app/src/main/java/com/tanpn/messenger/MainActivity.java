@@ -14,6 +14,7 @@ import com.tanpn.messenger.fragments.FragmentEvent;
 import com.tanpn.messenger.fragments.FragmentMessage;
 import com.tanpn.messenger.fragments.FragmentPicture;
 import com.tanpn.messenger.fragments.FragmentSetting;
+import com.tanpn.messenger.pagetransformer.*;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -77,6 +78,9 @@ public class MainActivity extends AppCompatActivity {
 
         //
         generateMessage();
+
+        viewPager.setPageTransformer(false, new ZoomOutPageTransformer());
+
 
 
     }

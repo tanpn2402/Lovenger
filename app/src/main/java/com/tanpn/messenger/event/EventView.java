@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.tanpn.messenger.R;
+import com.tanpn.messenger.pagetransformer.FlipHorizontalTransformer;
 import com.tanpn.messenger.photo.PhotoElement;
 import com.tanpn.messenger.photo.PhotoViewAdapter;
 import com.tanpn.messenger.utils.utils;
@@ -64,6 +65,8 @@ public class EventView extends AppCompatActivity implements View.OnClickListener
         PhotoViewAdapter adapter = new PhotoViewAdapter(this, new ArrayList<>(event.pictures.values()));
         viewPager.setAdapter(adapter);
         //viewPager.setCurrentItem(currentPhoto);
+
+        viewPager.setPageTransformer(false, new FlipHorizontalTransformer());
 
     }
     @Override

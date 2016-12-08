@@ -282,7 +282,7 @@ public class SignIn extends AppCompatActivity implements View.OnClickListener, S
                 prefUtil.put(R.string.pref_key_username, name);
 
             prefUtil.apply();
-            SystemClock.sleep(1200);
+            SystemClock.sleep(700);
             return null;
         }
 
