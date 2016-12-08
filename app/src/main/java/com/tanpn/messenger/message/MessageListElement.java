@@ -33,7 +33,7 @@ public class MessageListElement {
     public String id;
     public String name;
     public Map<String, String> message; // chỉ chứa duy nhất 1 element
-    public Bitmap avatar;
+    public String avatar;
     public boolean isSender;
     public MESSAGE_STATUS status;
     public String receivedDate;
@@ -43,7 +43,7 @@ public class MessageListElement {
 
     public View view;
 
-    public MessageListElement(String _id, boolean _isSender, String _name, MESSAGE_TYPE type, Map<String, String> _message, Bitmap _avatar, MESSAGE_STATUS _status, String _receivedDate, String _sendDate){
+    public MessageListElement(String _id, boolean _isSender, String _name, MESSAGE_TYPE type, Map<String, String> _message, String _avatar, MESSAGE_STATUS _status, String _receivedDate, String _sendDate){
         id = _id;
         isSender = _isSender;
         name = _name;

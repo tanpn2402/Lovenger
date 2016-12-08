@@ -3,6 +3,8 @@ package com.tanpn.messenger.login;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.AsyncTask;
+import android.os.SystemClock;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -208,33 +210,52 @@ public class SignIn extends AppCompatActivity implements View.OnClickListener, S
                                 signinStatus.dismiss();
                             signinStatus.setText("đăng nhập thành công").setDuration(Snackbar.LENGTH_LONG).show();
 
-                            FirebaseUser user = task.getResult().getUser();
-                            // lấy thông tin của user
-                            String name = user.getDisplayName();
-                            String email = user.getEmail();
-                            Uri photoUrl = user.getPhotoUrl();
-                            String uid = user.getUid();
-
-
-                            prefUtil.put(R.string.pref_key_email, email);
-                            prefUtil.put(R.string.pref_key_password, edtPassword.getText().toString());
-                            prefUtil.put(R.string.pref_key_uid, uid);
-                            if(photoUrl != null)
-                                prefUtil.put(R.string.pref_key_user_photo, photoUrl.toString());
-
-                            if(name != null)
-                                prefUtil.put(R.string.pref_key_username, name);
-
-                            prefUtil.apply();
-
-
-                            // chuyen screen
-
-                            signinSuccess();
+                            _password = edtPassword.getText().toString();
+                            new setupPreferences().execute(task);
                         }
 
                     }
                 });
+    }
+
+    private String _password;
+    private class setupPreferences extends AsyncTask<Task<AuthResult>, Void, Void>{
+
+
+        @Override
+        protected Void doInBackground(Task<AuthResult>... tasks) {
+            Task<AuthResult> task = tasks[0];
+
+            FirebaseUser user = task.getResult().getUser();
+            // lấy thông tin của user
+            String name = user.getDisplayName();
+            String email = user.getEmail();
+            Uri photoUrl = user.getPhotoUrl();
+            String uid = user.getUid();
+
+
+            prefUtil.put(R.string.pref_key_email, email);
+            prefUtil.put(R.string.pref_key_password, _password);
+            prefUtil.put(R.string.pref_key_uid, uid);
+            if(photoUrl != null)
+                prefUtil.put(R.string.pref_key_user_photo, photoUrl.getPath());
+
+            if(name != null)
+                prefUtil.put(R.string.pref_key_username, name);
+
+            prefUtil.apply();
+            SystemClock.sleep(1200);
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+
+            // chuyen screen
+
+            signinSuccess();
+        }
     }
 
     private void signinSuccess(){

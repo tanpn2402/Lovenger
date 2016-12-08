@@ -37,6 +37,7 @@ import com.tanpn.messenger.message.*;
 import com.tanpn.messenger.paint.ActivityPaint;
 import com.tanpn.messenger.photo.GalleryPicker;
 import com.tanpn.messenger.photo.PreviewPhoto;
+import com.tanpn.messenger.utils.PrefUtil;
 import com.tanpn.messenger.utils.utils;
 
 import org.json.JSONException;
@@ -67,12 +68,17 @@ public class FragmentMessage extends Fragment implements MessageListAdapter.OnEv
 
     private MessageListAdapter messageListAdapter;
 
+    private PrefUtil prefUser;
+
     // dialog fragment
     private VoiceRecorder voiceRecorder;    // dialog voice recorder
 
     private void init(View view){
 
+        prefUser = new PrefUtil(getContext());
+
         voiceRecorder = new VoiceRecorder();
+
 
         ibtCamera = (ImageView) view.findViewById(R.id.ibtCamera);
         ibtSend = (ImageView) view.findViewById(R.id.ibtSend);
@@ -157,11 +163,11 @@ public class FragmentMessage extends Fragment implements MessageListAdapter.OnEv
 
                     MessageListElement msg = new MessageListElement(
                             obj.getString("id"),
-                            true,
+                            obj.getString("name").equals(prefUser.getString(R.string.pref_key_username, "null")),       // isSender
                             obj.getString("name"),
                             MessageListElement.MESSAGE_TYPE.values()[obj.getInt("type")],
                             m,
-                            null,
+                            obj.getString("avatar"),
                             MessageListElement.MESSAGE_STATUS.values()[obj.getInt("status")],
                             obj.getString("sentDate"),
                             obj.getString("receiveDate")
@@ -200,12 +206,6 @@ public class FragmentMessage extends Fragment implements MessageListAdapter.OnEv
 
         messageList = (ListView) v.findViewById(R.id.messageList);
         messageListAdapter = new MessageListAdapter(getContext());
-
-        //messageListAdapter.add(new MessageListElement("id",true, "tan", MessageListElement.MESSAGE_TYPE.TEXT ,"chap em yeu 1", null, MessageListElement.MESSAGE_STATUS.RECEIVE, "12:00 20/10/2016", null));
-        //.add(new MessageListElement("id",false, "hang",MessageListElement.MESSAGE_TYPE.TEXT, "chao anh yeu 1", null, MessageListElement.MESSAGE_STATUS.RECEIVE, "12:00 20/10/2016", null));
-        //messageListAdapter.add(new MessageListElement("id",false, "hang",MessageListElement.MESSAGE_TYPE.TEXT, "chao anh yeu 2", null,MessageListElement.MESSAGE_STATUS.RECEIVE, "12:00 20/10/2016", null));
-        //messageListAdapter.add(new MessageListElement("id",true, "tan",MessageListElement.MESSAGE_TYPE.TEXT, "chap em yeu 5", null, MessageListElement.MESSAGE_STATUS.RECEIVE, "12:00 20/10/2016", null));
-
 
 
         messageList.setAdapter(messageListAdapter);
@@ -250,10 +250,6 @@ public class FragmentMessage extends Fragment implements MessageListAdapter.OnEv
         MessageListElement item = (MessageListElement) adapterView.getItemAtPosition(i);
     }
 
-    @Override
-    public void onLoadComplete() {
-
-    }
 
     @Override
     public void onDirtyStateChanged(boolean dirty) {
@@ -391,14 +387,14 @@ public class FragmentMessage extends Fragment implements MessageListAdapter.OnEv
             messageListAdapter.add(
                     new MessageListElement(
                             obj.getString("id"),
-                            true,
-                            "",                                         // avatar
+                            true,                                                   // isSender
+                            prefUser.getString(R.string.pref_key_username, "null"),                                         // name
                             MessageListElement.MESSAGE_TYPE.TEXT,
                             m,
-                            null,
+                            prefUser.getString(R.string.pref_key_user_photo, "null"),                                           //avatar
                             MessageListElement.MESSAGE_STATUS.SENDING,
-                            "",                                         // sentDate
-                            ""));                                       // receiveDate
+                            getTimeSent(),                                         // sentDate
+                            ""));                                                   // receiveDate
 
 
             // upload lên database
@@ -544,7 +540,7 @@ public class FragmentMessage extends Fragment implements MessageListAdapter.OnEv
 
         try {
             obj.put("id", utils.generateMessageId());
-            obj.put("name", "tan");
+            obj.put("name", prefUser.getString(R.string.pref_key_username, "null"));
             obj.put("type", type.ordinal());
 
             JSONObject o = new JSONObject();
@@ -555,7 +551,7 @@ public class FragmentMessage extends Fragment implements MessageListAdapter.OnEv
 
 
             obj.put("message", o);
-            obj.put("avatar", null);
+            obj.put("avatar", prefUser.getString(R.string.pref_key_user_photo, "null"));
             obj.put("sentDate", getTimeSent());
             obj.put("receiveDate", "14/11/2016 9:31");
             obj.put("status", MessageListElement.MESSAGE_STATUS.RECEIVE.ordinal());

@@ -8,6 +8,10 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.firebase.ui.storage.images.FirebaseImageLoader;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 import com.squareup.picasso.Picasso;
 import com.tanpn.messenger.R;
 
@@ -117,8 +121,22 @@ public class MessageListAdapter extends BaseAdapter {
     }
 
     private void generateAvatar(ImageView imAvatar, MessageListElement msg){
-        if(msg.avatar != null){
-            imAvatar.setImageBitmap(msg.avatar);
+        if(msg.avatar != null || !msg.avatar.equals("null")){
+
+            StorageReference photoRef = FirebaseStorage.getInstance().getReferenceFromUrl(msg.avatar);
+            Glide.with(context)
+                    .using(new FirebaseImageLoader())
+                    .load(photoRef)
+                    .centerCrop()
+                    .into(imAvatar);
+
+
+            /*Picasso.with(context)
+                    .load(msg.avatar)
+                    .resize(80, 80)
+                    .centerCrop()
+                    .into(imAvatar);*/
+
         }
         else{
             imAvatar.setVisibility(View.GONE);
@@ -288,8 +306,6 @@ public class MessageListAdapter extends BaseAdapter {
     }
 
     public interface OnEventListener {
-        public void onLoadComplete();
-
         public void onDirtyStateChanged(boolean dirty);
     }
 
