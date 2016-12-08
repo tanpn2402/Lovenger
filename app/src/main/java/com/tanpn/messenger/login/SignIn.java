@@ -1,7 +1,9 @@
 package com.tanpn.messenger.login;
 
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Bitmap;
+import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.SystemClock;
@@ -9,6 +11,7 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -27,6 +30,9 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.tanpn.messenger.MainActivity;
 import com.tanpn.messenger.R;
+import com.tanpn.messenger.receiver.MessageReceiver;
+import com.tanpn.messenger.receiver.NetworkReceiver;
+import com.tanpn.messenger.service.AppService;
 import com.tanpn.messenger.utils.PrefUtil;
 import com.tanpn.messenger.utils.utils;
 
@@ -34,7 +40,7 @@ import java.io.ByteArrayOutputStream;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class SignIn extends AppCompatActivity implements View.OnClickListener, SignUp.onSignUpResult, SetupAvatar.OnSetupCompletion {
+public class SignIn extends AppCompatActivity implements View.OnClickListener, SignUp.onSignUpResult, SetupAvatar.OnSetupCompletion, NetworkReceiver.OnNetworkReceiver {
 
     private EditText edtUsername, edtPassword;
     private Button btnLogin, btnSignUp, btnForgot;
@@ -80,9 +86,6 @@ public class SignIn extends AppCompatActivity implements View.OnClickListener, S
          * checking internet connected
          * */
 
-        if(!utils.connected(this)){
-            signinStatus.setText("không thể kết nối đến internet.").setDuration(Snackbar.LENGTH_INDEFINITE).show();
-        }
 
     }
     /**
@@ -138,6 +141,28 @@ public class SignIn extends AppCompatActivity implements View.OnClickListener, S
             }
         };*/
     }
+
+    private void initReceiver(){
+        NetworkReceiver networkReceiver = new NetworkReceiver();
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
+        registerReceiver(networkReceiver, filter);
+
+
+        /*MessageReceiver messageReceiver = new MessageReceiver();
+        IntentFilter f = new IntentFilter();
+        f.addAction(MessageReceiver.ACTION_RECEIVE_MESSAGE);
+        registerReceiver(messageReceiver, f);*/
+
+
+    }
+
+
+    private void startService(){
+        if(!AppService.isRunning(this)){
+            AppService.startAppService(this);
+        }
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -145,6 +170,10 @@ public class SignIn extends AppCompatActivity implements View.OnClickListener, S
 
         init();
         initFirebase();
+
+        startService();
+
+        initReceiver();
     }
 
     @Override
@@ -219,6 +248,15 @@ public class SignIn extends AppCompatActivity implements View.OnClickListener, S
     }
 
     private String _password;
+
+    @Override
+    public void onReceiver(boolean isConnected) {
+        if(isConnected)
+            Log.i("tag123", "connect");
+        else
+            signinStatus.setText("không thể kết nối đến internet.").setDuration(Snackbar.LENGTH_INDEFINITE).show();
+    }
+
     private class setupPreferences extends AsyncTask<Task<AuthResult>, Void, Void>{
 
 

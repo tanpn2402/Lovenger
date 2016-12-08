@@ -123,12 +123,12 @@ public class MessageListAdapter extends BaseAdapter {
     private void generateAvatar(ImageView imAvatar, MessageListElement msg){
         if(msg.avatar != null || !msg.avatar.equals("null")){
 
-            StorageReference photoRef = FirebaseStorage.getInstance().getReferenceFromUrl(msg.avatar);
+            /*StorageReference photoRef = FirebaseStorage.getInstance().getReferenceFromUrl(msg.avatar);
             Glide.with(context)
                     .using(new FirebaseImageLoader())
                     .load(photoRef)
                     .centerCrop()
-                    .into(imAvatar);
+                    .into(imAvatar);*/
 
 
             /*Picasso.with(context)

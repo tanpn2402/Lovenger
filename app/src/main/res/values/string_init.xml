@@ -6,4 +6,6 @@
     <string translatable="false" name="pref_key_uid">com.tanpn.messenger.pref.uid</string>
     <string translatable="false" name="pref_key_user_photo">com.tanpn.messenger.pref.user_photo</string>
 
+    <string translatable="false" name="pref_key_last_message">com.tanpn.messenger.last_message</string>
+
 </resources>
