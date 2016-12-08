@@ -13,9 +13,14 @@ import android.os.Build;
 public class PrefUtil {
 
     public static final String PREF_FILE_DEFAULT = "com.tanpn.messenger.prefs.default";
+    public static final String PREF_USER_ACCOUNT = "com.tanpn.messenger.pref.user_account";
 
     private final Context context;
     private final SharedPreferences prefs;
+
+    //public static SharedPreferences getPrefUserAccount(){
+    //    return getSharedPreferences
+    //}
 
     SharedPreferences.Editor editor;    // được dùng để lưu giá trị
 
