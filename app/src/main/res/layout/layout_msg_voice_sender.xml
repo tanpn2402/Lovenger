@@ -16,7 +16,7 @@
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:id="@+id/imMsgPhoto"
-            android:src="@android:drawable/ic_media_play"
+            android:src="@drawable/ic_play_pink"
             android:layout_centerVertical="true"
             android:layout_centerHorizontal="true" />
     </RelativeLayout>

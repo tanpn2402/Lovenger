@@ -69,9 +69,14 @@ public class FragmentMessage extends Fragment implements MessageListAdapter.OnEv
     private MessageListAdapter messageListAdapter;
 
     private PrefUtil prefUser;
+    private void setupLastMessage(String msg){
+        prefUser.put(R.string.pref_key_last_message, msg);
+        prefUser.apply();
+    }
 
     // dialog fragment
     private VoiceRecorder voiceRecorder;    // dialog voice recorder
+
 
     private void init(View view){
 
@@ -174,6 +179,7 @@ public class FragmentMessage extends Fragment implements MessageListAdapter.OnEv
                     );
 
                     messageListAdapter.add(msg);
+                    setupLastMessage(msg.id);
 
 
                 } catch (JSONException e) {
@@ -375,6 +381,8 @@ public class FragmentMessage extends Fragment implements MessageListAdapter.OnEv
 
     }
 
+
+
     private void sendTextMessage(String me){
 
 
@@ -396,6 +404,9 @@ public class FragmentMessage extends Fragment implements MessageListAdapter.OnEv
                             getTimeSent(),                                         // sentDate
                             ""));                                                   // receiveDate
 
+            // luu vao pref
+
+            setupLastMessage( obj.getString("id"));
 
             // upload lên database
             messageRef.child(obj.getString("id")).setValue(obj.toString()); // upload leen database
@@ -437,8 +448,9 @@ public class FragmentMessage extends Fragment implements MessageListAdapter.OnEv
                         }
 
                         // add to adapter
-                        messageListAdapter.add(new MessageListElement(msg.toString()));
-
+                        MessageListElement m = new MessageListElement(msg.toString());
+                        messageListAdapter.add(m);
+                        setupLastMessage(  m.id);
                         Log.i("loi", "ok");
                     }
                 }
@@ -475,8 +487,9 @@ public class FragmentMessage extends Fragment implements MessageListAdapter.OnEv
                     }
 
                     // add to adapter
-                    messageListAdapter.add(new MessageListElement(msg.toString()));
-
+                    MessageListElement m = new MessageListElement(msg.toString());
+                    messageListAdapter.add(m);
+                    setupLastMessage( m.id);
                     Log.i("loi", "ok");
                 }
             }

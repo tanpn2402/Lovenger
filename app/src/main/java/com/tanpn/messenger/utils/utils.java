@@ -416,9 +416,9 @@ public class utils {
      * checking connected internet
      * */
 
-    public static boolean connected(Activity act)
+    public static boolean connected(Context context)
     {
-        ConnectivityManager cm = (ConnectivityManager)act.getSystemService(Context.CONNECTIVITY_SERVICE);
+        ConnectivityManager cm = (ConnectivityManager)context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo netInfo = cm.getActiveNetworkInfo();
         if (netInfo != null && netInfo.isConnectedOrConnecting())
         {
