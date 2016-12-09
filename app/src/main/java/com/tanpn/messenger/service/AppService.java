@@ -85,75 +85,6 @@ public class AppService extends Service {
         }
     }
 
-    /*public class MessageReceiver extends BroadcastReceiver {
-
-        public static final String ACTION_RECEIVE_MESSAGE = "com.tanpn.messenger.ACTION_RECEIVE_MESSAGE";
-
-        private PrefUtil pref;
-        private int msgCounter = 0;
-
-        /** int result = S1.compareTo(S2)  :
-         * result = 0 if S1 = S2 theo từ điển;
-         * result > 0 if S1 > S2 theo từ điển;
-         * result < 0 if S1 < S2 theo từ điển;
-
-         *
-        @Override
-        public void onReceive(final Context context, Intent intent) {
-            Log.i("tanna", " child");
-            if(intent.getAction().equals(ACTION_RECEIVE_MESSAGE)){
-                pref = new PrefUtil(context);
-                final String lastMessage = pref.getString(R.string.pref_key_last_message, "null");
-                Log.i("tanna", lastMessage);
-                FirebaseDatabase root = FirebaseDatabase.getInstance();
-                DatabaseReference messageRef = root.getReference("message");
-                messageRef.addChildEventListener(new ChildEventListener() {
-                    @Override
-                    public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                        //Log.i("tanna", " add child");
-
-                        if (dataSnapshot.getKey().compareTo(lastMessage) > 0) {
-                            msgCounter ++;
-                            Log.i("tanna", "you have " + msgCounter + " messages");
-                            //showNotification(context);
-
-                            NotificationCompat.Builder builder =
-                                    new NotificationCompat.Builder(context)
-                                            .setSmallIcon(R.drawable.ic_sent_gray)
-                                            .setContentTitle("You have " + msgCounter + " message")
-                                            .setContentText("This is a test notification")
-                                            .setAutoCancel(true);
-
-                            Intent notificationIntent = new Intent(context, MainActivity.class);
-                            PendingIntent contentIntent = PendingIntent.getActivity(context, 0, notificationIntent,
-                                    PendingIntent.FLAG_UPDATE_CURRENT);
-                            builder.setContentIntent(contentIntent);
-
-                            // id
-                            int mNotificationId = 001;
-
-                            // Add as notification
-                            NotificationManager manager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-                            manager.notify(mNotificationId, builder.build());
-                        }
-                    }
-
-                    @Override
-                    public void onChildChanged(DataSnapshot dataSnapshot, String s) {}
-
-                    @Override
-                    public void onChildRemoved(DataSnapshot dataSnapshot) {}
-
-                    @Override
-                    public void onChildMoved(DataSnapshot dataSnapshot, String s) {}
-
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {}
-                });
-            }
-        }
-
-    }*/
 
         @Override
     public void onCreate() {
@@ -178,6 +109,7 @@ public class AppService extends Service {
     // kiem tra xem service duoc start 1 cach tuong minh hay khong
     // start 1 cach tuong minh co nghia la: nếu được gọi bằng lệnh start thì đó là tường minh,
     //      nếu được gọi bằng alarm thì đó là k tường minh
+
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
@@ -261,6 +193,7 @@ public class AppService extends Service {
     }
 
     public static void startAppService(Context c){
+
         startAlarm(c);
     }
 
@@ -298,7 +231,7 @@ public class AppService extends Service {
     public static void startAlarm(Context c){
         AlarmManager am = (AlarmManager) c.getSystemService(ALARM_SERVICE);
         PendingIntent pi = getRunIntent(c);
-        long interval = 250;
+        long interval = 1000;
         long startTime = SystemClock.elapsedRealtime();
         am.setRepeating(AlarmManager.ELAPSED_REALTIME, startTime, interval, pi);
         Log.i("tag", "alarm started");

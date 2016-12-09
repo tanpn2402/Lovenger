@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="10dp"
+    android:paddingLeft="20dp"
+    android:paddingRight="20dp"
+    android:paddingTop="10dp"
+    android:id="@+id/activity_login"
+    tools:context=".login.SignIn">
+
+    <ScrollView
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:id="@+id/scrollView"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true">
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="Chào Phạm !"
+                android:id="@+id/tvHello"
+                android:layout_marginTop="30dp"
+                android:textSize="30sp"
+                android:layout_gravity="center_horizontal" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="Đây là id của bạn, hãy dùng mã này để tạo nhóm với bạn bè"
+                android:id="@+id/textView18"
+                android:textAlignment="center"
+                android:layout_marginTop="5dp" />
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/edtUserID"
+                android:background="@drawable/custom_edittext"
+                android:layout_marginTop="10dp"
+                android:textAlignment="center"
+                android:text="123abc" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="Nhập mã bạn bè của bạn để tạo nhóm với họ"
+                android:id="@+id/textView19"
+                android:layout_marginTop="30dp"
+                android:textAlignment="center" />
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/edtFriendID"
+                android:background="@drawable/custom_edittext"
+                android:layout_marginTop="10dp"
+                android:textAlignment="center" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="hoặc nhập mã nhóm bạn muốn tham gia"
+                android:id="@+id/textView21"
+                android:textAlignment="center"
+                android:layout_marginTop="30dp" />
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/edtGroupID"
+                android:background="@drawable/custom_edittext"
+                android:layout_marginTop="10dp"
+                android:textAlignment="center" />
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Tham gia"
+                android:textAllCaps="false"
+                android:id="@+id/btnJoin"
+                android:layout_marginTop="50dp"
+                style="@style/AppTheme.AppBarOverlay"
+                android:background="#038639"
+                android:textColor="#FFF" />
+
+            <Button
+                style="@style/AppTheme.AppBarOverlay"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Quay lại đăng nhập"
+                android:textAllCaps="false"
+                android:id="@+id/btnSignIn"
+                android:layout_marginTop="10dp"
+                android:background="#dd0f31"
+                android:textColor="#fff"
+                android:layout_gravity="center_horizontal" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text="Bạn không thể sử dụng ứng dụng này một mình, hãy mời bạn bè sử dụng."
+
+                android:textAlignment="center"
+                android:id="@+id/textView8" />
+
+
+        </LinearLayout>
+    </ScrollView>
+
+
+</RelativeLayout>

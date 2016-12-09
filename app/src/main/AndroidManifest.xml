@@ -6,7 +6,6 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
 
@@ -18,8 +17,10 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".login.SignIn">
-            <!--android:windowSoftInputMode="adjustResize"-->
+            android:name=".login.SignIn"
+            android:windowSoftInputMode="stateHidden">
+
+            <!-- android:windowSoftInputMode="adjustResize" -->
 
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -37,16 +38,17 @@
         <service
             android:name=".service.AppService"
             android:enabled="true"
-            android:exported="true"></service>
+            android:exported="true" />
 
         <receiver android:name=".receiver.MessageReceiver">
             <intent-filter>
-                <action android:name="com.tanpn.messenger.ACTION_RECEIVE_MESSAGE">
-
-                </action>
+                <action android:name="com.tanpn.messenger.ACTION_RECEIVE_MESSAGE" />
             </intent-filter>
         </receiver>
 
+        <activity android:name=".login.IntroActivity" />
+        <activity android:name=".login.AddFriendActivity"
+            android:windowSoftInputMode="stateHidden"></activity>
     </application>
 
 </manifest>

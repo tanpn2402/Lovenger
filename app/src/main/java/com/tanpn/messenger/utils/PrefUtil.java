@@ -125,4 +125,9 @@ public class PrefUtil {
     }
 
 
+    public boolean getBoolean(int keyRes, boolean defValue){
+        return prefs.getBoolean(context.getString(keyRes), defValue);
+    }
+
+
 }

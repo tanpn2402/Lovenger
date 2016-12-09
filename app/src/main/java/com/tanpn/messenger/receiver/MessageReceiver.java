@@ -1,5 +1,6 @@
 package com.tanpn.messenger.receiver;
 
+import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
@@ -55,9 +56,10 @@ public class MessageReceiver extends BroadcastReceiver {
 
                         NotificationCompat.Builder builder =
                                 new NotificationCompat.Builder(context)
-                                        .setSmallIcon(R.drawable.ic_sent_gray)
+                                        .setSmallIcon(R.drawable.ic_notification_white)
                                         .setContentTitle("You have " + msgCounter + " message")
                                         .setContentText("This is a test notification")
+                                        .setDefaults(Notification.DEFAULT_ALL)
                                         .setAutoCancel(true);
 
                         Intent notificationIntent = new Intent(context, MainActivity.class);
