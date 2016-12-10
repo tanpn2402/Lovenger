@@ -9,6 +9,7 @@ import android.os.AsyncTask;
 import android.os.SystemClock;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -25,12 +26,16 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.tanpn.messenger.MainActivity;
 import com.tanpn.messenger.R;
-import com.tanpn.messenger.receiver.MessageReceiver;
 import com.tanpn.messenger.receiver.NetworkReceiver;
 import com.tanpn.messenger.service.AppService;
 import com.tanpn.messenger.utils.PrefUtil;
@@ -40,10 +45,11 @@ import java.io.ByteArrayOutputStream;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class SignIn extends AppCompatActivity implements View.OnClickListener, SignUp.onSignUpResult, SetupAvatar.OnSetupCompletion, NetworkReceiver.OnNetworkReceiver {
+public class SignIn extends AppCompatActivity
+        implements NetworkReceiver.OnNetworkReceiver, SignInFragment.onSignInCompletion {
 
-    private EditText edtUsername, edtPassword;
-    private Button btnLogin, btnSignUp, btnForgot;
+
+    private Button btnFunction;
     private ImageView imAppIcon, imBackground;
 
     private Snackbar signinStatus;
@@ -51,22 +57,88 @@ public class SignIn extends AppCompatActivity implements View.OnClickListener, S
     private PrefUtil prefUtil;
 
     private boolean newbie = false;
+    private ViewPager mViewPager;
 
     private void init(){
+
         prefUtil = new PrefUtil(this);
-        edtUsername = (EditText) findViewById(R.id.edtUsername);
-        edtPassword = (EditText) findViewById(R.id.edtPassword);
 
-        edtUsername.setText(prefUtil.getString(R.string.pref_key_email, "email"));
+        /**
+         * kiem tra xem co phai newbie k
+         *
+         * */
+        if(!prefUtil.getBoolean(R.string.pref_key_first_use, false)){
+            newbie = true;
+            prefUtil.put(R.string.pref_key_first_use, true);
+            prefUtil.apply();
+        }
 
-        btnLogin = (Button) findViewById(R.id.btnSignIn);
-        btnSignUp = (Button) findViewById(R.id.btnCreate);
-        btnForgot = (Button) findViewById(R.id.btnForgot);
-        btnSignUp.setOnClickListener(this);
-        btnLogin.setOnClickListener(this);
-        btnForgot.setOnClickListener(this);
+        /**
+         * kiem tra xem account --> k login nua
+         *
+         * */
+        if(!prefUtil.getString(R.string.pref_key_email, "null").equals("null") &&
+                !prefUtil.getString(R.string.pref_key_password, "null").equals("null")){
+            signinSuccess();
+
+            return ; // khong init nua
+        }
 
 
+        /**
+         * init compomments
+         * */
+
+        mViewPager = (ViewPager) findViewById(R.id.myViewPager);
+        mViewPager.setAdapter(new SignInAdapter(getSupportFragmentManager()));
+        mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                switch (position){
+                    case 0: // signin view:
+                        btnFunction.setText("Đăng kí");
+                        break;
+                    case 1: // sign up view
+                        btnFunction.setText("Đăng nhập");
+                        break;
+                    default: // forgot view
+                        btnFunction.setText("Đăng nhập");
+                }
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
+
+
+
+
+        btnFunction = (Button) findViewById(R.id.btnFunction);
+        btnFunction.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                switch (mViewPager.getCurrentItem()){
+                    case 0: // signin view:
+                        mViewPager.setCurrentItem(1);
+                        btnFunction.setText("Đăng nhập");
+                        break;
+                    case 1: // sign up view
+                        mViewPager.setCurrentItem(0);
+                        btnFunction.setText("Đăng kí");
+                        break;
+                    default: // forgot view
+                        mViewPager.setCurrentItem(0);
+                        btnFunction.setText("Đăng kí");
+                }
+            }
+        });
 
         signinStatus = Snackbar.make(
                 findViewById(R.id.activity_login),
@@ -82,64 +154,20 @@ public class SignIn extends AppCompatActivity implements View.OnClickListener, S
         });
 
 
-        /**
-         * checking internet connected
-         * */
-
-
     }
     /**
      * read at: https://firebase.google.com/docs/auth/android/start/
      * */
     private FirebaseAuth mAuth;
-    private FirebaseAuth.AuthStateListener mAuthListener;
-    private StorageReference photoRef;  // reference to storage
+
+    private DatabaseReference userRef;
 
     private void initFirebase(){
         mAuth = FirebaseAuth.getInstance();
-        FirebaseStorage storage = FirebaseStorage.getInstance();
-        photoRef = storage.getReferenceFromUrl("gs://messenger-d08e4.appspot.com/avatar/");
 
-        /*mAuthListener = new FirebaseAuth.AuthStateListener() {
-            @Override
-            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                FirebaseUser user = firebaseAuth.getCurrentUser();
-                if (user != null) {
-                    // User is signed in
-                    if(signinStatus.isShown())
-                        signinStatus.dismiss();
-                    signinStatus.setText("đăng nhập thành công").show();
+        FirebaseDatabase root = FirebaseDatabase.getInstance();
+        userRef = root.getReference("user");
 
-                    // lấy thông tin của user
-                    String name = user.getDisplayName();
-                    String email = user.getEmail();
-                    Uri photoUrl = user.getPhotoUrl();
-                    String uid = user.getUid();
-
-
-                    prefUtil.put(R.string.pref_key_email, email);
-                    prefUtil.put(R.string.pref_key_password, edtPassword.getText().toString());
-                    prefUtil.put(R.string.pref_key_uid, uid);
-                    prefUtil.put(R.string.pref_key_user_photo, photoUrl);
-                    prefUtil.put(R.string.pref_key_username, name);
-
-                    prefUtil.apply();
-
-
-
-
-                } else {
-                    // User is signed out
-                    prefUtil.put(R.string.pref_key_email, "");
-                    prefUtil.put(R.string.pref_key_password, "");
-                    prefUtil.put(R.string.pref_key_uid, "");
-                    prefUtil.put(R.string.pref_key_user_photo, "");
-                    prefUtil.put(R.string.pref_key_username, "");
-
-                    prefUtil.apply();
-                }
-            }
-        };*/
     }
 
     private void initReceiver(){
@@ -147,13 +175,6 @@ public class SignIn extends AppCompatActivity implements View.OnClickListener, S
         IntentFilter filter = new IntentFilter();
         filter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
         registerReceiver(networkReceiver, filter);
-
-
-        /*MessageReceiver messageReceiver = new MessageReceiver();
-        IntentFilter f = new IntentFilter();
-        f.addAction(MessageReceiver.ACTION_RECEIVE_MESSAGE);
-        registerReceiver(messageReceiver, f);*/
-
 
     }
 
@@ -168,44 +189,25 @@ public class SignIn extends AppCompatActivity implements View.OnClickListener, S
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        init();
+
         initFirebase();
+
+        init();
+
 
         startService();
 
-        initReceiver();
+        //initReceiver();
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        //mAuth.addAuthStateListener(mAuthListener);
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        //if (mAuthListener != null) {
-        //    mAuth.removeAuthStateListener(mAuthListener);
-        //}
-    }
-
-    //Set the radius of the Blur. Supported range 0 < radius <= 25
-    private static final float BLUR_RADIUS = 25f;
-
-    @Override
-    public void onClick(View view) {
-        switch (view.getId()){
-            case R.id.btnCreate:
-                signup();
-                break;
-            case R.id.btnSignIn:
-                signin();
-                break;
-            case R.id.btnForgot:
-                forgot();
-                break;
-        }
     }
 
 
@@ -231,7 +233,9 @@ public class SignIn extends AppCompatActivity implements View.OnClickListener, S
                             // sign in fail
                             if(signinStatus.isShown())
                                 signinStatus.dismiss();
-                            signinStatus.setText("đăng nhập thất bại, vui lòng thử lại.").setDuration(Snackbar.LENGTH_INDEFINITE).show();
+                            //signinStatus.setText("đăng nhập thất bại, vui lòng thử lại.").setDuration(Snackbar.LENGTH_INDEFINITE).show();
+                            signinStatus.setText(task.getException().toString()).setDuration(Snackbar.LENGTH_INDEFINITE).show();
+
                         }
                         else {
                             // User is signed in
@@ -257,6 +261,48 @@ public class SignIn extends AppCompatActivity implements View.OnClickListener, S
             signinStatus.setText("không thể kết nối đến internet.").setDuration(Snackbar.LENGTH_INDEFINITE).show();
     }
 
+
+    /**
+     * implemments tu interface onSigninCompletion
+     *
+     * */
+    private EditText edtUsername, edtPassword, edtFullname;
+    @Override
+    public void onSignIn(EditText edt1, EditText edt2) {
+        edtUsername = edt1;
+        edtPassword = edt2;
+
+        signin();
+    }
+
+    @Override
+    public void onSignUp(EditText edt1, EditText edt2, EditText edt3) {
+        edtFullname = edt1;
+        edtUsername = edt2;
+        edtPassword = edt3;
+
+        signup();
+    }
+
+    @Override
+    public void onForgot(EditText edt1) {
+        edtUsername = edt1;
+
+        forgot();
+    }
+
+    @Override
+    public void onForgetTextviewClick() {
+        mViewPager.setCurrentItem(2); // chuyen qua forgot view
+        btnFunction.setText("Đăng nhập");
+    }
+
+
+    /**
+ * khi dang nhap thanh cong thi luu cac thong tin co ban cua user vao share preferences
+ * bo vao thread chay cho nhanh :v
+ *
+ * */
     private class setupPreferences extends AsyncTask<Task<AuthResult>, Void, Void>{
 
 
@@ -299,22 +345,127 @@ public class SignIn extends AppCompatActivity implements View.OnClickListener, S
     private void signinSuccess(){
         if(newbie){
             // lan dau su dung thi huong dan chon avatar
-            actionSetupAvatar();
+            showIntroScreen();
         }
         else{
             // chuyen den Main Activity
-            gotoMainAvtivity();
+            checkHasGroup(prefUtil.getString(R.string.pref_key_uid));
         }
     }
 
+    /**
+     * doi voi nguoi dau tien su dung ung dung thi show intro scrren
+     * */
+    private void showIntroScreen(){
+        Intent in = new Intent(this, IntroActivity.class);
+        startActivity(in);
+    }
+
+    private void checkHasGroup(String uid){
+        /**
+         * kiem tra xem user nay co group nao hay chua
+         * path:   root/user/uid/groups/
+         * */
+        DatabaseReference groupRef = userRef.child(uid).child("groups");
+
+        groupRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                String data = dataSnapshot.getValue().toString();
+                if(data.equals("false")){
+                    //prefUtil.put(R.string.pref_key_groups, null);
+                    //prefUtil.apply();
+                    gotoMainAvtivity(false);
+                }
+                else{
+                    prefUtil.put(R.string.pref_key_groups, data);
+                    prefUtil.apply();
+                    gotoMainAvtivity(true);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {}
+        });
+
+    }
+    /**
+     * neu dang nhap thanh cong va k phai la lan dau su dung nen skip qua main activity luon
+     *
+     * */
+
+
+    private void gotoMainAvtivity(boolean hasGroup) {
+
+        /**
+         * Kiem tra xem da co nhom chua
+         * neu khong thi hien thi man hinh addfirend
+         * */
+
+        if (!hasGroup){
+            Intent in = new Intent(this, AddFriendActivity.class);
+            startActivity(in);
+        }
+        else {
+            Intent in = new Intent(this, MainActivity.class);
+            startActivity(in);
+        }
+
+
+    }
+
+
+    /**
+     * sign up: dang ki
+     * duoc nhan thogn tin tu interface .... trong class SignInFragment
+     *
+     * */
     private void signup(){
         // dang ki
-        // hien thi dialog sign up
-        new SignUp().show(getSupportFragmentManager(), "dialog");
+
+        if(!validateEmail(edtUsername))
+            return;
+
+        if(!validatePassword(edtPassword))
+            return;
+
+
+        if(signinStatus.isShown())
+            signinStatus.dismiss();
+        signinStatus.setText("đang tài khoản mới...").show();
+
+        email = edtUsername.getText().toString();
+        password = edtPassword.getText().toString();
+        fullname = edtFullname.getText().toString();
+
+        mAuth.createUserWithEmailAndPassword(email, password)
+                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+
+                        // If sign in fails, display a message to the user. If sign in succeeds
+                        // the auth state listener will be notified and logic to handle the
+                        // signed in user can be handled in the listener.
+                        if (!task.isSuccessful()) {
+                            setNotification(task.getException().toString(), Snackbar.LENGTH_INDEFINITE);
+
+                        }
+                        else {
+
+                            // setup name for new account
+                            setupFirebaseAuth(task.getResult().getUser());
+                        }
+
+
+                    }
+                });
     }
 
     private void forgot(){
         // quen mat khau
+
+        if(!validateEmail(edtUsername))
+            return;
     }
 
     private static final String EMAIL_PATTERN =
@@ -336,6 +487,23 @@ public class SignIn extends AppCompatActivity implements View.OnClickListener, S
 
     }
 
+    private static final String PASSWORD_PATTERN =
+            "((?=.*\\d)(?=.*[a-z])(?=.*[A-Z]).{6,20})";
+
+    private boolean validatePassword(EditText input){
+        String text = input.getText().toString();
+        Pattern pattern = Pattern.compile(PASSWORD_PATTERN);
+        Matcher matcher = pattern.matcher(text);
+
+        if(!matcher.matches()){
+            // validate by using pattern
+            // sai qui dinh
+            input.setError("sai định dạng");
+            return false;
+        }
+        return true;
+    }
+
     private String fullname;
     private String email;
     private String password;
@@ -346,125 +514,14 @@ public class SignIn extends AppCompatActivity implements View.OnClickListener, S
         signinStatus.setText(text).setDuration(lenght).show();
     }
 
-
-    @Override
-    public void onResult(String data) {
-        if(signinStatus.isShown())
-            signinStatus.dismiss();
-        signinStatus.setText("đang tài khoản mới...").show();
-
-        String[] info = data.split("\\|");
-        email = info[1];
-        password = info[2];
-        fullname = info[0];
-
-        mAuth.createUserWithEmailAndPassword(email, password)
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-
-                        // If sign in fails, display a message to the user. If sign in succeeds
-                        // the auth state listener will be notified and logic to handle the
-                        // signed in user can be handled in the listener.
-                        if (!task.isSuccessful()) {
-                            setNotification("tạo tài khoản mới thất bại.", Snackbar.LENGTH_INDEFINITE);
-
-                        }
-                        else {
-                            FirebaseUser user =  task.getResult().getUser();
-
-                            // quay trở lại màn hình đăng nhập
-                            // sẽ điền trước email, và user sẽ nhập mật khẩu và log in
-                            setNotification("tạo tài khoản mới thành công.", Snackbar.LENGTH_INDEFINITE);
-
-                            edtUsername.setText(user.getEmail());
-                            newbie = true;
-                        }
-
-
-                    }
-                });
-
-
-    }
-
-    private void actionSetupAvatar(){
-        /**
-         * ln dau tien su dung
-         * */
-        SetupAvatar setupAvatar = new SetupAvatar();
-        setupAvatar.setFullname(fullname);
-        setupAvatar.show(getSupportFragmentManager(), "dialog");
-    }
-
-
     /**
-     * chon anh lam avatar: gio upload len firebase, setup lai auth
+     * cap nhat thong tin cho user
      * */
-    @Override
-    public void OnCompleteWithBitmap(Bitmap b) {
-        if(b == null)
-            return;
-
-        // convert to upload to storage
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        b.compress(Bitmap.CompressFormat.PNG, 100, baos);   // full quality 100
-        byte[] bytes = baos.toByteArray();
-
-        final String photoName = utils.generatePhotoId();
-        UploadTask uploadTask = photoRef.child(photoName).putBytes(bytes);  // upload len storage
-
-        uploadTask.addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception exception) {}
-        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-            @Override
-            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                // taskSnapshot.getMetadata() contains file metadata such as size, content-type, and download URL.
-                setupFirebaseAuth(taskSnapshot.getDownloadUrl().getPath());
-            }
-        });
-    }
-
-    @Override
-    public void OnCompleteWithUri(Uri u) {
-        if(u == null)
-            return;
-
-        final String photoName = utils.generatePhotoId();
-        UploadTask uploadTask = photoRef.child(photoName).putFile(u);
-        uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-            @Override
-            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                // upload to storage success
-                setupFirebaseAuth(taskSnapshot.getDownloadUrl().getPath());
-
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {}
-        });
-    }
-
-    @Override
-    public void OnSkip(boolean skip) {
-        if(skip)
-            gotoMainAvtivity();
-    }
-
-    private void gotoMainAvtivity() {
-        Intent in = new Intent(this, MainActivity.class);
-        startActivity(in);
-    }
-
-    private void setupFirebaseAuth(String photoPath){
+    private void setupFirebaseAuth(final FirebaseUser user){
         UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
-                .setDisplayName(fullname)
-                .setPhotoUri(Uri.parse(photoPath))
-                .build();
+                    .setDisplayName(fullname)
+                    .build();
 
-
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if(user != null){
             user.updateProfile(profileUpdates)
                     .addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -472,14 +529,12 @@ public class SignIn extends AppCompatActivity implements View.OnClickListener, S
                         public void onComplete(@NonNull Task<Void> task) {
                             if (task.isSuccessful()) {
 
-                                // hien thi thong bao snackbar
-                                //if(signinStatus.isShown())
-                                //    signinStatus.dismiss();
-                                signinStatus.setText("cập nhật thông tin thành công").show();
+                                setupDatabase(user);
 
-                                // chuyen qua main screen
-                                newbie = false;
-                                signinSuccess();
+                            }
+                            else{
+                                // delete account
+                                deleteAuth(user);
                             }
                         }
                     });
@@ -487,25 +542,45 @@ public class SignIn extends AppCompatActivity implements View.OnClickListener, S
 
     }
 
+    /**
+     * upload databse for GROUPS node
+     * */
+
+    private void setupDatabase(final FirebaseUser user){
+        Log.i("aaa", user.toString());
+        userRef.child(user.getUid()).child("groups").setValue("false").addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                // thong bao tao tai khoan thanh cong
+                signinStatus.setText("tạo tài khoản thành công").setDuration(Snackbar.LENGTH_SHORT).show();
+
+                // quay tro lại man hinh dang nhap
+                mViewPager.setCurrentItem(0);
+                btnFunction.setText("Đăng kí");
+
+                edtUsername.setText(user.getEmail());
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                deleteAuth(user);
+
+                // thong bao tao tai khoan thanh cong
+                signinStatus.setText("tạo tài khoản thất bại").setDuration(Snackbar.LENGTH_SHORT).show();
+            }
+        });
+    }
 
     /**
-     * RenderScript:
-     * see at : http://stacktips.com/tutorials/android/how-to-create-bitmap-blur-effect-in-android-using-renderscript
+     * o 1 buoc nao do ma that bai thi xoa tai khoan
      * */
-    /*public Bitmap blur(Bitmap image) {
-        if (null == image) return null;
 
-        Bitmap outputBitmap = Bitmap.createBitmap(image);
-        final RenderScript renderScript = RenderScript.create(this);
-        Allocation tmpIn = Allocation.createFromBitmap(renderScript, image);
-        Allocation tmpOut = Allocation.createFromBitmap(renderScript, outputBitmap);
-
-        //Intrinsic Gausian blur filter
-        ScriptIntrinsicBlur theIntrinsic = ScriptIntrinsicBlur.create(renderScript, Element.U8_4(renderScript));
-        theIntrinsic.setRadius(BLUR_RADIUS);
-        theIntrinsic.setInput(tmpIn);
-        theIntrinsic.forEach(tmpOut);
-        tmpOut.copyTo(outputBitmap);
-        return outputBitmap;
-    }*/
+    private void deleteAuth(FirebaseUser user){
+        user.delete()
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                    }
+                });
+    }
 }

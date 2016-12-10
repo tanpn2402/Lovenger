@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="#00FFFFFF">
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/edtUsername"
+        android:ems="10"
+        android:drawableLeft="@drawable/ic_username"
+        android:textColor="#FFF"
+        android:hint="email"
+        android:textColorHint="#FFF"
+        android:background="@drawable/login_input"
+        android:inputType="textVisiblePassword">
+
+        <requestFocus />
+    </EditText>
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:id="@+id/edtPassword"
+        android:textColor="#FFF"
+        android:textColorHint="#FFF"
+        android:hint="mật khẩu"
+        android:background="@drawable/login_input"
+
+        android:drawableLeft="@drawable/ic_password"
+        android:ems="10"
+        android:inputType="textPassword" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="Quên mật khẩu ?"
+        android:id="@+id/tvForgetPassword"
+        android:layout_gravity="right"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="30dp"
+        android:textColor="#FFF" />
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:text="Đăng nhập"
+        android:textAllCaps="false"
+        android:background="@drawable/button_login"
+        android:textColor="#FFF"
+        android:id="@+id/btnSignIn"
+        />
+
+</LinearLayout>

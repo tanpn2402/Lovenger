@@ -1,5 +1,6 @@
 package com.tanpn.messenger;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
@@ -117,5 +118,13 @@ public class MainActivity extends AppCompatActivity {
 
     public void generateMessage(){
 
+    }
+
+    @Override
+    public void onBackPressed() {
+        Intent intent = new Intent(Intent.ACTION_MAIN);
+        intent.addCategory(Intent.CATEGORY_HOME);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
     }
 }

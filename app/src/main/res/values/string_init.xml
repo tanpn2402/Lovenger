@@ -7,5 +7,9 @@
     <string translatable="false" name="pref_key_user_photo">com.tanpn.messenger.pref.user_photo</string>
 
     <string translatable="false" name="pref_key_last_message">com.tanpn.messenger.last_message</string>
+    <string translatable="false" name="pref_key_first_use">com.tanpn.messenger.first_use</string>
+    <string translatable="false" name="pref_key_has_group">com.tanpn.messenger.has_group</string>
+    <string translatable="false" name="pref_key_groups">com.tanpn.messenger.groups</string>
+
 
 </resources>

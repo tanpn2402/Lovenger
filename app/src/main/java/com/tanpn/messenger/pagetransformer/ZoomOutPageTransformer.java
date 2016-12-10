@@ -21,7 +21,6 @@ public class ZoomOutPageTransformer implements ViewPager.PageTransformer {
         btn = (Button) v;
     }
 
-    private float x = 0;
 
     public void transformPage(View view, float position) {
         int pageWidth = view.getWidth();
@@ -38,18 +37,15 @@ public class ZoomOutPageTransformer implements ViewPager.PageTransformer {
             float horzMargin = pageWidth * (1 - scaleFactor) / 2;
             if (position < 0) {
                 view.setTranslationX(horzMargin - vertMargin / 2);
-                //btn.setTranslationX(MAX_DISTANCE);
+
 
 
             } else {
                 view.setTranslationX(-horzMargin + vertMargin / 2);
-                //btn.setTranslationX(-MAX_DISTANCE);
+
             }
 
-
-            //x += position;
-
-            Log.i("cale", position + "");
+            //btn.setTranslationX(MAX_DISTANCE * position);
             //btn.setScaleX( Math.max(MIN_SCALE, Math.abs(position)));
             //btn.setScaleY(Math.max(MIN_SCALE, Math.abs(position)));
             // Scale the page down (between MIN_SCALE and 1)
