@@ -74,13 +74,15 @@ public class SignIn extends AppCompatActivity
         }
 
         /**
-         * kiem tra xem account --> k login nua
+         * kiem tra xem account --> k login nua AUTO LOGIN
          *
          * */
         if(!prefUtil.getString(R.string.pref_key_email, "null").equals("null") &&
                 !prefUtil.getString(R.string.pref_key_password, "null").equals("null")){
-            signinSuccess();
+            Log.i("pref",prefUtil.getString(R.string.pref_key_groups, "null") );
+            gotoMainAvtivity(!prefUtil.getString(R.string.pref_key_groups, "null").equals("null"));
 
+            finish();
             return ; // khong init nua
         }
 
@@ -322,13 +324,22 @@ public class SignIn extends AppCompatActivity
             prefUtil.put(R.string.pref_key_password, _password);
             prefUtil.put(R.string.pref_key_uid, uid);
             if(photoUrl != null)
-                prefUtil.put(R.string.pref_key_user_photo, photoUrl.getPath());
+            {
+                String p = photoUrl.toString();
+
+                prefUtil.put(R.string.pref_key_user_photo_link, p);
+                String[] s = photoUrl.toString().split("/");
+                prefUtil.put(R.string.pref_key_user_photo_name, s[s.length - 1]);
+
+                Log.i("photo login link =  ", p);
+                Log.i("photo login name =  ", s[s.length - 1]);
+            }
 
             if(name != null)
                 prefUtil.put(R.string.pref_key_username, name);
 
             prefUtil.apply();
-            SystemClock.sleep(700);
+            SystemClock.sleep(200);
             return null;
         }
 
@@ -373,12 +384,15 @@ public class SignIn extends AppCompatActivity
             public void onDataChange(DataSnapshot dataSnapshot) {
                 String data = dataSnapshot.getValue().toString();
                 if(data.equals("false")){
-                    //prefUtil.put(R.string.pref_key_groups, null);
-                    //prefUtil.apply();
+                    prefUtil.put(R.string.pref_key_groups, "null");
+                    prefUtil.put(R.string.pref_key_default_group, "null");
+                    prefUtil.apply();
                     gotoMainAvtivity(false);
                 }
                 else{
+                    String[] g = data.split("\\|");
                     prefUtil.put(R.string.pref_key_groups, data);
+                    prefUtil.put(R.string.pref_key_default_group, g[0]);
                     prefUtil.apply();
                     gotoMainAvtivity(true);
                 }
@@ -516,10 +530,15 @@ public class SignIn extends AppCompatActivity
 
     /**
      * cap nhat thong tin cho user
+     *  - ten duoc user dat
+     *  - photo default
      * */
     private void setupFirebaseAuth(final FirebaseUser user){
+        Uri u = Uri.parse(getString(R.string.default_user_photo_link));
+        Log.i("photo uri", u.toString());
         UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
                     .setDisplayName(fullname)
+                    .setPhotoUri(u)
                     .build();
 
         if(user != null){
@@ -553,6 +572,11 @@ public class SignIn extends AppCompatActivity
             public void onComplete(@NonNull Task<Void> task) {
                 // thong bao tao tai khoan thanh cong
                 signinStatus.setText("tạo tài khoản thành công").setDuration(Snackbar.LENGTH_SHORT).show();
+
+                // cai dat pref
+                prefUtil.put(R.string.pref_key_user_photo_name, getString(R.string.default_user_photo_name));
+                prefUtil.put(R.string.pref_key_user_photo_link, getString(R.string.default_user_photo_link));
+                prefUtil.apply();
 
                 // quay tro lại man hinh dang nhap
                 mViewPager.setCurrentItem(0);

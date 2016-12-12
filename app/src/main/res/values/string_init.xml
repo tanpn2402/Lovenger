@@ -4,12 +4,24 @@
     <string translatable="false" name="pref_key_email">com.tanpn.messenger.pref.email</string>
     <string translatable="false" name="pref_key_username">com.tanpn.messenger.pref.username</string>
     <string translatable="false" name="pref_key_uid">com.tanpn.messenger.pref.uid</string>
-    <string translatable="false" name="pref_key_user_photo">com.tanpn.messenger.pref.user_photo</string>
+    <string translatable="false" name="pref_key_user_photo_link">com.tanpn.messenger.pref.user_photo_link</string>
+    <string translatable="false" name="pref_key_user_photo_name">com.tanpn.messenger.pref.user_photo_name</string>
 
     <string translatable="false" name="pref_key_last_message">com.tanpn.messenger.last_message</string>
     <string translatable="false" name="pref_key_first_use">com.tanpn.messenger.first_use</string>
     <string translatable="false" name="pref_key_has_group">com.tanpn.messenger.has_group</string>
     <string translatable="false" name="pref_key_groups">com.tanpn.messenger.groups</string>
+    <string translatable="false" name="pref_key_default_group">com.tanpn.messenger.default_group</string>
+
+
+
+    <string translatable="false" name="pref_key_power_saver_mode">com.tanpn.messenger.power_saver_mode</string>
+    <string translatable="false" name="pref_key_sound">com.tanpn.messenger.sound</string>
+    <string translatable="false" name="pref_key_vibration">com.tanpn.messenger.vibration</string>
+    <string translatable="false" name="pref_key_account_manager">com.tanpn.messenger.account_manager</string>
+    <string translatable="false" name="pref_key_group_manager">com.tanpn.messenger.group_manager</string>
+    <string translatable="false" name="pref_key_main_menu_effect">com.tanpn.messenger.main_menu_effect</string>
+    <string translatable="false" name="pref_key_photo_view_effect">com.tanpn.messenger.photo_view_effect</string>
 
 
 </resources>

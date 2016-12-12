@@ -399,7 +399,7 @@ public class FragmentMessage extends Fragment implements MessageListAdapter.OnEv
                             prefUser.getString(R.string.pref_key_username, "null"),                                         // name
                             MessageListElement.MESSAGE_TYPE.TEXT,
                             m,
-                            prefUser.getString(R.string.pref_key_user_photo, "null"),                                           //avatar
+                            prefUser.getString(R.string.pref_key_user_photo_name, "null"),                                           //avatar
                             MessageListElement.MESSAGE_STATUS.SENDING,
                             getTimeSent(),                                         // sentDate
                             ""));                                                   // receiveDate
@@ -564,7 +564,7 @@ public class FragmentMessage extends Fragment implements MessageListAdapter.OnEv
 
 
             obj.put("message", o);
-            obj.put("avatar", prefUser.getString(R.string.pref_key_user_photo, "null"));
+            obj.put("avatar", prefUser.getString(R.string.pref_key_user_photo_name, "null"));
             obj.put("sentDate", getTimeSent());
             obj.put("receiveDate", "14/11/2016 9:31");
             obj.put("status", MessageListElement.MESSAGE_STATUS.RECEIVE.ordinal());

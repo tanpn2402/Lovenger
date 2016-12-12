@@ -101,7 +101,7 @@
                 android:layout_height="wrap_content"
                 android:text="Quay lại đăng nhập"
                 android:textAllCaps="false"
-                android:id="@+id/btnSignIn"
+                android:id="@+id/btnChangePassword"
                 android:layout_marginTop="10dp"
                 android:background="#dd0f31"
                 android:textColor="#fff"

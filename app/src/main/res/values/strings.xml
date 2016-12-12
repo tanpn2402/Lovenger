@@ -34,7 +34,6 @@
     <string name="setting_notification_sound">Chuông</string>
 
 
-
     <string name="setting_user_chang_info">Thay đổi thông tin</string>
 
 
@@ -86,5 +85,12 @@
     <string name="line_imageview_description">This displays the line thickness</string>
     <string name="title_line_width_dialog">Change Line Width</string>
     <string name="button_set_line_width">Change</string>
+
+
+    <string name="login_with_name">Bạn đã đăng nhập với tên </string>
+
+    <string name="default_user_photo_name">default.jpg</string>
+    <string name="default_user_photo_link">/v0/b/messenger-d08e4.appspot.com/o/avatar/default.jpg</string>
+    <string name="avatar_photo_ref">gs://messenger-d08e4.appspot.com/avatar/</string>
 
 </resources>

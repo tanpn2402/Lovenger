@@ -37,7 +37,7 @@ public class GroupManager extends AppCompatActivity {
                 "432"
         };
         //expandableListDetail =
-
+        expandableListDetail = new HashMap<>();
         List<String> function = new ArrayList<String>();
         function.add("Tham gia");
         function.add("Rời nhóm");

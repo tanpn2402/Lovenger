@@ -2,19 +2,20 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
 
     <PreferenceCategory android:title="@string/setting_power_saver"/>
-    <SwitchPreference android:key="power_save"
+    <SwitchPreference
+        android:key="@string/pref_key_power_saver_mode"
             android:title="@string/setting_power_saver_mode"
             android:defaultValue="false"/>
 
     <PreferenceCategory android:title="@string/setting__effect">
-        <ListPreference android:key="menu_effect"
+        <ListPreference android:key="@string/pref_key_main_menu_effect"
                 android:title="@string/setting_main_menu_effect"
                 android:summary="@string/setting_main_menu_effect_summary"
                 android:entries="@array/setting_effect_val"
                 android:entryValues="@array/setting_effect_val"
                 android:defaultValue="0"/>
 
-        <ListPreference android:key="photo_effect"
+        <ListPreference android:key="@string/pref_key_photo_view_effect"
             android:title="@string/setting_photo_view_effect"
             android:summary="@string/setting_photo_view_effect_summary"
             android:entries="@array/setting_effect_val"
@@ -28,9 +29,11 @@
 
     <PreferenceCategory android:title="@string/setting_notification">
         <SwitchPreference
+            android:key="@string/pref_key_vibration"
             android:title="@string/setting_notification_vib"
             android:defaultValue="true"/>
         <SwitchPreference
+            android:key="@string/pref_key_sound"
             android:title="@string/setting_notification_sound"
             android:defaultValue="true"/>
 
@@ -39,18 +42,14 @@
     <PreferenceCategory android:title="@string/setting_manager">
 
         <Preference
-            android:key="mykey"
+            android:key="@string/pref_key_account_manager"
             android:title="@string/setting_account_manager">
         </Preference>
 
         <Preference
-            android:key="mykey1"
+            android:key="@string/pref_key_group_manager"
             android:title="@string/setting_group_manager">
 
         </Preference>
     </PreferenceCategory>
-
-
-
-
 </PreferenceScreen>
