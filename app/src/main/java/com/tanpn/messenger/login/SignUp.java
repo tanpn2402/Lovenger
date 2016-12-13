@@ -37,7 +37,7 @@ public class SignUp extends DialogFragment implements View.OnClickListener {
     private void init(View v){
         edtUsername = (EditText) v.findViewById(R.id.edtUsername);
         edtFullname = (EditText) v.findViewById(R.id.edtFullname);
-        edtPassword = (EditText) v.findViewById(R.id.edtPassword);
+        edtPassword = (EditText) v.findViewById(R.id.edtOldPass);
         edtRepeat = (EditText) v.findViewById(R.id.edtRepeatPassword);
 
         btnCancel = (Button) v.findViewById(R.id.btnCancel);

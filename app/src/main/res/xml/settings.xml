@@ -1,80 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
 
-    <SwitchPreference android:key="lock_enable"
-            android:title="@string/setting_lock_enable"
-            android:defaultValue="true"/>
+    <PreferenceCategory android:title="@string/setting_power_saver"/>
+    <SwitchPreference
+        android:key="@string/pref_key_power_saver_mode"
+            android:title="@string/setting_power_saver_mode"
+            android:defaultValue="false"/>
 
-    <ListPreference android:key="lock_background"
-            android:title="@string/setting_lock_background"
-            android:summary="@string/setting_lock_background_summary"
-            android:entries="@array/setting_lock_background"
-            android:entryValues="@array/setting_lock_background_val"
+    <PreferenceCategory android:title="@string/setting__effect">
+        <ListPreference android:key="@string/pref_key_main_menu_effect"
+                android:title="@string/setting_main_menu_effect"
+                android:summary="@string/setting_main_menu_effect_summary"
+                android:entries="@array/setting_effect_val"
+                android:entryValues="@array/setting_effect_val"
+                android:defaultValue="0"/>
+
+        <ListPreference android:key="@string/pref_key_photo_view_effect"
+            android:title="@string/setting_photo_view_effect"
+            android:summary="@string/setting_photo_view_effect_summary"
+            android:entries="@array/setting_effect_val"
+            android:entryValues="@array/setting_effect_val"
             android:defaultValue="0"/>
 
-    <PreferenceCategory android:title="@string/setting_title_general">
+    </PreferenceCategory>
 
-        <CheckBoxPreference android:key="setting_vibra"
-            android:title="@string/setting_vibration_summary"
-            android:defaultValue="true" />
 
-        <CheckBoxPreference android:key="setting_start_at_boot"
-            android:title="@string/setting_general_start_at_boot"
+
+
+    <PreferenceCategory android:title="@string/setting_notification">
+        <SwitchPreference
+            android:key="@string/pref_key_vibration"
+            android:title="@string/setting_notification_vib"
+            android:defaultValue="true"/>
+        <SwitchPreference
+            android:key="@string/pref_key_sound"
+            android:title="@string/setting_notification_sound"
             android:defaultValue="true"/>
 
-
-        <CheckBoxPreference android:key="setting_lock_after_screenoff"
-            android:title="@string/setting_general_relock_after_screen_off"
-            android:defaultValue="true"/>
-
-        <EditTextPreference android:key="setting_wrong_time"
-            android:title="@string/setting_general_wrong_time_title"
-            android:dialogTitle="@string/setting_general_wrong_time_title"
-            android:dialogMessage="@string/setting_general_wrong_time_input"
-            android:numeric="decimal"
-            android:defaultValue="5"/>
-
     </PreferenceCategory>
 
-    <PreferenceCategory android:title="@string/setting_title_password">
+    <PreferenceCategory android:title="@string/setting_manager">
 
-        <EditTextPreference android:key="setting_wrong_time"
-            android:title="@string/setting_change_password"
-            android:dialogTitle="@string/setting_change_password"
-            android:dialogMessage="@string/setting_change_password"
-            android:defaultValue="5"/>
+        <Preference
+            android:key="@string/pref_key_account_manager"
+            android:title="@string/setting_account_manager">
+        </Preference>
+
+        <Preference
+            android:key="@string/pref_key_group_manager"
+            android:title="@string/setting_group_manager">
+        </Preference>
+        <Preference
+            android:key="@string/pref_key_invite_manager"
+            android:title="@string/setting_invite_manager">
+        </Preference>
 
     </PreferenceCategory>
-
-    <PreferenceCategory android:title="@string/setting_title_patern">
-
-        <EditTextPreference android:key="setting_wrong_time"
-            android:title="@string/setting_change_password"
-            android:dialogTitle="@string/setting_change_password"
-            android:dialogMessage="@string/setting_change_password"
-            android:defaultValue="5"/>
-
-    </PreferenceCategory>
-
-
-    <PreferenceCategory android:title="@string/setting_title_user">
-
-        <Preference
-            android:title="@string/setting_user_full_name"
-            android:summary="@string/setting_user_full_name_summary"/>
-
-        <Preference
-            android:title="@string/setting_user_name"
-            android:summary="@string/setting_user_name_summary"/>
-
-        <Preference
-            android:title="@string/setting_user_email"
-            android:summary="@string/setting_user_email_summary"/>
-
-        <Preference
-            android:title="@string/setting_user_phone"
-            android:summary="@string/setting_user_phone_summary"/>
-
-    </PreferenceCategory>
-
 </PreferenceScreen>

@@ -74,13 +74,13 @@ public class SignIn extends AppCompatActivity
         }
 
         /**
-         * kiem tra xem account --> k login nua
+         * kiem tra xem account --> k login nua AUTO LOGIN
          *
          * */
-        if(!prefUtil.getString(R.string.pref_key_email, "null").equals("null") &&
-                !prefUtil.getString(R.string.pref_key_password, "null").equals("null")){
-            signinSuccess();
+        if(!prefUtil.getString(R.string.pref_key_password, "null").equals("null")){
+            gotoMainAvtivity();
 
+            finish();
             return ; // khong init nua
         }
 
@@ -161,11 +161,12 @@ public class SignIn extends AppCompatActivity
     private FirebaseAuth mAuth;
 
     private DatabaseReference userRef;
+    private FirebaseDatabase root;
 
     private void initFirebase(){
         mAuth = FirebaseAuth.getInstance();
 
-        FirebaseDatabase root = FirebaseDatabase.getInstance();
+        root = FirebaseDatabase.getInstance();
         userRef = root.getReference("user");
 
     }
@@ -322,13 +323,26 @@ public class SignIn extends AppCompatActivity
             prefUtil.put(R.string.pref_key_password, _password);
             prefUtil.put(R.string.pref_key_uid, uid);
             if(photoUrl != null)
-                prefUtil.put(R.string.pref_key_user_photo, photoUrl.getPath());
+            {
+                String p = photoUrl.toString();
+
+                prefUtil.put(R.string.pref_key_user_photo_link, p);
+                String[] s = photoUrl.toString().split("/");
+                prefUtil.put(R.string.pref_key_user_photo_name, s[s.length - 1]);
+
+                Log.i("photo login link =  ", p);
+                Log.i("photo login name =  ", s[s.length - 1]);
+            }
 
             if(name != null)
                 prefUtil.put(R.string.pref_key_username, name);
 
+
+            // get group
+
+
             prefUtil.apply();
-            SystemClock.sleep(700);
+            SystemClock.sleep(200);
             return null;
         }
 
@@ -343,13 +357,23 @@ public class SignIn extends AppCompatActivity
     }
 
     private void signinSuccess(){
+        /**
+         * cho dù là newbie hay là k thì bước đầu vẫn phải lấy các nhóm mà user mới đăng nhập
+         * sau đó xác định luôn current_group là group đầu tiên
+         * */
+        getGroup(prefUtil.getString(R.string.pref_key_uid));
+
+
+    }
+
+    private void getGroupSuccess(){
         if(newbie){
             // lan dau su dung thi huong dan chon avatar
             showIntroScreen();
         }
         else{
             // chuyen den Main Activity
-            checkHasGroup(prefUtil.getString(R.string.pref_key_uid));
+            gotoMainAvtivity();
         }
     }
 
@@ -361,7 +385,7 @@ public class SignIn extends AppCompatActivity
         startActivity(in);
     }
 
-    private void checkHasGroup(String uid){
+    private void getGroup(String uid){
         /**
          * kiem tra xem user nay co group nao hay chua
          * path:   root/user/uid/groups/
@@ -372,16 +396,15 @@ public class SignIn extends AppCompatActivity
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 String data = dataSnapshot.getValue().toString();
-                if(data.equals("false")){
-                    //prefUtil.put(R.string.pref_key_groups, null);
-                    //prefUtil.apply();
-                    gotoMainAvtivity(false);
-                }
-                else{
+
+                    String[] g = data.split("\\|");
                     prefUtil.put(R.string.pref_key_groups, data);
+                    prefUtil.put(R.string.pref_key_default_group, g[0]);
+                    prefUtil.put(R.string.pref_key_current_groups, g[0]);
+
                     prefUtil.apply();
-                    gotoMainAvtivity(true);
-                }
+                    getGroupSuccess();
+
             }
 
             @Override
@@ -395,22 +418,9 @@ public class SignIn extends AppCompatActivity
      * */
 
 
-    private void gotoMainAvtivity(boolean hasGroup) {
-
-        /**
-         * Kiem tra xem da co nhom chua
-         * neu khong thi hien thi man hinh addfirend
-         * */
-
-        if (!hasGroup){
-            Intent in = new Intent(this, AddFriendActivity.class);
-            startActivity(in);
-        }
-        else {
-            Intent in = new Intent(this, MainActivity.class);
-            startActivity(in);
-        }
-
+    private void gotoMainAvtivity() {
+        Intent in = new Intent(this, MainActivity.class);
+        startActivity(in);
 
     }
 
@@ -516,10 +526,15 @@ public class SignIn extends AppCompatActivity
 
     /**
      * cap nhat thong tin cho user
+     *  - ten duoc user dat
+     *  - photo default
      * */
     private void setupFirebaseAuth(final FirebaseUser user){
+        Uri u = Uri.parse(getString(R.string.default_user_photo_link));
+        Log.i("photo uri", u.toString());
         UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
                     .setDisplayName(fullname)
+                    .setPhotoUri(u)
                     .build();
 
         if(user != null){
@@ -543,22 +558,35 @@ public class SignIn extends AppCompatActivity
     }
 
     /**
-     * upload databse for GROUPS node
+     * upload database for GROUPS node
      * */
 
     private void setupDatabase(final FirebaseUser user){
-        Log.i("aaa", user.toString());
-        userRef.child(user.getUid()).child("groups").setValue("false").addOnCompleteListener(new OnCompleteListener<Void>() {
+        //Log.i("aaa", user.toString());
+        Log.i("tanaa", user.getUid());
+        root.getReference("user")
+                .child(user.getUid())
+                .child("groups")
+                .setValue(user.getUid())
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 // thong bao tao tai khoan thanh cong
                 signinStatus.setText("tạo tài khoản thành công").setDuration(Snackbar.LENGTH_SHORT).show();
+
+                // cai dat pref
+                prefUtil.put(R.string.pref_key_user_photo_name, getString(R.string.default_user_photo_name));
+                prefUtil.put(R.string.pref_key_user_photo_link, getString(R.string.default_user_photo_link));
+                prefUtil.apply();
 
                 // quay tro lại man hinh dang nhap
                 mViewPager.setCurrentItem(0);
                 btnFunction.setText("Đăng kí");
 
                 edtUsername.setText(user.getEmail());
+
+
+                Log.i("tanaa", "thanh cong");
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override

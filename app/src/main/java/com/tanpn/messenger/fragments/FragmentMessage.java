@@ -2,12 +2,16 @@ package com.tanpn.messenger.fragments;
 
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.LocalBroadcastManager;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -37,6 +41,7 @@ import com.tanpn.messenger.message.*;
 import com.tanpn.messenger.paint.ActivityPaint;
 import com.tanpn.messenger.photo.GalleryPicker;
 import com.tanpn.messenger.photo.PreviewPhoto;
+import com.tanpn.messenger.setting.GroupManager;
 import com.tanpn.messenger.utils.PrefUtil;
 import com.tanpn.messenger.utils.utils;
 
@@ -54,7 +59,8 @@ import java.util.Map;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class FragmentMessage extends Fragment implements MessageListAdapter.OnEventListener, AdapterView.OnItemClickListener, View.OnTouchListener, View.OnClickListener {
+public class FragmentMessage extends Fragment implements MessageListAdapter.OnEventListener, AdapterView.OnItemClickListener,
+        View.OnTouchListener, View.OnClickListener, ChildEventListener {
     public FragmentMessage() {
         // Required empty public constructor
     }
@@ -142,11 +148,27 @@ public class FragmentMessage extends Fragment implements MessageListAdapter.OnEv
                     ibtSend.setEnabled(true);
             }
         });
+
+        LocalBroadcastManager.getInstance(getContext()).registerReceiver(changeGroup, new IntentFilter("CHANGE_GROUP"));
+
     }
+
+
+    /**
+     * Local Broadcast
+     * */
+    private BroadcastReceiver changeGroup = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String message = intent.getStringExtra("message");
+            onChange(message);
+        }
+    };
 
     private StorageReference photoRef;  // reference to storage
     private DatabaseReference messageRef; // reference to database
     private StorageReference voiceRef;
+    private FirebaseDatabase root;
 
     private void initFirebase(){
         FirebaseStorage storage = FirebaseStorage.getInstance();
@@ -154,52 +176,9 @@ public class FragmentMessage extends Fragment implements MessageListAdapter.OnEv
         voiceRef = storage.getReferenceFromUrl("gs://messenger-d08e4.appspot.com/voice/");
 
 
-        FirebaseDatabase root = FirebaseDatabase.getInstance();
-        messageRef = root.getReference("message");
-        messageRef.addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                try {
-                    JSONObject obj = new JSONObject(dataSnapshot.getValue().toString());
-
-                    JSONObject o = (JSONObject) obj.get("message");
-                    Map<String, String> m = new HashMap<>();
-                    m.put(o.getString("id"), o.getString("path"));
-
-                    MessageListElement msg = new MessageListElement(
-                            obj.getString("id"),
-                            obj.getString("name").equals(prefUser.getString(R.string.pref_key_username, "null")),       // isSender
-                            obj.getString("name"),
-                            MessageListElement.MESSAGE_TYPE.values()[obj.getInt("type")],
-                            m,
-                            obj.getString("avatar"),
-                            MessageListElement.MESSAGE_STATUS.values()[obj.getInt("status")],
-                            obj.getString("sentDate"),
-                            obj.getString("receiveDate")
-                    );
-
-                    messageListAdapter.add(msg);
-                    setupLastMessage(msg.id);
-
-
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-
-            }
-
-            @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {}
-
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {}
-
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {}
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {}
-        });
+        root = FirebaseDatabase.getInstance();
+        messageRef = root.getReference(prefUser.getString(R.string.pref_key_current_groups)).child("message");
+        messageRef.addChildEventListener(this);
     }
 
     @Override
@@ -399,7 +378,7 @@ public class FragmentMessage extends Fragment implements MessageListAdapter.OnEv
                             prefUser.getString(R.string.pref_key_username, "null"),                                         // name
                             MessageListElement.MESSAGE_TYPE.TEXT,
                             m,
-                            prefUser.getString(R.string.pref_key_user_photo, "null"),                                           //avatar
+                            prefUser.getString(R.string.pref_key_user_photo_name, "null"),                                           //avatar
                             MessageListElement.MESSAGE_STATUS.SENDING,
                             getTimeSent(),                                         // sentDate
                             ""));                                                   // receiveDate
@@ -564,7 +543,7 @@ public class FragmentMessage extends Fragment implements MessageListAdapter.OnEv
 
 
             obj.put("message", o);
-            obj.put("avatar", prefUser.getString(R.string.pref_key_user_photo, "null"));
+            obj.put("avatar", prefUser.getString(R.string.pref_key_user_photo_name, "null"));
             obj.put("sentDate", getTimeSent());
             obj.put("receiveDate", "14/11/2016 9:31");
             obj.put("status", MessageListElement.MESSAGE_STATUS.RECEIVE.ordinal());
@@ -577,5 +556,65 @@ public class FragmentMessage extends Fragment implements MessageListAdapter.OnEv
         }
 
         return null;
+    }
+
+
+    /**
+     * firebase
+     * */
+    @Override
+    public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+        try {
+            JSONObject obj = new JSONObject(dataSnapshot.getValue().toString());
+
+            JSONObject o = (JSONObject) obj.get("message");
+            Map<String, String> m = new HashMap<>();
+            m.put(o.getString("id"), o.getString("path"));
+
+            MessageListElement msg = new MessageListElement(
+                    obj.getString("id"),
+                    obj.getString("name").equals(prefUser.getString(R.string.pref_key_username, "null")),       // isSender
+                    obj.getString("name"),
+                    MessageListElement.MESSAGE_TYPE.values()[obj.getInt("type")],
+                    m,
+                    obj.getString("avatar"),
+                    MessageListElement.MESSAGE_STATUS.values()[obj.getInt("status")],
+                    obj.getString("sentDate"),
+                    obj.getString("receiveDate")
+            );
+
+            messageListAdapter.add(msg);
+            setupLastMessage(msg.id);
+
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    @Override
+    public void onChildChanged(DataSnapshot dataSnapshot, String s) {}
+
+    @Override
+    public void onChildRemoved(DataSnapshot dataSnapshot) {}
+
+    @Override
+    public void onChildMoved(DataSnapshot dataSnapshot, String s) {}
+
+    @Override
+    public void onCancelled(DatabaseError databaseError) {}
+
+
+    /**
+     * change group
+     * */
+    public void onChange(String data) {
+        messageRef.removeEventListener(this);
+        messageListAdapter.deleteAll();
+        messageListAdapter.notifyDataSetChanged();
+
+        messageRef = root.getReference(data).child("message");
+        messageRef.addChildEventListener(this);
     }
 }

@@ -3,6 +3,7 @@ package com.tanpn.messenger.login;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -39,6 +40,11 @@ public class AddFriendActivity extends AppCompatActivity {
         else
             tvHello.setText("Xin chào!");
 
+
+
+        String p = pre.getString(R.string.pref_key_user_photo_link);
+        Log.i("photo", p);
+        Log.i("photo", getString(R.string.default_user_photo_link));
 
     }
 

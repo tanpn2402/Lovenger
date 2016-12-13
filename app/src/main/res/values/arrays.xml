@@ -14,4 +14,17 @@
         <item>3</item>
     </string-array>
 
+    <string-array name="setting_effect_val">
+        <item>Default</item>
+        <item>Flip Horizontal</item>
+        <item>Rotate Down</item>
+        <item>Zoom Out Page</item>
+        <item>Depth Page</item>
+        <item>Fade Page</item>
+        <item>Draw From Back</item>
+
+
+
+    </string-array>
+
 </resources>

@@ -1,12 +1,16 @@
 package com.tanpn.messenger.fragments;
 
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -33,6 +37,9 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
+import com.tanpn.messenger.setting.GroupManager;
+import com.tanpn.messenger.setting.OnGroupChange;
+import com.tanpn.messenger.utils.PrefUtil;
 import com.tanpn.messenger.utils.utils;
 
 import org.json.JSONObject;
@@ -40,7 +47,8 @@ import org.json.JSONObject;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class FragmentEvent extends Fragment implements EventListAdapter.OnEventListener, AdapterView.OnItemClickListener {
+public class FragmentEvent extends Fragment implements EventListAdapter.OnEventListener, AdapterView.OnItemClickListener,
+         ChildEventListener {
 
 
     private FloatingActionButton fabAdd;
@@ -49,15 +57,22 @@ public class FragmentEvent extends Fragment implements EventListAdapter.OnEventL
     private EventListAdapter eventListAdapter;
     private DatabaseReference eventRef;
 
+
+    private PrefUtil prefUtil;
+
     public FragmentEvent() {
         // Required empty public constructor
     }
 
+    private FirebaseDatabase root;
     private void initFirebase(){
-        FirebaseDatabase root = FirebaseDatabase.getInstance();
-        eventRef = root.getReference("event");
+        root = FirebaseDatabase.getInstance();
+        eventRef  = root.getReference(prefUtil.getString(R.string.pref_key_current_groups)).child("event");
+        // root / <group id> / event / ....
 
-        eventRef.addChildEventListener(new ChildEventListener() {
+        eventRef.addChildEventListener(this);
+
+        /*{
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 List<String> im = new ArrayList<>();
@@ -96,7 +111,7 @@ public class FragmentEvent extends Fragment implements EventListAdapter.OnEventL
 
             @Override
             public void onCancelled(DatabaseError databaseError) {}
-        });
+        });*/
     }
 
 
@@ -105,6 +120,8 @@ public class FragmentEvent extends Fragment implements EventListAdapter.OnEventL
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_event, container, false);
+
+        prefUtil = new PrefUtil(getContext());
 
         fabAdd = (FloatingActionButton) v.findViewById(R.id.fab_add);
         fabAdd.setBackgroundTintList(ColorStateList.valueOf(Color
@@ -183,6 +200,16 @@ public class FragmentEvent extends Fragment implements EventListAdapter.OnEventL
 
         lvEventList.setOnItemClickListener(this);
 
+
+        //
+
+        /**
+         * more, see at: http://stackoverflow.com/questions/8802157/how-to-use-localbroadcastmanager?noredirect=1&lq=1
+         *
+         * */
+        LocalBroadcastManager.getInstance(getContext()).registerReceiver(changeGroup, new IntentFilter("CHANGE_GROUP"));
+
+
         // set background
         setBackGround(v);
 
@@ -190,6 +217,14 @@ public class FragmentEvent extends Fragment implements EventListAdapter.OnEventL
 
 
     }
+
+    private BroadcastReceiver changeGroup = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String message = intent.getStringExtra("message");
+            onChange(message);
+        }
+    };
 
     public static void setBackGround(View view){
         ((RelativeLayout)view.findViewById(R.id.layout)).setBackgroundResource(R.drawable.image_background);
@@ -213,5 +248,67 @@ public class FragmentEvent extends Fragment implements EventListAdapter.OnEventL
 
         startActivity(in);
 
+    }
+
+
+
+
+
+    /**
+     * firebase
+     * */
+    @Override
+    public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+        List<String> im = new ArrayList<>();
+        im.add("d");
+
+        Log.i("TAG", dataSnapshot.getValue().toString());
+        EventListElement event = utils.readJSONString(dataSnapshot.getValue().toString());
+        if(event != null)
+        {
+            Log.i("TAG", "child added :" );
+
+            eventListAdapter.add(event);
+        }
+    }
+
+    @Override
+    public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+        Log.i("TAG", "child changed");
+
+        EventListElement event = utils.readJSONString(dataSnapshot.getValue().toString());
+        if(event != null){
+            eventListAdapter.edit(event);
+            eventListAdapter.notifyDataSetChanged();
+        }
+    }
+
+    @Override
+    public void onChildRemoved(DataSnapshot dataSnapshot) {
+        // dataSnapshot.getKey() = event ID
+        eventListAdapter.delete(dataSnapshot.getKey());
+        eventListAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onChildMoved(DataSnapshot dataSnapshot, String s) {}
+
+    @Override
+    public void onCancelled(DatabaseError databaseError) {}
+
+
+    /**
+     * khi thay doi group
+     *
+     * */
+
+    public void onChange(String data) {
+        eventRef.removeEventListener(this);
+        eventListAdapter.deleteAll();
+        eventListAdapter.notifyDataSetChanged();
+
+
+        eventRef  = root.getReference(data).child("event");
+        eventRef.addChildEventListener(this);
     }
 }

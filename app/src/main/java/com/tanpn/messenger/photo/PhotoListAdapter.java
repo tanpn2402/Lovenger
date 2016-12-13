@@ -153,4 +153,11 @@ public class PhotoListAdapter extends BaseAdapter {
 
         return false;
     }
+
+    public void deleteAll(){
+        keyPath.clear();
+        photoPaths.clear();
+
+        notifyDirtyStateChanged(true);
+    }
 }

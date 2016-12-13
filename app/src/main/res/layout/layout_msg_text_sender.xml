@@ -33,7 +33,7 @@
                 android:paddingTop="5dp"
                 android:textSize="15dp"
                 android:text="Message"
-                android:textColor="#000"
+                android:textColor="#eeffffff"
                 android:layout_marginRight="18dp"
                 android:layout_marginEnd="18dp"
                 android:layout_centerVertical="true"

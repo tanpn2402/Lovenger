@@ -91,14 +91,14 @@ public class SignInFragment extends Fragment {
     private void signinView(View v){
         final EditText edtUsername, edtPassword;
         edtUsername = (EditText) v.findViewById(R.id.edtUsername);
-        edtPassword = (EditText) v.findViewById(R.id.edtPassword);
+        edtPassword = (EditText) v.findViewById(R.id.edtOldPass);
 
         PrefUtil pre = new PrefUtil(getContext());
-        if(pre.getString(R.string.pref_key_email) != null){
+        if(!pre.getString(R.string.pref_key_email, "null").equals("null")){
             edtUsername.setText(pre.getString(R.string.pref_key_email));
         }
 
-        Button btnSignin = (Button) v.findViewById(R.id.btnSignIn);
+        Button btnSignin = (Button) v.findViewById(R.id.btnChangePassword);
         btnSignin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -120,10 +120,10 @@ public class SignInFragment extends Fragment {
     private void signupView(View v){
         final EditText edtUsername, edtPassword, edtFullname;
         edtUsername = (EditText) v.findViewById(R.id.edtUsername);
-        edtPassword = (EditText) v.findViewById(R.id.edtPassword);
+        edtPassword = (EditText) v.findViewById(R.id.edtOldPass);
         edtFullname = (EditText) v.findViewById(R.id.edtFullname);
 
-        Button btnSignin = (Button) v.findViewById(R.id.btnSignIn);
+        Button btnSignin = (Button) v.findViewById(R.id.btnChangePassword);
         btnSignin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -137,7 +137,7 @@ public class SignInFragment extends Fragment {
         final EditText edtUsername;
         edtUsername = (EditText) v.findViewById(R.id.edtUsername);
 
-        Button btnSignin = (Button) v.findViewById(R.id.btnSignIn);
+        Button btnSignin = (Button) v.findViewById(R.id.btnChangePassword);
         btnSignin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

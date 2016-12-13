@@ -94,7 +94,7 @@
                     <EditText
                         android:layout_width="300dp"
                         android:layout_height="50dp"
-                        android:id="@+id/edtPassword"
+                        android:id="@+id/edtOldPass"
                         android:textColor="#FFF"
                         android:textColorHint="#FFF"
                         android:hint="mật khẩu"
@@ -114,7 +114,7 @@
                         android:hint="nhâp lại mật khẩu"
                         android:textColorHint="#FFF"
                         android:background="@drawable/login_input"
-                        android:layout_below="@+id/edtPassword"
+                        android:layout_below="@+id/edtOldPass"
                         android:layout_alignParentLeft="true"
                         android:layout_alignParentRight="true"
                         android:layout_marginTop="4dp" />
