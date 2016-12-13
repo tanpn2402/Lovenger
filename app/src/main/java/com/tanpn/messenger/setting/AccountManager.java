@@ -57,13 +57,15 @@ public class AccountManager extends AppCompatActivity implements ChangePassword.
         btnLogout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                prefUtil.put(R.string.pref_key_email, "null");
+                //prefUtil.put(R.string.pref_key_email, "null");
                 prefUtil.put(R.string.pref_key_password, "null");
                 prefUtil.put(R.string.pref_key_username, "null");
                 prefUtil.put(R.string.pref_key_uid, "null");
 
                 prefUtil.put(R.string.pref_key_groups, "null");
                 prefUtil.put(R.string.pref_key_default_group, "null");
+                prefUtil.put(R.string.pref_key_current_groups, "null");
+
 
                 prefUtil.put(R.string.pref_key_user_photo_name, "null");
                 prefUtil.put(R.string.pref_key_user_photo_link, "null");
@@ -72,6 +74,14 @@ public class AccountManager extends AppCompatActivity implements ChangePassword.
 
                 backToSignIn();
 
+            }
+        });
+
+        ibtBack = (ImageButton) findViewById(R.id.ibtBack);
+        ibtBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onBackPressed();
             }
         });
 

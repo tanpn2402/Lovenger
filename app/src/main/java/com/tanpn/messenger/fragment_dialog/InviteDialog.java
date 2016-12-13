@@ -20,6 +20,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.tanpn.messenger.R;
 import com.tanpn.messenger.setting.InviteItem;
+import com.tanpn.messenger.utils.utils;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -48,8 +49,8 @@ public class InviteDialog extends DialogFragment {
         imUserphoto = (ImageView) v.findViewById(R.id.imUserphoto);
 
         tvUsername.setText(item.name);
-        tvDateIn.setText("ngay");
-        tvTimeIn.setText("time");
+        tvDateIn.setText(utils.calendarToDateString(item.datatime));
+        tvTimeIn.setText(utils.calendarToTimeString(item.datatime));
 
         StorageReference photoRef = FirebaseStorage.getInstance().getReferenceFromUrl("gs://messenger-d08e4.appspot.com/avatar/" +
                 item.userPhotoName);
@@ -96,6 +97,8 @@ public class InviteDialog extends DialogFragment {
     private void accept() {
         onAcceptInvite onAcceptInvite = (InviteDialog.onAcceptInvite) getActivity();
         onAcceptInvite.onAccept(item);
+
+        dismiss();
     }
 
     @NonNull

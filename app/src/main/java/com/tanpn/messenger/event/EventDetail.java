@@ -2,7 +2,10 @@ package com.tanpn.messenger.event;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -12,6 +15,7 @@ import android.os.SystemClock;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
@@ -62,7 +66,7 @@ import java.util.List;
 import java.util.Map;
 
 public class EventDetail extends AppCompatActivity implements View.OnClickListener, PhotoListAdapter.OnEventListener,
-        PreviewPhoto.OnResultListener, GroupManager.onGroupChange {
+        PreviewPhoto.OnResultListener{
 
 
     private TextView tvEventTitle, tvEventDate,  tvSetEvTime, tvSetEvDate, tvEventDays;
@@ -191,9 +195,25 @@ public class EventDetail extends AppCompatActivity implements View.OnClickListen
             }
         });
 
+        ///
+
+        LocalBroadcastManager.getInstance(this).registerReceiver(changeGroup, new IntentFilter("CHANGE_GROUP"));
+
+        ////
 
         initValues();
     }
+
+    /**
+     * Local Broadcast
+     * */
+    private BroadcastReceiver changeGroup = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String message = intent.getStringExtra("message");
+            onChange(message);
+        }
+    };
 
     /**
      * View details event: set values for all components
@@ -342,11 +362,13 @@ public class EventDetail extends AppCompatActivity implements View.OnClickListen
     /**
      * change group
      * */
-    @Override
+
     public void onChange(String data) {
         eventRef = root.getReference(data).child("event");
     }
 
+
+    //-----
     private class createNewEvent extends AsyncTask<Void, Void, Boolean>{
         private int totalPhoto = listPath.size();
         private int index = 0;
@@ -412,7 +434,7 @@ public class EventDetail extends AppCompatActivity implements View.OnClickListen
         event.put("category", Event.EventType.valueOf(eventCategoryDialog.getCategory().toString()).ordinal());
         event.put("date", tvEventDate.getText().toString());
         event.put("time", tvSetEvTime.getText().toString());
-        event.put("creater", "Tan Pham");
+        event.put("creater", prefUtil.getString(R.string.pref_key_username));
         event.put("remind", Event.Reminder.valueOf(eventRemindDialog.getReminder().toString()).ordinal());
         event.put("notification", swEventNotify.isChecked());
 

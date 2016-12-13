@@ -357,13 +357,23 @@ public class SignIn extends AppCompatActivity
     }
 
     private void signinSuccess(){
+        /**
+         * cho dù là newbie hay là k thì bước đầu vẫn phải lấy các nhóm mà user mới đăng nhập
+         * sau đó xác định luôn current_group là group đầu tiên
+         * */
+        getGroup(prefUtil.getString(R.string.pref_key_uid));
+
+
+    }
+
+    private void getGroupSuccess(){
         if(newbie){
             // lan dau su dung thi huong dan chon avatar
             showIntroScreen();
         }
         else{
             // chuyen den Main Activity
-            getGroup(prefUtil.getString(R.string.pref_key_uid));
+            gotoMainAvtivity();
         }
     }
 
@@ -393,7 +403,7 @@ public class SignIn extends AppCompatActivity
                     prefUtil.put(R.string.pref_key_current_groups, g[0]);
 
                     prefUtil.apply();
-                    gotoMainAvtivity();
+                    getGroupSuccess();
 
             }
 
@@ -409,9 +419,9 @@ public class SignIn extends AppCompatActivity
 
 
     private void gotoMainAvtivity() {
+        Intent in = new Intent(this, MainActivity.class);
+        startActivity(in);
 
-            Intent in = new Intent(this, MainActivity.class);
-            startActivity(in);
     }
 
 

@@ -27,6 +27,7 @@ import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.tanpn.messenger.MainActivity;
 import com.tanpn.messenger.R;
 import com.tanpn.messenger.utils.utils;
 
@@ -136,7 +137,10 @@ public class IntroFragment extends Fragment {
     private StorageReference photoRef;  // reference to storage
 
     private void joinActivity() {
-        Intent in = new Intent(getContext(), AddFriendActivity.class);
+        /**
+         * chuyển đến main Activity
+         * */
+        Intent in = new Intent(getContext(), MainActivity.class);
         startActivity(in);
 
     }

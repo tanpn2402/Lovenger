@@ -101,4 +101,11 @@ public class MyExpandableAdapter extends BaseExpandableListAdapter {
     public boolean isChildSelectable(int listPosition, int expandedListPosition) {
         return true;
     }
+
+    public void delete(String id){
+       if(expandableListTitle.contains(id)){
+           expandableListTitle.remove(id);
+           expandableListDetail.remove(id);
+       }
+    }
 }

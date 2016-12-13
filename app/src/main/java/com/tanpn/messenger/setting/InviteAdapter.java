@@ -60,7 +60,7 @@ public class InviteAdapter extends BaseAdapter {
 
         if (convertView == null) {
             holder = new ViewHolder();
-            convertView = inflater.inflate(R.layout.cusom_gallery_cell, null);
+            convertView = inflater.inflate(R.layout.layout_invite_item, null);
             holder.imUserPhoto = (ImageView) convertView.findViewById(R.id.imUserphoto);
             holder.tvUsername = (TextView) convertView.findViewById(R.id.tvUsername) ;
 

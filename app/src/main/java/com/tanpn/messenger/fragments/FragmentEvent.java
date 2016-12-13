@@ -1,12 +1,16 @@
 package com.tanpn.messenger.fragments;
 
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -34,6 +38,7 @@ import java.util.Calendar;
 import java.util.List;
 
 import com.tanpn.messenger.setting.GroupManager;
+import com.tanpn.messenger.setting.OnGroupChange;
 import com.tanpn.messenger.utils.PrefUtil;
 import com.tanpn.messenger.utils.utils;
 
@@ -43,7 +48,7 @@ import org.json.JSONObject;
  * A simple {@link Fragment} subclass.
  */
 public class FragmentEvent extends Fragment implements EventListAdapter.OnEventListener, AdapterView.OnItemClickListener,
-        GroupManager.onGroupChange, ChildEventListener {
+         ChildEventListener {
 
 
     private FloatingActionButton fabAdd;
@@ -195,6 +200,16 @@ public class FragmentEvent extends Fragment implements EventListAdapter.OnEventL
 
         lvEventList.setOnItemClickListener(this);
 
+
+        //
+
+        /**
+         * more, see at: http://stackoverflow.com/questions/8802157/how-to-use-localbroadcastmanager?noredirect=1&lq=1
+         *
+         * */
+        LocalBroadcastManager.getInstance(getContext()).registerReceiver(changeGroup, new IntentFilter("CHANGE_GROUP"));
+
+
         // set background
         setBackGround(v);
 
@@ -202,6 +217,14 @@ public class FragmentEvent extends Fragment implements EventListAdapter.OnEventL
 
 
     }
+
+    private BroadcastReceiver changeGroup = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String message = intent.getStringExtra("message");
+            onChange(message);
+        }
+    };
 
     public static void setBackGround(View view){
         ((RelativeLayout)view.findViewById(R.id.layout)).setBackgroundResource(R.drawable.image_background);
@@ -228,20 +251,7 @@ public class FragmentEvent extends Fragment implements EventListAdapter.OnEventL
     }
 
 
-    /**
-     * khi thay doi group
-     *
-     * */
-    @Override
-    public void onChange(String data) {
-        eventRef.removeEventListener(this);
-        eventListAdapter.deleteAll();
-        eventListAdapter.notifyDataSetChanged();
 
-
-        eventRef  = root.getReference(data).child("event");
-        eventRef.addChildEventListener(this);
-    }
 
 
     /**
@@ -285,4 +295,20 @@ public class FragmentEvent extends Fragment implements EventListAdapter.OnEventL
 
     @Override
     public void onCancelled(DatabaseError databaseError) {}
+
+
+    /**
+     * khi thay doi group
+     *
+     * */
+
+    public void onChange(String data) {
+        eventRef.removeEventListener(this);
+        eventListAdapter.deleteAll();
+        eventListAdapter.notifyDataSetChanged();
+
+
+        eventRef  = root.getReference(data).child("event");
+        eventRef.addChildEventListener(this);
+    }
 }

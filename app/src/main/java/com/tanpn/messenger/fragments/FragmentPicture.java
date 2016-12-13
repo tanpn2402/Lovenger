@@ -2,7 +2,10 @@ package com.tanpn.messenger.fragments;
 
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
@@ -11,6 +14,7 @@ import android.os.SystemClock;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -48,7 +52,7 @@ import java.util.List;
 
 
 public class FragmentPicture extends Fragment implements PhotoListAdapter.OnEventListener,
-                            ChildEventListener, GroupManager.onGroupChange {
+                            ChildEventListener {
 
 
     public FragmentPicture() {
@@ -153,9 +157,21 @@ public class FragmentPicture extends Fragment implements PhotoListAdapter.OnEven
             }
         });
 
+        LocalBroadcastManager.getInstance(getContext()).registerReceiver(changeGroup, new IntentFilter("CHANGE_GROUP"));
+
         return v;
     }
 
+    /**
+     * Local Broadcast
+     * */
+    private BroadcastReceiver changeGroup = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String message = intent.getStringExtra("message");
+            onChange(message);
+        }
+    };
 
 
     private final int GALLERY_CODE = 1;
@@ -226,7 +242,7 @@ public class FragmentPicture extends Fragment implements PhotoListAdapter.OnEven
     /**
      * change group
      * */
-    @Override
+
     public void onChange(String data) {
         photoRef.removeEventListener(this);
         adapter.deleteAll();

@@ -13,13 +13,6 @@ public class InviteItem {
     public String userPhotoName;
     public Calendar datatime;
 
-    public InviteItem(String _name, String _userPhoto, Calendar _datatime){
-        id = utils.generateInviteId();
-        name = _name;
-        userPhotoName = _userPhoto;
-        datatime = _datatime;
-    }
-
     public InviteItem(String _id, String _name, String _userPhoto, Calendar _datatime){
         id = _id;
         name = _name;

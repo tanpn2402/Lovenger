@@ -2,12 +2,16 @@ package com.tanpn.messenger.fragments;
 
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.LocalBroadcastManager;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -56,7 +60,7 @@ import java.util.Map;
  * A simple {@link Fragment} subclass.
  */
 public class FragmentMessage extends Fragment implements MessageListAdapter.OnEventListener, AdapterView.OnItemClickListener,
-        View.OnTouchListener, View.OnClickListener, GroupManager.onGroupChange, ChildEventListener {
+        View.OnTouchListener, View.OnClickListener, ChildEventListener {
     public FragmentMessage() {
         // Required empty public constructor
     }
@@ -144,7 +148,22 @@ public class FragmentMessage extends Fragment implements MessageListAdapter.OnEv
                     ibtSend.setEnabled(true);
             }
         });
+
+        LocalBroadcastManager.getInstance(getContext()).registerReceiver(changeGroup, new IntentFilter("CHANGE_GROUP"));
+
     }
+
+
+    /**
+     * Local Broadcast
+     * */
+    private BroadcastReceiver changeGroup = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String message = intent.getStringExtra("message");
+            onChange(message);
+        }
+    };
 
     private StorageReference photoRef;  // reference to storage
     private DatabaseReference messageRef; // reference to database
@@ -590,7 +609,6 @@ public class FragmentMessage extends Fragment implements MessageListAdapter.OnEv
     /**
      * change group
      * */
-    @Override
     public void onChange(String data) {
         messageRef.removeEventListener(this);
         messageListAdapter.deleteAll();

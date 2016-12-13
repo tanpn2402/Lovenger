@@ -84,6 +84,11 @@ public class FragmentSetting extends PreferenceFragment implements
         menuEffect = (ListPreference) findPreference(getString(R.string.pref_key_main_menu_effect));
         photoEffect = (ListPreference) findPreference(getString(R.string.pref_key_photo_view_effect));
 
+        prefUtil = new PrefUtil(getContext());
+        menuEffect.setDefaultValue(prefUtil.getString(R.string.pref_key_main_menu_effect, "Default"));
+        photoEffect.setDefaultValue(prefUtil.getString(R.string.pref_key_photo_view_effect, "Default"));
+
+
 
         pref.registerOnSharedPreferenceChangeListener(this);
         powerMode.setOnPreferenceChangeListener(this);
@@ -138,7 +143,7 @@ public class FragmentSetting extends PreferenceFragment implements
         }
         else if(key.equals(k3)){
             Log.i("pref", o + "");
-            editor.putString(k3, o.toString());
+            editor.putBoolean(k3, (Boolean)o);
             editor.commit();
 
         }
