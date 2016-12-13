@@ -18,6 +18,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.tanpn.messenger.R;
+import com.tanpn.messenger.photo.SharePhoto;
 import com.tanpn.messenger.setting.AccountManager;
 import com.tanpn.messenger.setting.GroupManager;
 import com.tanpn.messenger.setting.InviteManager;
@@ -45,6 +46,9 @@ public class FragmentSetting extends PreferenceFragment implements
     private Preference accountManager;
     private Preference groupManager;
     private Preference inviteManager;
+
+    private Preference sharePhoto;
+    private Preference shareVoice;
 
     private ListPreference menuEffect;
     private ListPreference photoEffect;
@@ -81,13 +85,13 @@ public class FragmentSetting extends PreferenceFragment implements
         groupManager = (Preference) findPreference(getString(R.string.pref_key_group_manager));
         inviteManager = (Preference) findPreference(getString(R.string.pref_key_invite_manager));
 
+        sharePhoto = (Preference) findPreference(getString(R.string.pref_key_share_photo));
+        shareVoice = (Preference) findPreference(getString(R.string.pref_key_share_voice));
+
         menuEffect = (ListPreference) findPreference(getString(R.string.pref_key_main_menu_effect));
         photoEffect = (ListPreference) findPreference(getString(R.string.pref_key_photo_view_effect));
 
         prefUtil = new PrefUtil(getContext());
-        menuEffect.setDefaultValue(prefUtil.getString(R.string.pref_key_main_menu_effect, "Default"));
-        photoEffect.setDefaultValue(prefUtil.getString(R.string.pref_key_photo_view_effect, "Default"));
-
 
 
         pref.registerOnSharedPreferenceChangeListener(this);
@@ -101,6 +105,29 @@ public class FragmentSetting extends PreferenceFragment implements
         accountManager.setOnPreferenceClickListener(this);
         groupManager.setOnPreferenceClickListener(this);
         inviteManager.setOnPreferenceClickListener(this);
+
+        sharePhoto.setOnPreferenceClickListener(this);
+        shareVoice.setOnPreferenceClickListener(this);
+
+        initValues();
+    }
+
+
+    private void initValues(){
+        powerMode.setChecked(prefUtil.getBoolean(R.string.pref_key_power_saver_mode, true));
+        sound.setChecked(prefUtil.getBoolean(R.string.pref_key_sound, true));
+        vibration.setChecked(prefUtil.getBoolean(R.string.pref_key_vibration, true));
+
+        menuEffect.setDefaultValue(prefUtil.getString(R.string.pref_key_main_menu_effect, "Default"));
+        photoEffect.setDefaultValue(prefUtil.getString(R.string.pref_key_photo_view_effect, "Default"));
+
+        menuEffect.setSummary(prefUtil.getString(R.string.pref_key_main_menu_effect, "Default"));
+        photoEffect.setSummary(prefUtil.getString(R.string.pref_key_photo_view_effect, "Default"));
+
+        menuEffect.setValue(prefUtil.getString(R.string.pref_key_main_menu_effect, "Default"));
+        photoEffect.setValue(prefUtil.getString(R.string.pref_key_photo_view_effect, "Default"));
+
+
     }
 
 
@@ -132,7 +159,7 @@ public class FragmentSetting extends PreferenceFragment implements
 
 
         if(key.equals(k1)){
-            Log.i("pref", (Boolean) o + "");
+            Log.i("pref", o + "");
             editor.putBoolean(k1, (Boolean)o);
             editor.commit();
         }
@@ -168,6 +195,8 @@ public class FragmentSetting extends PreferenceFragment implements
         String k1 = getString(R.string.pref_key_account_manager);
         String k2 = getString(R.string.pref_key_group_manager);
         String k3 = getString(R.string.pref_key_invite_manager);
+        String k4 = getString(R.string.pref_key_share_photo);
+        String k5 = getString(R.string.pref_key_share_voice);
 
         if(key.equals(k1)){
             Intent in = new Intent(getContext(), AccountManager.class);
@@ -181,6 +210,15 @@ public class FragmentSetting extends PreferenceFragment implements
         else if(key.equals(k3)){
             Intent in = new Intent(getContext(), InviteManager.class);
             startActivity(in);
+        }
+        else if(key.equals(k4)){
+            // share photo activity
+            Intent in = new Intent(getContext(), SharePhoto.class);
+            startActivity(in);
+
+        }
+        else if(key.equals(k5)){
+            // voice
         }
         return false;
     }

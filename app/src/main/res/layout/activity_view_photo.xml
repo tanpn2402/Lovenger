@@ -31,8 +31,8 @@
             android:text="12/100"
             android:id="@+id/tvPhotoIndex"
             android:layout_centerVertical="true"
-            android:layout_toRightOf="@+id/imageView6"
-            android:layout_toEndOf="@+id/imageView6"
+            android:layout_toRightOf="@+id/ibtBack"
+            android:layout_toEndOf="@+id/ibtBack"
             android:layout_marginLeft="10dp" />
 
         <ImageView
@@ -48,7 +48,7 @@
         <ImageView
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:id="@+id/imageView6"
+            android:id="@+id/ibtBack"
             android:src="@drawable/abc_ic_ab_back_material"
             android:scaleType="center"
             android:layout_centerVertical="true"

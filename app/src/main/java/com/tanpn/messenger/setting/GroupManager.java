@@ -143,6 +143,9 @@ public class GroupManager extends AppCompatActivity {
         pref.apply();
 
 
+        /**
+         * local broadcast
+         * */
         Intent intent = new Intent("CHANGE_GROUP");
         // You can also include some extra data.
         intent.putExtra("message", id);

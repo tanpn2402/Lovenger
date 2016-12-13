@@ -29,6 +29,7 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.tanpn.messenger.MainActivity;
 import com.tanpn.messenger.R;
+import com.tanpn.messenger.utils.PrefUtil;
 import com.tanpn.messenger.utils.utils;
 
 import java.io.ByteArrayOutputStream;
@@ -44,6 +45,7 @@ public class IntroFragment extends Fragment {
 
     private int mBackgroundColor, mPage;
 
+    private PrefUtil prefUtil;
     public static IntroFragment newInstance(int backgroundColor, int page) {
         IntroFragment frag = new IntroFragment();
         Bundle b = new Bundle();
@@ -106,6 +108,8 @@ public class IntroFragment extends Fragment {
 
         if(mPage == 4){
             // page so 3 co 3 button
+            prefUtil = new PrefUtil(getContext());
+            photoName = prefUtil.getString(R.string.pref_key_user_photo_name);
             Button btnSkip =  (Button) view.findViewById(R.id.btnSkip);
             ImageButton ibtCam = (ImageButton) view.findViewById(R.id.ibtCamera);
             ImageButton ibtGal = (ImageButton) view.findViewById(R.id.ibtGallery);
@@ -145,6 +149,7 @@ public class IntroFragment extends Fragment {
 
     }
 
+    private String photoName;
     private final int CAMERA_CODE = 1;
     private final int GALLERY_CODE = 2;
 
@@ -185,7 +190,8 @@ public class IntroFragment extends Fragment {
             photo.compress(Bitmap.CompressFormat.PNG, 100, baos);   // full quality 100
             byte[] bytes = baos.toByteArray();
 
-            final String photoName = utils.generatePhotoId();
+
+
             UploadTask uploadTask = photoRef.child(photoName).putBytes(bytes);  // upload len storage
 
             uploadTask.addOnFailureListener(new OnFailureListener() {
@@ -202,7 +208,6 @@ public class IntroFragment extends Fragment {
         else if(requestCode == GALLERY_CODE){
             Uri u = data.getData();
 
-            final String photoName = utils.generatePhotoId();
             UploadTask uploadTask = photoRef.child(photoName).putFile(u);
             uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                 @Override
@@ -233,6 +238,9 @@ public class IntroFragment extends Fragment {
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
                             if (task.isSuccessful()) {
+                                prefUtil.put(R.string.pref_key_user_photo_link, photoPath);
+                                prefUtil.apply();
+
                                 joinActivity();
                             }
                         }

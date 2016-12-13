@@ -126,6 +126,13 @@ public class utils {
 
     }
 
+    public static String generateCommentId(){
+        return "cmt-" + getCurrentTimeStamp();
+
+    }
+
+
+
 
     public static int getEventCategoryID(Event.EventType status){
         switch (status){
@@ -344,7 +351,8 @@ public class utils {
                     json.getString("creater"),
                     utils.getReminder(json.getInt("remind")),
                     json.getBoolean("notification"),
-                    pictures
+                    pictures,
+                    json.getJSONArray("comment")
             );
 
            return event;
@@ -368,6 +376,7 @@ public class utils {
             obj.put("creater", e.creater);
             obj.put("remind", e.remind.ordinal());
             obj.put("notification", e.notify);
+            obj.put("comment", e.commentArr);
 
             JSONArray list = new JSONArray();
             for(Map.Entry<String, String> s : e.pictures.entrySet()){

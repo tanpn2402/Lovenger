@@ -39,6 +39,18 @@
 
     </PreferenceCategory>
 
+    <PreferenceCategory android:title="@string/setting_share_title">
+        <Preference
+            android:title="@string/setting_share_photo"
+            android:key="@string/pref_key_share_photo"/>
+
+        <Preference
+            android:title="@string/setting_share_voice"
+            android:key="@string/pref_key_share_voice"/>
+
+
+    </PreferenceCategory>
+
     <PreferenceCategory android:title="@string/setting_manager">
 
         <Preference

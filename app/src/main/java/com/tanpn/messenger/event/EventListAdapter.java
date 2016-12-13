@@ -141,7 +141,7 @@ public class EventListAdapter extends BaseAdapter {
         return false;
     }
 
-    private EventListElement getEvent(String eId){
+    public EventListElement getEvent(String eId){
         for(int i = 0 ; i < eventList.size(); i++){
             if(eventList.get(i).id.equals(eId)){
                 return eventList.get(i);

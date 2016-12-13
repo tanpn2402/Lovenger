@@ -65,6 +65,7 @@ public class AccountManager extends AppCompatActivity implements ChangePassword.
                 prefUtil.put(R.string.pref_key_groups, "null");
                 prefUtil.put(R.string.pref_key_default_group, "null");
                 prefUtil.put(R.string.pref_key_current_groups, "null");
+                prefUtil.put(R.string.pref_key_current_event, "null");
 
 
                 prefUtil.put(R.string.pref_key_user_photo_name, "null");
@@ -216,8 +217,11 @@ public class AccountManager extends AppCompatActivity implements ChangePassword.
     }
 
     private void setupFirebaseAvatar(final String photoPath){
+        Uri u = Uri.parse(photoPath);
+        Log.i("k hieu", u.toString());
+
         UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
-                .setPhotoUri(Uri.parse(photoPath))
+                .setPhotoUri(u)
                 .build();
 
         final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();

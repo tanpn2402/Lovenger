@@ -22,7 +22,8 @@
         android:layout_height="50dp"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:background="#00ffffff">
+        android:background="#b1464646"
+        android:id="@+id/rlAppbar">
 
         <ImageView
             android:layout_width="50dp"
@@ -37,8 +38,8 @@
         <ImageView
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:id="@+id/imageView6"
-            android:src="@drawable/abc_ic_ab_back_material"
+            android:id="@+id/ibtBack"
+            android:src="@drawable/abc_vector_test"
             android:scaleType="center"
             android:layout_centerVertical="true"
             android:layout_alignParentLeft="true"
@@ -66,35 +67,53 @@
             android:layout_toStartOf="@+id/ibtEventShare" />
     </RelativeLayout>
 
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="200dp"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
         android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:background="#00ffffff">
+        android:orientation="vertical">
 
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="60dp"
-            android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true"
-            android:id="@+id/relativeLayout7">
+            android:id="@+id/rlPanelHeader"
+            android:background="#b1464646">
 
             <ImageView
-                android:layout_width="40dp"
-                android:layout_height="40dp"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
                 android:id="@+id/imEventCategory"
                 android:layout_centerVertical="true"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
                 android:layout_marginLeft="30dp"
-                android:src="@drawable/ic_heart_pink" />
+                android:src="@drawable/ic_anniversary_gray"
+                android:scaleType="center" />
+
+            <ImageView
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:id="@+id/imEventStatus"
+                android:layout_toRightOf="@+id/tvEventDays"
+                android:layout_toEndOf="@+id/tvEventDays"
+                android:layout_centerVertical="true"
+                android:src="@drawable/ic_day_coming" />
+
+            <ImageView
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:id="@+id/ibtHide"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
+                android:src="@android:drawable/arrow_down_float"
+                android:scaleType="center" />
 
             <TextView
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="60dp"
                 android:textAppearance="?android:attr/textAppearanceLarge"
                 android:text="142"
                 android:id="@+id/tvEventDays"
@@ -106,67 +125,137 @@
                 android:textColor="#FFF" />
 
             <ImageView
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:id="@+id/imEventDayStatus"
-                android:layout_toRightOf="@+id/tvEventDays"
-                android:layout_toEndOf="@+id/tvEventDays"
-                android:layout_centerVertical="true"
-                android:src="@drawable/ic_day_coming" />
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:id="@+id/ibtShow"
+                android:src="@android:drawable/arrow_up_float"
+                android:scaleType="center"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
+                android:visibility="gone" />
         </RelativeLayout>
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="Untitled Event"
-            android:id="@+id/tvEventTitle"
-            android:layout_below="@+id/relativeLayout7"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_marginLeft="30dp"
-            android:layout_marginStart="30dp"
-            android:layout_marginBottom="5dp"
-            android:textColor="#FFF" />
 
-        <TextView
-            android:layout_width="wrap_content"
+        <RelativeLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="Date"
-            android:id="@+id/tvEventDate"
-            android:layout_below="@+id/tvEventTitle"
-            android:layout_alignLeft="@+id/tvEventTitle"
-            android:layout_alignStart="@+id/tvEventTitle"
-            android:layout_marginBottom="5dp"
-            android:textSize="18dp"
-            android:textColor="#FFF" />
+            android:background="#b1464646"
+            android:id="@+id/rlPanelDetail"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="Time"
-            android:id="@+id/tvEventTime"
-            android:layout_below="@+id/tvEventDate"
-            android:layout_alignLeft="@+id/tvEventDate"
-            android:layout_alignStart="@+id/tvEventDate"
-            android:layout_marginBottom="5dp"
-            android:textSize="18dp"
-            android:textColor="#FFF" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="Create by"
-            android:id="@+id/tvEventCreated"
-            android:layout_below="@+id/tvEventTime"
-            android:layout_alignLeft="@+id/tvEventTime"
-            android:layout_alignStart="@+id/tvEventTime"
-            android:layout_marginBottom="5dp"
-            android:textSize="18dp"
-            android:textColor="#FFF" />
-    </RelativeLayout>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="Untitled Event"
+                android:id="@+id/tvEventTitle"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_marginLeft="30dp"
+                android:layout_marginStart="30dp"
+                android:layout_marginBottom="5dp"
+                android:textColor="#FFF" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="Date"
+                android:id="@+id/tvEventDate"
+                android:layout_below="@+id/tvEventTitle"
+                android:layout_alignLeft="@+id/tvEventTitle"
+                android:layout_alignStart="@+id/tvEventTitle"
+                android:layout_marginBottom="5dp"
+                android:textSize="18dp"
+                android:textColor="#FFF" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="Time"
+                android:id="@+id/tvEventTime"
+                android:layout_below="@+id/tvEventDate"
+                android:layout_alignLeft="@+id/tvEventDate"
+                android:layout_alignStart="@+id/tvEventDate"
+                android:layout_marginBottom="5dp"
+                android:textSize="18dp"
+                android:textColor="#FFF" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="Create by"
+                android:id="@+id/tvEventCreated"
+                android:layout_below="@+id/tvEventTime"
+                android:layout_alignLeft="@+id/tvEventTime"
+                android:layout_alignStart="@+id/tvEventTime"
+                android:layout_marginBottom="5dp"
+                android:textSize="18dp"
+                android:textColor="#FFF" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/rlPanelComment"
+            android:visibility="gone">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"
+                android:id="@+id/typing_area"
+                android:background="#FFF">
+
+                <ImageButton
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:id="@+id/ibtSend"
+                    android:layout_centerVertical="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentEnd="true"
+                    android:src="@drawable/ic_send_gray"
+                    android:scaleType="center" />
+
+                <EditText
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/layout_typing"
+                    android:id="@+id/edtTyping"
+                    android:hint="@string/comment_hint"
+                    android:textSize="15dp"
+                    android:maxLines="3"
+                    android:autoLink="phone|web|map|email"
+                    android:minLines="1"
+                    android:padding="10dp"
+                    android:gravity="top|bottom"
+                    android:layout_centerVertical="true"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
+                    android:layout_toStartOf="@+id/ibtSend"
+                    android:layout_toLeftOf="@+id/ibtSend" />
+            </RelativeLayout>
+            <ListView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/commentList"
+                android:layout_centerHorizontal="true"
+                android:divider="@null"
+                android:stackFromBottom="true"
+                android:transcriptMode="alwaysScroll"
+                android:background="#b1464646"
+                android:layout_alignParentTop="true"
+                android:layout_above="@+id/typing_area" />
+
+        </RelativeLayout>
+
+
+    </LinearLayout>
 
 </RelativeLayout>

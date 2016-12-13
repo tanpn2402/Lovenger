@@ -325,7 +325,7 @@ public class FragmentMessage extends Fragment implements MessageListAdapter.OnEv
                 break;
             case R.id.ibtVoice:
                 voiceRecorder.show(getActivity().getSupportFragmentManager(), "dialog");
-                voiceRecorder.setTargetFragment(this, VOICE_CODE);
+                voiceRecorder.setTargetFragment(getTargetFragment(), VOICE_CODE);
                 /*
                 * see at: http://stackoverflow.com/questions/10905312/receive-result-from-dialogfragment
                 * */

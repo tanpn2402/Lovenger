@@ -36,7 +36,7 @@ public class MainActivity extends AppCompatActivity {
 
         viewPagesAdapter = new ViewPagesAdapter(getSupportFragmentManager());
         viewPagesAdapter.addFragments(new FragmentEvent(), getString(R.string.fragment_event));
-        viewPagesAdapter.addFragments(new FragmentPicture(), getString(R.string.fragment_picture));
+        //viewPagesAdapter.addFragments(new FragmentPicture(), getString(R.string.fragment_picture));
         viewPagesAdapter.addFragments(new FragmentMessage(), getString(R.string.fragment_message));
         viewPagesAdapter.addFragments(new FragmentSetting(), getString(R.string.fragment_setting));
 
@@ -90,27 +90,27 @@ public class MainActivity extends AppCompatActivity {
         switch (i){
             case 1:
                 tabLayout.getTabAt(0).setIcon(R.drawable.ic_event_pink);
-                tabLayout.getTabAt(1).setIcon(R.drawable.ic_picture_gray);
-                tabLayout.getTabAt(2).setIcon(R.drawable.ic_message_gray);
-                tabLayout.getTabAt(3).setIcon(R.drawable.ic_setting_gray);
-                break;
-            case 2:
-                tabLayout.getTabAt(0).setIcon(R.drawable.ic_event_gray);
-                tabLayout.getTabAt(1).setIcon(R.drawable.ic_picture_pink);
-                tabLayout.getTabAt(2).setIcon(R.drawable.ic_message_gray);
-                tabLayout.getTabAt(3).setIcon(R.drawable.ic_setting_gray);
-                break;
-            case 3:
-                tabLayout.getTabAt(0).setIcon(R.drawable.ic_event_gray);
-                tabLayout.getTabAt(1).setIcon(R.drawable.ic_picture_gray);
-                tabLayout.getTabAt(2).setIcon(R.drawable.ic_message_pink);
-                tabLayout.getTabAt(3).setIcon(R.drawable.ic_setting_gray);
+                //tabLayout.getTabAt(1).setIcon(R.drawable.ic_picture_gray);
+                tabLayout.getTabAt(1).setIcon(R.drawable.ic_message_gray);
+                tabLayout.getTabAt(2).setIcon(R.drawable.ic_setting_gray);
                 break;
             case 4:
                 tabLayout.getTabAt(0).setIcon(R.drawable.ic_event_gray);
-                tabLayout.getTabAt(1).setIcon(R.drawable.ic_picture_gray);
-                tabLayout.getTabAt(2).setIcon(R.drawable.ic_message_gray);
-                tabLayout.getTabAt(3).setIcon(R.drawable.ic_setting_pink);
+                //tabLayout.getTabAt(1).setIcon(R.drawable.ic_picture_pink);
+                tabLayout.getTabAt(1).setIcon(R.drawable.ic_message_gray);
+                tabLayout.getTabAt(2).setIcon(R.drawable.ic_setting_gray);
+                break;
+            case 2:
+                tabLayout.getTabAt(0).setIcon(R.drawable.ic_event_gray);
+                //tabLayout.getTabAt(1).setIcon(R.drawable.ic_picture_gray);
+                tabLayout.getTabAt(1).setIcon(R.drawable.ic_message_pink);
+                tabLayout.getTabAt(2).setIcon(R.drawable.ic_setting_gray);
+                break;
+            case 3:
+                tabLayout.getTabAt(0).setIcon(R.drawable.ic_event_gray);
+                //tabLayout.getTabAt(1).setIcon(R.drawable.ic_picture_gray);
+                tabLayout.getTabAt(1).setIcon(R.drawable.ic_message_gray);
+                tabLayout.getTabAt(2).setIcon(R.drawable.ic_setting_pink);
                 break;
 
         }
