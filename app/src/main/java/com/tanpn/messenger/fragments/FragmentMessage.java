@@ -37,6 +37,7 @@ import com.tanpn.messenger.message.*;
 import com.tanpn.messenger.paint.ActivityPaint;
 import com.tanpn.messenger.photo.GalleryPicker;
 import com.tanpn.messenger.photo.PreviewPhoto;
+import com.tanpn.messenger.setting.GroupManager;
 import com.tanpn.messenger.utils.PrefUtil;
 import com.tanpn.messenger.utils.utils;
 
@@ -54,7 +55,8 @@ import java.util.Map;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class FragmentMessage extends Fragment implements MessageListAdapter.OnEventListener, AdapterView.OnItemClickListener, View.OnTouchListener, View.OnClickListener {
+public class FragmentMessage extends Fragment implements MessageListAdapter.OnEventListener, AdapterView.OnItemClickListener,
+        View.OnTouchListener, View.OnClickListener, GroupManager.onGroupChange, ChildEventListener {
     public FragmentMessage() {
         // Required empty public constructor
     }
@@ -147,6 +149,7 @@ public class FragmentMessage extends Fragment implements MessageListAdapter.OnEv
     private StorageReference photoRef;  // reference to storage
     private DatabaseReference messageRef; // reference to database
     private StorageReference voiceRef;
+    private FirebaseDatabase root;
 
     private void initFirebase(){
         FirebaseStorage storage = FirebaseStorage.getInstance();
@@ -154,52 +157,9 @@ public class FragmentMessage extends Fragment implements MessageListAdapter.OnEv
         voiceRef = storage.getReferenceFromUrl("gs://messenger-d08e4.appspot.com/voice/");
 
 
-        FirebaseDatabase root = FirebaseDatabase.getInstance();
-        messageRef = root.getReference("message");
-        messageRef.addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                try {
-                    JSONObject obj = new JSONObject(dataSnapshot.getValue().toString());
-
-                    JSONObject o = (JSONObject) obj.get("message");
-                    Map<String, String> m = new HashMap<>();
-                    m.put(o.getString("id"), o.getString("path"));
-
-                    MessageListElement msg = new MessageListElement(
-                            obj.getString("id"),
-                            obj.getString("name").equals(prefUser.getString(R.string.pref_key_username, "null")),       // isSender
-                            obj.getString("name"),
-                            MessageListElement.MESSAGE_TYPE.values()[obj.getInt("type")],
-                            m,
-                            obj.getString("avatar"),
-                            MessageListElement.MESSAGE_STATUS.values()[obj.getInt("status")],
-                            obj.getString("sentDate"),
-                            obj.getString("receiveDate")
-                    );
-
-                    messageListAdapter.add(msg);
-                    setupLastMessage(msg.id);
-
-
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-
-            }
-
-            @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {}
-
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {}
-
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {}
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {}
-        });
+        root = FirebaseDatabase.getInstance();
+        messageRef = root.getReference(prefUser.getString(R.string.pref_key_current_groups)).child("message");
+        messageRef.addChildEventListener(this);
     }
 
     @Override
@@ -577,5 +537,66 @@ public class FragmentMessage extends Fragment implements MessageListAdapter.OnEv
         }
 
         return null;
+    }
+
+
+    /**
+     * firebase
+     * */
+    @Override
+    public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+        try {
+            JSONObject obj = new JSONObject(dataSnapshot.getValue().toString());
+
+            JSONObject o = (JSONObject) obj.get("message");
+            Map<String, String> m = new HashMap<>();
+            m.put(o.getString("id"), o.getString("path"));
+
+            MessageListElement msg = new MessageListElement(
+                    obj.getString("id"),
+                    obj.getString("name").equals(prefUser.getString(R.string.pref_key_username, "null")),       // isSender
+                    obj.getString("name"),
+                    MessageListElement.MESSAGE_TYPE.values()[obj.getInt("type")],
+                    m,
+                    obj.getString("avatar"),
+                    MessageListElement.MESSAGE_STATUS.values()[obj.getInt("status")],
+                    obj.getString("sentDate"),
+                    obj.getString("receiveDate")
+            );
+
+            messageListAdapter.add(msg);
+            setupLastMessage(msg.id);
+
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    @Override
+    public void onChildChanged(DataSnapshot dataSnapshot, String s) {}
+
+    @Override
+    public void onChildRemoved(DataSnapshot dataSnapshot) {}
+
+    @Override
+    public void onChildMoved(DataSnapshot dataSnapshot, String s) {}
+
+    @Override
+    public void onCancelled(DatabaseError databaseError) {}
+
+
+    /**
+     * change group
+     * */
+    @Override
+    public void onChange(String data) {
+        messageRef.removeEventListener(this);
+        messageListAdapter.deleteAll();
+        messageListAdapter.notifyDataSetChanged();
+
+        messageRef = root.getReference(data).child("message");
+        messageRef.addChildEventListener(this);
     }
 }

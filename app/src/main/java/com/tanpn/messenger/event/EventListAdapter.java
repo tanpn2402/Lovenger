@@ -178,4 +178,9 @@ public class EventListAdapter extends BaseAdapter {
             notifyDirtyStateChanged(true);
         }
     }
+
+    public void deleteAll(){
+        eventList.clear();
+        notifyDirtyStateChanged(true);
+    }
 }

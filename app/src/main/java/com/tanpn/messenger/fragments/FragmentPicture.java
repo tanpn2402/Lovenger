@@ -35,6 +35,8 @@ import com.tanpn.messenger.photo.ActivityViewPhoto;
 import com.tanpn.messenger.photo.GalleryPicker;
 import com.tanpn.messenger.photo.PhotoElement;
 import com.tanpn.messenger.photo.PhotoListAdapter;
+import com.tanpn.messenger.setting.GroupManager;
+import com.tanpn.messenger.utils.PrefUtil;
 import com.tanpn.messenger.utils.utils;
 
 import org.json.JSONException;
@@ -45,7 +47,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class FragmentPicture extends Fragment implements PhotoListAdapter.OnEventListener {
+public class FragmentPicture extends Fragment implements PhotoListAdapter.OnEventListener,
+                            ChildEventListener, GroupManager.onGroupChange {
 
 
     public FragmentPicture() {
@@ -59,46 +62,17 @@ public class FragmentPicture extends Fragment implements PhotoListAdapter.OnEven
 
     private StorageReference imageRef;
     private DatabaseReference photoRef;
+    private FirebaseDatabase root;
+
+    private PrefUtil prefUtil;
 
     private void initFirebase(){
         FirebaseStorage storage = FirebaseStorage.getInstance();
         imageRef = storage.getReferenceFromUrl("gs://messenger-d08e4.appspot.com/photo/");
 
-        FirebaseDatabase root = FirebaseDatabase.getInstance();
-        photoRef = root.getReference("photo");
-        photoRef.addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-
-                try {
-                    JSONObject obj = new JSONObject(dataSnapshot.getValue().toString());
-
-                    adapter.add(
-                            dataSnapshot.getKey(),
-                            new PhotoElement(obj.getString("id"), obj.getLong("size"), obj.getString("path"))
-                    );
-
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-
-            @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
-
-            }
-
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {}
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {}
-        });
+        root = FirebaseDatabase.getInstance();
+        photoRef = root.getReference(prefUtil.getString(R.string.pref_key_current_groups)).child("photo");
+        photoRef.addChildEventListener(this);
 
     }
 
@@ -109,6 +83,9 @@ public class FragmentPicture extends Fragment implements PhotoListAdapter.OnEven
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         v = inflater.inflate(R.layout.fragment_picture, container, false);
+
+        prefUtil = new PrefUtil(getContext());
+
 
         photoList = (GridView) v.findViewById(R.id.photoList);
         fabUpload = (FloatingActionButton) v.findViewById(R.id.fab_upload);
@@ -207,6 +184,56 @@ public class FragmentPicture extends Fragment implements PhotoListAdapter.OnEven
 
 
         }
+    }
+
+
+    /**
+     * firebase
+     * */
+    @Override
+    public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+
+        try {
+            JSONObject obj = new JSONObject(dataSnapshot.getValue().toString());
+
+            adapter.add(
+                    dataSnapshot.getKey(),
+                    new PhotoElement(obj.getString("id"), obj.getLong("size"), obj.getString("path"))
+            );
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+    }
+
+    @Override
+    public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+    }
+
+    @Override
+    public void onChildMoved(DataSnapshot dataSnapshot, String s) {}
+
+    @Override
+    public void onCancelled(DatabaseError databaseError) {}
+
+
+    /**
+     * change group
+     * */
+    @Override
+    public void onChange(String data) {
+        photoRef.removeEventListener(this);
+        adapter.deleteAll();
+        adapter.notifyDataSetChanged();
+
+        photoRef = root.getReference(data).child("photo");
+        photoRef.addChildEventListener(this);
     }
 
     class uploadPhoto extends AsyncTask<List<Bitmap>, Void, Boolean>{

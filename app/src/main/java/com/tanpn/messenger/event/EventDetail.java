@@ -46,6 +46,8 @@ import com.tanpn.messenger.photo.GalleryPicker;
 import com.tanpn.messenger.photo.PhotoElement;
 import com.tanpn.messenger.photo.PhotoListAdapter;
 import com.tanpn.messenger.photo.PreviewPhoto;
+import com.tanpn.messenger.setting.GroupManager;
+import com.tanpn.messenger.utils.PrefUtil;
 import com.tanpn.messenger.utils.utils;
 
 import org.json.JSONArray;
@@ -59,7 +61,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class EventDetail extends AppCompatActivity implements View.OnClickListener, PhotoListAdapter.OnEventListener, PreviewPhoto.OnResultListener {
+public class EventDetail extends AppCompatActivity implements View.OnClickListener, PhotoListAdapter.OnEventListener,
+        PreviewPhoto.OnResultListener, GroupManager.onGroupChange {
 
 
     private TextView tvEventTitle, tvEventDate,  tvSetEvTime, tvSetEvDate, tvEventDays;
@@ -81,9 +84,12 @@ public class EventDetail extends AppCompatActivity implements View.OnClickListen
     private EventRemindDialog eventRemindDialog;
     private PreviewPhoto previewPhoto;
 
+    private PrefUtil prefUtil;
+
 
     private void init(){
 
+        prefUtil = new PrefUtil(this);
 
 
 
@@ -234,10 +240,11 @@ public class EventDetail extends AppCompatActivity implements View.OnClickListen
 
     private DatabaseReference eventRef;
     private StorageReference eventStorageRef;
+    private FirebaseDatabase root;
     private void initFirebase(){
         // Write a message to the database
-        FirebaseDatabase root = FirebaseDatabase.getInstance();
-        eventRef = root.getReference("event");
+        root = FirebaseDatabase.getInstance();
+        eventRef = root.getReference(prefUtil.getString(R.string.pref_key_current_groups)).child("event");
 
         FirebaseStorage storage = FirebaseStorage.getInstance();
         eventStorageRef = storage.getReferenceFromUrl("gs://messenger-d08e4.appspot.com/event/");
@@ -330,6 +337,15 @@ public class EventDetail extends AppCompatActivity implements View.OnClickListen
 
     }
     private Map<String, String> listPathInStorage= new HashMap<>();
+
+
+    /**
+     * change group
+     * */
+    @Override
+    public void onChange(String data) {
+        eventRef = root.getReference(data).child("event");
+    }
 
     private class createNewEvent extends AsyncTask<Void, Void, Boolean>{
         private int totalPhoto = listPath.size();

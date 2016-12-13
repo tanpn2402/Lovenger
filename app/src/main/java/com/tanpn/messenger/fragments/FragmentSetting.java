@@ -20,6 +20,7 @@ import android.view.ViewGroup;
 import com.tanpn.messenger.R;
 import com.tanpn.messenger.setting.AccountManager;
 import com.tanpn.messenger.setting.GroupManager;
+import com.tanpn.messenger.setting.InviteManager;
 import com.tanpn.messenger.utils.PrefUtil;
 
 /**
@@ -43,6 +44,7 @@ public class FragmentSetting extends PreferenceFragment implements
 
     private Preference accountManager;
     private Preference groupManager;
+    private Preference inviteManager;
 
     private ListPreference menuEffect;
     private ListPreference photoEffect;
@@ -77,6 +79,7 @@ public class FragmentSetting extends PreferenceFragment implements
 
         accountManager = (Preference) findPreference(getString(R.string.pref_key_account_manager));
         groupManager = (Preference) findPreference(getString(R.string.pref_key_group_manager));
+        inviteManager = (Preference) findPreference(getString(R.string.pref_key_invite_manager));
 
         menuEffect = (ListPreference) findPreference(getString(R.string.pref_key_main_menu_effect));
         photoEffect = (ListPreference) findPreference(getString(R.string.pref_key_photo_view_effect));
@@ -92,6 +95,7 @@ public class FragmentSetting extends PreferenceFragment implements
 
         accountManager.setOnPreferenceClickListener(this);
         groupManager.setOnPreferenceClickListener(this);
+        inviteManager.setOnPreferenceClickListener(this);
     }
 
 
@@ -158,6 +162,8 @@ public class FragmentSetting extends PreferenceFragment implements
 
         String k1 = getString(R.string.pref_key_account_manager);
         String k2 = getString(R.string.pref_key_group_manager);
+        String k3 = getString(R.string.pref_key_invite_manager);
+
         if(key.equals(k1)){
             Intent in = new Intent(getContext(), AccountManager.class);
             startActivity(in);
@@ -166,6 +172,10 @@ public class FragmentSetting extends PreferenceFragment implements
             Intent in = new Intent(getContext(), GroupManager.class);
             startActivity(in);
 
+        }
+        else if(key.equals(k3)){
+            Intent in = new Intent(getContext(), InviteManager.class);
+            startActivity(in);
         }
         return false;
     }

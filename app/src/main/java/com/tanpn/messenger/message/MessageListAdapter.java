@@ -348,4 +348,11 @@ public class MessageListAdapter extends BaseAdapter {
         notifyDirtyStateChanged(true);
 
     }
+
+    public void deleteAll(){
+        msgID.clear();
+        messagelist.clear();
+
+        notifyDirtyStateChanged(true);
+    }
 }

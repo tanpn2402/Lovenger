@@ -77,10 +77,8 @@ public class SignIn extends AppCompatActivity
          * kiem tra xem account --> k login nua AUTO LOGIN
          *
          * */
-        if(!prefUtil.getString(R.string.pref_key_email, "null").equals("null") &&
-                !prefUtil.getString(R.string.pref_key_password, "null").equals("null")){
-            Log.i("pref",prefUtil.getString(R.string.pref_key_groups, "null") );
-            gotoMainAvtivity(!prefUtil.getString(R.string.pref_key_groups, "null").equals("null"));
+        if(!prefUtil.getString(R.string.pref_key_password, "null").equals("null")){
+            gotoMainAvtivity();
 
             finish();
             return ; // khong init nua
@@ -163,11 +161,12 @@ public class SignIn extends AppCompatActivity
     private FirebaseAuth mAuth;
 
     private DatabaseReference userRef;
+    private FirebaseDatabase root;
 
     private void initFirebase(){
         mAuth = FirebaseAuth.getInstance();
 
-        FirebaseDatabase root = FirebaseDatabase.getInstance();
+        root = FirebaseDatabase.getInstance();
         userRef = root.getReference("user");
 
     }
@@ -338,6 +337,10 @@ public class SignIn extends AppCompatActivity
             if(name != null)
                 prefUtil.put(R.string.pref_key_username, name);
 
+
+            // get group
+
+
             prefUtil.apply();
             SystemClock.sleep(200);
             return null;
@@ -360,7 +363,7 @@ public class SignIn extends AppCompatActivity
         }
         else{
             // chuyen den Main Activity
-            checkHasGroup(prefUtil.getString(R.string.pref_key_uid));
+            getGroup(prefUtil.getString(R.string.pref_key_uid));
         }
     }
 
@@ -372,7 +375,7 @@ public class SignIn extends AppCompatActivity
         startActivity(in);
     }
 
-    private void checkHasGroup(String uid){
+    private void getGroup(String uid){
         /**
          * kiem tra xem user nay co group nao hay chua
          * path:   root/user/uid/groups/
@@ -383,19 +386,15 @@ public class SignIn extends AppCompatActivity
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 String data = dataSnapshot.getValue().toString();
-                if(data.equals("false")){
-                    prefUtil.put(R.string.pref_key_groups, "null");
-                    prefUtil.put(R.string.pref_key_default_group, "null");
-                    prefUtil.apply();
-                    gotoMainAvtivity(false);
-                }
-                else{
+
                     String[] g = data.split("\\|");
                     prefUtil.put(R.string.pref_key_groups, data);
                     prefUtil.put(R.string.pref_key_default_group, g[0]);
+                    prefUtil.put(R.string.pref_key_current_groups, g[0]);
+
                     prefUtil.apply();
-                    gotoMainAvtivity(true);
-                }
+                    gotoMainAvtivity();
+
             }
 
             @Override
@@ -409,23 +408,10 @@ public class SignIn extends AppCompatActivity
      * */
 
 
-    private void gotoMainAvtivity(boolean hasGroup) {
+    private void gotoMainAvtivity() {
 
-        /**
-         * Kiem tra xem da co nhom chua
-         * neu khong thi hien thi man hinh addfirend
-         * */
-
-        if (!hasGroup){
-            Intent in = new Intent(this, AddFriendActivity.class);
-            startActivity(in);
-        }
-        else {
             Intent in = new Intent(this, MainActivity.class);
             startActivity(in);
-        }
-
-
     }
 
 
@@ -562,12 +548,17 @@ public class SignIn extends AppCompatActivity
     }
 
     /**
-     * upload databse for GROUPS node
+     * upload database for GROUPS node
      * */
 
     private void setupDatabase(final FirebaseUser user){
-        Log.i("aaa", user.toString());
-        userRef.child(user.getUid()).child("groups").setValue("false").addOnCompleteListener(new OnCompleteListener<Void>() {
+        //Log.i("aaa", user.toString());
+        Log.i("tanaa", user.getUid());
+        root.getReference("user")
+                .child(user.getUid())
+                .child("groups")
+                .setValue(user.getUid())
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 // thong bao tao tai khoan thanh cong
@@ -583,6 +574,9 @@ public class SignIn extends AppCompatActivity
                 btnFunction.setText("Đăng kí");
 
                 edtUsername.setText(user.getEmail());
+
+
+                Log.i("tanaa", "thanh cong");
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override

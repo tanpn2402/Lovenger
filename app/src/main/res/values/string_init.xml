@@ -11,6 +11,7 @@
     <string translatable="false" name="pref_key_first_use">com.tanpn.messenger.first_use</string>
     <string translatable="false" name="pref_key_has_group">com.tanpn.messenger.has_group</string>
     <string translatable="false" name="pref_key_groups">com.tanpn.messenger.groups</string>
+    <string translatable="false" name="pref_key_current_groups">com.tanpn.messenger.current_groups</string>
     <string translatable="false" name="pref_key_default_group">com.tanpn.messenger.default_group</string>
 
 
@@ -20,6 +21,8 @@
     <string translatable="false" name="pref_key_vibration">com.tanpn.messenger.vibration</string>
     <string translatable="false" name="pref_key_account_manager">com.tanpn.messenger.account_manager</string>
     <string translatable="false" name="pref_key_group_manager">com.tanpn.messenger.group_manager</string>
+    <string translatable="false" name="pref_key_invite_manager">com.tanpn.messenger.invite_manager</string>
+
     <string translatable="false" name="pref_key_main_menu_effect">com.tanpn.messenger.main_menu_effect</string>
     <string translatable="false" name="pref_key_photo_view_effect">com.tanpn.messenger.photo_view_effect</string>
 

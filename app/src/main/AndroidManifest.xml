@@ -50,15 +50,15 @@
         <activity
             android:name=".login.AddFriendActivity"
             android:windowSoftInputMode="stateHidden" />
-
         <activity android:name=".setting.AccountManager" />
-
         <activity android:name=".setting.GroupManager">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
+        <activity android:name=".setting.InviteManager"></activity>
     </application>
 
 </manifest>

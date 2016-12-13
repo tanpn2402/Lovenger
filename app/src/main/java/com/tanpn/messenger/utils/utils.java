@@ -121,6 +121,12 @@ public class utils {
     }
 
 
+    public static String generateInviteId(){
+        return "in-" + getCurrentTimeStamp();
+
+    }
+
+
     public static int getEventCategoryID(Event.EventType status){
         switch (status){
 

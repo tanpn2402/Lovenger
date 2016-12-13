@@ -28,6 +28,8 @@
 
     <string name="setting_group_manager">Nhóm</string>
     <string name="setting_account_manager">Tài khoản</string>
+    <string name="setting_invite_manager">Danh sách đề nghị</string>
+
 
     <string name="setting_notification">Thông báo</string>
     <string name="setting_notification_vib">Rung</string>

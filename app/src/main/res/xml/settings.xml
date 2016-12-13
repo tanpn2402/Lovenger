@@ -49,7 +49,11 @@
         <Preference
             android:key="@string/pref_key_group_manager"
             android:title="@string/setting_group_manager">
-
         </Preference>
+        <Preference
+            android:key="@string/pref_key_invite_manager"
+            android:title="@string/setting_invite_manager">
+        </Preference>
+
     </PreferenceCategory>
 </PreferenceScreen>
