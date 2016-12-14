@@ -10,7 +10,7 @@
     tools:context="com.tanpn.messenger.setting.AccountManager"
     android:padding="0dp"
     android:id="@+id/activity_account"
-    >
+    android:background="#ffffff">
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
@@ -39,7 +39,7 @@
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
                 android:src="@drawable/abc_vector_test"
-                android:background="#00ffffff" />
+                android:background="@drawable/image_button" />
 
         </RelativeLayout>
 
@@ -47,7 +47,7 @@
 
     <ScrollView
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
+        android:layout_height="wrap_content"
         android:id="@+id/scrollView2"
         android:layout_centerHorizontal="true"
         android:layout_below="@+id/view3"
@@ -66,6 +66,35 @@
                 android:layout_marginTop="50dp"
                 android:id="@+id/imPhoto" />
 
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_gravity="center_horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:text="id: Xd02do"
+                    android:id="@+id/tvID"
+                    android:layout_centerVertical="true"
+                    android:layout_centerHorizontal="true"
+                    android:textAlignment="center" />
+
+                <ImageButton
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:id="@+id/ibtShare"
+                    android:background="@drawable/image_button"
+                    android:src="@android:drawable/ic_menu_share"
+                    android:layout_alignParentTop="false"
+                    android:layout_toRightOf="@+id/tvID"
+                    android:layout_toEndOf="@+id/tvID"
+                    android:layout_marginLeft="29dp"
+                    android:layout_marginStart="29dp"
+                    android:layout_centerHorizontal="true" />
+            </RelativeLayout>
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -77,34 +106,45 @@
                 android:layout_marginTop="10dp" />
 
             <Button
-                android:layout_width="300dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Đổi ảnh đại diện"
                 android:textAllCaps="false"
                 android:id="@+id/btnChangePhoto"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="50dp" />
+                android:layout_above="@+id/btnChangePassword"
+                android:layout_centerHorizontal="true"
+                android:layout_marginBottom="10dp"
+                android:layout_marginTop="40dp"
+                android:textAlignment="textStart"
+                android:gravity="center|start"
+                android:background="@drawable/rectangle_button" />
 
             <Button
-                android:layout_width="300dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Đổi mật khẩu"
                 android:textAllCaps="false"
                 android:id="@+id/btnChangePassword"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="20dp" />
+                android:layout_above="@+id/btnLogout"
+                android:layout_centerHorizontal="true"
+                android:layout_marginBottom="10dp"
+                android:textAlignment="textStart"
+                android:gravity="center|start"
+                android:background="@drawable/rectangle_button" />
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Đăng xuất"
+                android:textAllCaps="false"
+                android:id="@+id/btnLogout"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"
+                android:textAlignment="textStart"
+                android:gravity="center|start"
+                android:background="@drawable/rectangle_button" />
 
         </LinearLayout>
     </ScrollView>
 
-    <Button
-        android:layout_width="300dp"
-        android:layout_height="wrap_content"
-        android:text="Đăng xuất"
-        android:textAllCaps="false"
-        android:id="@+id/btnLogout"
-        android:layout_gravity="center_horizontal"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="10dp" />
 </RelativeLayout>

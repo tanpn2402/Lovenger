@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    >
 
     <PreferenceCategory android:title="@string/setting_power_saver"/>
     <SwitchPreference
@@ -11,14 +12,14 @@
         <ListPreference android:key="@string/pref_key_main_menu_effect"
                 android:title="@string/setting_main_menu_effect"
                 android:summary="@string/setting_main_menu_effect_summary"
-                android:entries="@array/setting_effect_val"
+                android:entries="@array/setting_effect"
                 android:entryValues="@array/setting_effect_val"
                 android:defaultValue="0"/>
 
         <ListPreference android:key="@string/pref_key_photo_view_effect"
             android:title="@string/setting_photo_view_effect"
             android:summary="@string/setting_photo_view_effect_summary"
-            android:entries="@array/setting_effect_val"
+            android:entries="@array/setting_effect"
             android:entryValues="@array/setting_effect_val"
             android:defaultValue="0"/>
 
@@ -36,6 +37,18 @@
             android:key="@string/pref_key_sound"
             android:title="@string/setting_notification_sound"
             android:defaultValue="true"/>
+
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="@string/setting_share_title">
+        <Preference
+            android:title="@string/setting_share_photo"
+            android:key="@string/pref_key_share_photo"/>
+
+        <Preference
+            android:title="@string/setting_share_voice"
+            android:key="@string/pref_key_share_voice"/>
+
 
     </PreferenceCategory>
 

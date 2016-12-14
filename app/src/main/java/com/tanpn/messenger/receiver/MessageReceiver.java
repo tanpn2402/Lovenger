@@ -42,6 +42,7 @@ public class MessageReceiver extends BroadcastReceiver {
             pref = new PrefUtil(context);
             final String lastMessage = pref.getString(R.string.pref_key_last_message, "null");
             Log.i("tanna", lastMessage);
+
             FirebaseDatabase root = FirebaseDatabase.getInstance();
             DatabaseReference messageRef = root.getReference("message");
             messageRef.addChildEventListener(new ChildEventListener() {

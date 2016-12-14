@@ -13,6 +13,7 @@ import com.firebase.ui.storage.images.FirebaseImageLoader;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.tanpn.messenger.R;
+import com.tanpn.messenger.utils.utils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -50,7 +51,7 @@ public class InviteAdapter extends BaseAdapter {
 
     private class ViewHolder{
         ImageView imUserPhoto;
-        TextView tvUsername;
+        TextView tvUsername, tvInviteDate;
     }
 
     @Override
@@ -61,8 +62,9 @@ public class InviteAdapter extends BaseAdapter {
         if (convertView == null) {
             holder = new ViewHolder();
             convertView = inflater.inflate(R.layout.layout_invite_item, null);
-            holder.imUserPhoto = (ImageView) convertView.findViewById(R.id.imUserphoto);
+            holder.imUserPhoto = (ImageView) convertView.findViewById(R.id.imUserPhoto);
             holder.tvUsername = (TextView) convertView.findViewById(R.id.tvUsername) ;
+            holder.tvInviteDate = (TextView) convertView.findViewById(R.id.tvInviteDate) ;
 
             convertView.setTag(holder);
         } else {
@@ -80,6 +82,7 @@ public class InviteAdapter extends BaseAdapter {
                     .into(holder.imUserPhoto);
 
             holder.tvUsername.setText(listInvites.get(i).name);
+            holder.tvInviteDate.setText(utils.calendarToDateString(listInvites.get(i).datatime));
         }
         catch (Exception e){
 

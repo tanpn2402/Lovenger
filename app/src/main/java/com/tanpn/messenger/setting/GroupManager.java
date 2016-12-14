@@ -72,7 +72,7 @@ public class GroupManager extends AppCompatActivity {
         expandableListDetail = new HashMap<>();
 
         /**
-         * function: có 3 loại function khác nhau:
+         * function: có 4 loại function khác nhau:
          *  -   dành riêng cho default group: chỉ Tham gia, nếu đang tham gia thì không có gì cả
          *  -   dành cho các group khác: nếu đang tham gia thì chỉ có rời nhóm, nếu chưa tham gia thì có cả 2
          * */
@@ -142,7 +142,13 @@ public class GroupManager extends AppCompatActivity {
         pref.put(R.string.pref_key_current_groups, id);
         pref.apply();
 
-
+        expandableListView.refreshDrawableState();
+        for(int i =0; i< expandableListView.getChildCount(); i++){
+            expandableListView.collapseGroup(i);
+        }
+        /**
+         * local broadcast
+         * */
         Intent intent = new Intent("CHANGE_GROUP");
         // You can also include some extra data.
         intent.putExtra("message", id);

@@ -2,6 +2,8 @@ package com.tanpn.messenger.event;
 
 import com.tanpn.messenger.utils.utils;
 
+import org.json.JSONArray;
+
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -25,8 +27,10 @@ public class EventListElement {
     public Event.Reminder remind;
     public boolean notify;
     public int days = 0;
+    public JSONArray commentArr;
 
-    public EventListElement(String _id, String _title, Event.EventType _type, String _date, String _time, String _creater, Event.Reminder _remind, boolean _notify, Map<String, String> _pictures){
+    public EventListElement(String _id, String _title, Event.EventType _type, String _date, String _time,
+                            String _creater, Event.Reminder _remind, boolean _notify, Map<String, String> _pictures, JSONArray arr){
         id = _id;
         title = _title;
 
@@ -42,6 +46,8 @@ public class EventListElement {
 
 
         days = utils.getDiffDays(datetime);
+
+        commentArr = arr;
 
     }
 }

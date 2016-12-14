@@ -3,6 +3,7 @@ package com.tanpn.messenger.login;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -171,20 +172,7 @@ public class SignIn extends AppCompatActivity
 
     }
 
-    private void initReceiver(){
-        NetworkReceiver networkReceiver = new NetworkReceiver();
-        IntentFilter filter = new IntentFilter();
-        filter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
-        registerReceiver(networkReceiver, filter);
 
-    }
-
-
-    private void startService(){
-        if(!AppService.isRunning(this)){
-            AppService.startAppService(this);
-        }
-    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -195,10 +183,6 @@ public class SignIn extends AppCompatActivity
 
         init();
 
-
-        startService();
-
-        //initReceiver();
     }
 
     @Override
@@ -321,7 +305,8 @@ public class SignIn extends AppCompatActivity
 
             prefUtil.put(R.string.pref_key_email, email);
             prefUtil.put(R.string.pref_key_password, _password);
-            prefUtil.put(R.string.pref_key_uid, uid);
+            prefUtil.put(R.string.pref_key_user_id, uid);
+            prefUtil.put(R.string.pref_key_uid, uid.substring(uid.length() - 6, uid.length()));
             if(photoUrl != null)
             {
                 String p = photoUrl.toString();
@@ -338,8 +323,9 @@ public class SignIn extends AppCompatActivity
                 prefUtil.put(R.string.pref_key_username, name);
 
 
-            // get group
-
+            // khoi tao cac hieu ung mac dinh
+            prefUtil.put(R.string.pref_key_photo_view_effect, "1");
+            prefUtil.put(R.string.pref_key_main_menu_effect, "1");
 
             prefUtil.apply();
             SystemClock.sleep(200);
@@ -419,6 +405,7 @@ public class SignIn extends AppCompatActivity
 
 
     private void gotoMainAvtivity() {
+
         Intent in = new Intent(this, MainActivity.class);
         startActivity(in);
 
@@ -448,6 +435,7 @@ public class SignIn extends AppCompatActivity
         password = edtPassword.getText().toString();
         fullname = edtFullname.getText().toString();
 
+        Log.i("k hieu", "dang tao");
         mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
@@ -463,7 +451,9 @@ public class SignIn extends AppCompatActivity
                         else {
 
                             // setup name for new account
-                            setupFirebaseAuth(task.getResult().getUser());
+
+                            Log.i("k hieu", "tao scc");
+                            uploadDefaultPhoto(task.getResult().getUser());
                         }
 
 
@@ -524,13 +514,50 @@ public class SignIn extends AppCompatActivity
         signinStatus.setText(text).setDuration(lenght).show();
     }
 
+    private void uploadDefaultPhoto(final FirebaseUser user){
+
+        Log.i("k hieu", "upload_ bat dua decode");
+        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.avatar);
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
+        byte[] data = baos.toByteArray();
+
+        String photoName = utils.generatePhotoId();
+
+        StorageReference photoRef = FirebaseStorage.getInstance().getReferenceFromUrl("gs://messenger-d08e4.appspot.com/avatar/");
+
+        Log.i("k hieu", "upload_decode xong_bat dau upload");
+        UploadTask uploadTask = photoRef.child(photoName).putBytes(data);
+        uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+
+                Log.i("k hieu", "upload_succ");
+                setupFirebaseAuth(user, taskSnapshot.getDownloadUrl().getPath());
+
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+
+                Log.i("k hieu", "fail");
+                deleteAuth(user);
+
+            }
+        });
+
+    }
+
     /**
      * cap nhat thong tin cho user
+
      *  - ten duoc user dat
      *  - photo default
      * */
-    private void setupFirebaseAuth(final FirebaseUser user){
-        Uri u = Uri.parse(getString(R.string.default_user_photo_link));
+    private void setupFirebaseAuth(final FirebaseUser user, final String path){
+
+        Log.i("k hieu", "setupfb_bat dau");
+        Uri u = Uri.parse(path);
         Log.i("photo uri", u.toString());
         UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
                     .setDisplayName(fullname)
@@ -544,7 +571,8 @@ public class SignIn extends AppCompatActivity
                         public void onComplete(@NonNull Task<Void> task) {
                             if (task.isSuccessful()) {
 
-                                setupDatabase(user);
+                                Log.i("k hieu", "setupfb_comple");
+                                setupDatabase(user, path);
 
                             }
                             else{
@@ -561,22 +589,23 @@ public class SignIn extends AppCompatActivity
      * upload database for GROUPS node
      * */
 
-    private void setupDatabase(final FirebaseUser user){
+    private void setupDatabase(final FirebaseUser user, final String path){
         //Log.i("aaa", user.toString());
-        Log.i("tanaa", user.getUid());
+        Log.i("k hieu", "setup db_ bat dau");
+        String user_id = user.getUid().substring(user.getUid().length() - 6, user.getUid().length());
         root.getReference("user")
-                .child(user.getUid())
+                .child(user_id)
                 .child("groups")
-                .setValue(user.getUid())
+                .setValue(user_id)
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 // thong bao tao tai khoan thanh cong
                 signinStatus.setText("tạo tài khoản thành công").setDuration(Snackbar.LENGTH_SHORT).show();
-
-                // cai dat pref
-                prefUtil.put(R.string.pref_key_user_photo_name, getString(R.string.default_user_photo_name));
-                prefUtil.put(R.string.pref_key_user_photo_link, getString(R.string.default_user_photo_link));
+                Log.i("k hieu", "setup db_ scuc");
+                String s[] = path.split("/");
+                prefUtil.put(R.string.pref_key_user_photo_name, s[s.length - 1]);
+                prefUtil.put(R.string.pref_key_user_photo_link, path);
                 prefUtil.apply();
 
                 // quay tro lại man hinh dang nhap
@@ -594,7 +623,7 @@ public class SignIn extends AppCompatActivity
                 deleteAuth(user);
 
                 // thong bao tao tai khoan thanh cong
-                signinStatus.setText("tạo tài khoản thất bại").setDuration(Snackbar.LENGTH_SHORT).show();
+                //signinStatus.setText("tạo tài khoản thất bại").setDuration(Snackbar.LENGTH_SHORT).show();
             }
         });
     }
@@ -608,6 +637,11 @@ public class SignIn extends AppCompatActivity
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
+
+                        if (!task.isSuccessful()) {
+                            setNotification(task.getException().toString(), Snackbar.LENGTH_INDEFINITE);
+
+                        }
                     }
                 });
     }

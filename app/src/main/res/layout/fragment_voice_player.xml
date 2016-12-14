@@ -30,7 +30,8 @@
             android:layout_toLeftOf="@+id/ibtPlay"
             android:layout_toStartOf="@+id/ibtPlay"
             android:layout_marginRight="20dp"
-            android:scaleType="fitCenter" />
+            android:scaleType="fitCenter"
+            android:visibility="invisible" />
 
         <SeekBar
             style="?android:attr/progressBarStyleHorizontal"
@@ -52,7 +53,8 @@
             android:layout_toRightOf="@+id/ibtPlay"
             android:layout_toEndOf="@+id/ibtPlay"
             android:layout_marginLeft="20dp"
-            android:layout_marginStart="20dp" />
+            android:layout_marginStart="20dp"
+            android:visibility="gone" />
 
     </RelativeLayout>
 </RelativeLayout>

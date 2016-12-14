@@ -39,11 +39,11 @@ public class EventListAdapter extends BaseAdapter {
 
     private List<EventListElement> eventList;
     private Context context;
-
+    private LayoutInflater mInflater;
     public EventListAdapter(Context _context){
         context = _context;
         eventList = new ArrayList<>();
-
+        mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
     private OnEventListener mListener;
@@ -85,40 +85,52 @@ public class EventListAdapter extends BaseAdapter {
         return 1;
     }
 
+    private class ViewHolder{
+        ImageView eIcon, eStatus;
+        TextView eTitle, eDate, eDays, eCreatedBy;
+
+    }
     @Override
-    public View getView(int i, View view, ViewGroup viewGroup) {
-        LayoutInflater inflater = (LayoutInflater) context
-                .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View v =
-                inflater.inflate(R.layout.layout_event_element, viewGroup, false);
+    public View getView(int i, View convertView, ViewGroup viewGroup) {
 
-        ImageView eIcon = (ImageView) v.findViewById(R.id.imEventIcon);
-        ImageView eStatus = (ImageView) v.findViewById(R.id.imEStatus);
-        TextView eTitle = (TextView) v.findViewById(R.id.tvEventTitle);
-        TextView eDate = (TextView) v.findViewById(R.id.tvEventDate);
-        TextView eDays = (TextView) v.findViewById(R.id.tvEDays);
-        TextView eCreatedBy = (TextView) v.findViewById(R.id.tvEventCreateBy);
+        ViewHolder holder;
+        if(convertView == null){
+            holder = new ViewHolder();
+            convertView = mInflater.inflate(R.layout.layout_event_element, null);
+
+            holder.eIcon = (ImageView) convertView.findViewById(R.id.imEventIcon);
+            holder.eStatus = (ImageView) convertView.findViewById(R.id.imEStatus);
+            holder.eTitle = (TextView) convertView.findViewById(R.id.tvEventTitle);
+            holder.eDate = (TextView) convertView.findViewById(R.id.tvEventDate);
+            holder.eDays = (TextView) convertView.findViewById(R.id.tvEDays);
+            holder.eCreatedBy = (TextView) convertView.findViewById(R.id.tvEventCreateBy);
+
+            convertView.setTag(holder);
+
+        }else{
+            holder = (ViewHolder) convertView.getTag();
+        }
 
 
-        eIcon.setImageResource(utils.getEventCategoryResourceID(eventList.get(i).type));
+        holder.eIcon.setImageResource(utils.getEventCategoryResourceID(eventList.get(i).type));
 
-        eDays.setText("" + Math.abs(eventList.get(i).days));
+        holder.eDays.setText("" + Math.abs(eventList.get(i).days));
         if(eventList.get(i).days > 0){
             // su kien da tao trong qua khu va dang tiep dien ra
-            eStatus.setImageResource(utils.getEventStatusResourceID(Event.EventStatus.PASS));
-            eDays.setTextColor(Color.parseColor("#2980b9"));
+            holder.eStatus.setImageResource(utils.getEventStatusResourceID(Event.EventStatus.PASS));
+            holder.eDays.setTextColor(Color.parseColor("#2980b9"));
         }
         else{
             // su kien da tao trong tuong lai, con lai xxx ngay nua la den
-            eStatus.setImageResource(utils.getEventStatusResourceID(Event.EventStatus.FURTURE));
-            eDays.setTextColor(Color.parseColor("#c0392b"));
+            holder.eStatus.setImageResource(utils.getEventStatusResourceID(Event.EventStatus.FURTURE));
+            holder.eDays.setTextColor(Color.parseColor("#c0392b"));
         }
 
-        eTitle.setText(eventList.get(i).title);
-        eDate.setText(utils.calendarToDateString(eventList.get(i).datetime));
-        eCreatedBy.setText(eventList.get(i).creater);
+        holder.eTitle.setText(eventList.get(i).title);
+        holder.eDate.setText(utils.calendarToDateString(eventList.get(i).datetime));
+        holder.eCreatedBy.setText(eventList.get(i).creater);
 
-        return v;
+        return convertView;
     }
 
     public void add(EventListElement event){
@@ -141,7 +153,7 @@ public class EventListAdapter extends BaseAdapter {
         return false;
     }
 
-    private EventListElement getEvent(String eId){
+    public EventListElement getEvent(String eId){
         for(int i = 0 ; i < eventList.size(); i++){
             if(eventList.get(i).id.equals(eId)){
                 return eventList.get(i);

@@ -23,6 +23,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.tanpn.messenger.MainActivity;
 import com.tanpn.messenger.R;
+import com.tanpn.messenger.receiver.EventReceiver;
 import com.tanpn.messenger.receiver.MessageReceiver;
 import com.tanpn.messenger.utils.PrefUtil;
 import com.tanpn.messenger.utils.utils;
@@ -91,7 +92,8 @@ public class AppService extends Service {
         super.onCreate();
     }
 
-
+    private MessageReceiver messageReceiver;
+    private EventReceiver eventReceiver;
     private boolean init(){
         networdChecker = new NetworkReceiver();
         IntentFilter filter = new IntentFilter();
@@ -101,6 +103,20 @@ public class AppService extends Service {
         Intent intent = new Intent();
         intent.setAction(MessageReceiver.ACTION_RECEIVE_MESSAGE); sendBroadcast(intent);
 
+        // message receiver
+        messageReceiver = new MessageReceiver();
+        IntentFilter filter1 = new IntentFilter();
+        filter1.addAction(MessageReceiver.ACTION_RECEIVE_MESSAGE);
+        registerReceiver(messageReceiver, filter1);
+
+        // event receiver
+        eventReceiver = new EventReceiver();
+        IntentFilter filter2 = new IntentFilter();
+        filter2.addAction(EventReceiver.ACTION_RECEIVE_EVENT);
+        registerReceiver(eventReceiver, filter2);
+
+
+        //startAlarm(this);
         return true;
     }
 
@@ -255,6 +271,12 @@ public class AppService extends Service {
 
     private void doStopService(){
         stopAlarm(this);
+
+        if(messageReceiver != null)
+            unregisterReceiver(messageReceiver);
+        if(eventReceiver != null)
+            unregisterReceiver(eventReceiver);
+
         allowDestroy = true;
         stopForeground(true);
         stopSelf();

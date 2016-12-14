@@ -14,7 +14,9 @@ import com.squareup.picasso.Picasso;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by phamt_000 on 11/4/16.
@@ -29,15 +31,6 @@ public class PhotoViewAdapter extends PagerAdapter {
 
     private List<String> photoPaths;
 
-    public PhotoViewAdapter(Context _context){
-        context = _context;
-        resID = null;
-    }
-
-    public PhotoViewAdapter(Context _context, Integer[] i){
-        context = _context;
-        resID = i;
-    }
 
     public PhotoViewAdapter(Context _context, List<String> i){
         context = _context;
@@ -91,5 +84,11 @@ public class PhotoViewAdapter extends PagerAdapter {
     @Override
     public Parcelable saveState() {
         return null;
+    }
+
+    public void add(String path){
+        if(!photoPaths.contains(path)){
+            photoPaths.add(path);
+        }
     }
 }

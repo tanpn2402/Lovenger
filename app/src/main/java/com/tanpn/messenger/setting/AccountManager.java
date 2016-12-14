@@ -9,6 +9,7 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Html;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -42,8 +43,8 @@ public class AccountManager extends AppCompatActivity implements ChangePassword.
 
     private Button btnLogout, btnChangePassword,btnChangePhoto;
     private ImageView imPhoto;
-    private ImageButton ibtBack;
-    private TextView tvUsename;
+    private ImageButton ibtBack, ibtShare;
+    private TextView tvUsename, tvID;
 
     private PrefUtil prefUtil;
 
@@ -65,6 +66,7 @@ public class AccountManager extends AppCompatActivity implements ChangePassword.
                 prefUtil.put(R.string.pref_key_groups, "null");
                 prefUtil.put(R.string.pref_key_default_group, "null");
                 prefUtil.put(R.string.pref_key_current_groups, "null");
+                prefUtil.put(R.string.pref_key_current_event, "null");
 
 
                 prefUtil.put(R.string.pref_key_user_photo_name, "null");
@@ -84,7 +86,14 @@ public class AccountManager extends AppCompatActivity implements ChangePassword.
                 onBackPressed();
             }
         });
-
+        
+        ibtShare = (ImageButton) findViewById(R.id.ibtShare);
+        ibtShare.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                shareID();
+            }
+        });
 
         btnChangePassword = (Button) findViewById(R.id.btnChangePassword);
         btnChangePhoto = (Button) findViewById(R.id.btnChangePhoto);
@@ -92,7 +101,8 @@ public class AccountManager extends AppCompatActivity implements ChangePassword.
         tvUsename = (TextView) findViewById(R.id.tvUsername);
 
         tvUsename.setText(getString(R.string.login_with_name) + " " + prefUtil.getString(R.string.pref_key_username));
-
+        tvID = (TextView) findViewById(R.id.tvID);
+        tvID.setText("id: " + prefUtil.getString(R.string.pref_key_uid));
 
 
         btnChangePassword.setOnClickListener(new View.OnClickListener() {
@@ -137,6 +147,13 @@ public class AccountManager extends AppCompatActivity implements ChangePassword.
             }
         });
 
+    }
+
+    private void shareID() {
+        Intent sharingIntent = new Intent(Intent.ACTION_SEND);
+        sharingIntent.setType("text/html");
+        sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, "ID của tôi là " + prefUtil.getString(R.string.pref_key_user_id) + ", hãy tạo nhóm trên We do! với mình nhé!");
+        startActivity(Intent.createChooser(sharingIntent,"Share using"));
     }
 
     @Override
@@ -216,8 +233,11 @@ public class AccountManager extends AppCompatActivity implements ChangePassword.
     }
 
     private void setupFirebaseAvatar(final String photoPath){
+        Uri u = Uri.parse(photoPath);
+        Log.i("k hieu", u.toString());
+
         UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
-                .setPhotoUri(Uri.parse(photoPath))
+                .setPhotoUri(u)
                 .build();
 
         final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();

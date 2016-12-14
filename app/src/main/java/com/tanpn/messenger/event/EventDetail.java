@@ -28,6 +28,8 @@ import android.widget.CompoundButton;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.GridView;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -70,6 +72,9 @@ public class EventDetail extends AppCompatActivity implements View.OnClickListen
 
 
     private TextView tvEventTitle, tvEventDate,  tvSetEvTime, tvSetEvDate, tvEventDays;
+    private ImageView imEventStatus;
+
+    private RelativeLayout rlEventType, rlEventDate, rlEventTime, rlEventRemind, rlEventNotify, rlEventDefault;
 
     public static TextView tvEventCategory, tvEventRemind;
 
@@ -78,10 +83,12 @@ public class EventDetail extends AppCompatActivity implements View.OnClickListen
     private FloatingActionButton fabSave, fabPicture;
 
     private Switch swEventNotify;
+    private Switch swDefaultEvent;
 
     private GridView photoList;
     private PhotoListAdapter photoListAdapter;
-    private Map<String, String> listPath;
+    private Map<String, String> listPath;   // list path (path o local)
+    private Map<String, String> listPathInStorage= new HashMap<>();     // path o firebase, dung de upload event
     private EventListElement event;
 
     private EventCategoryDialog eventCategoryDialog;
@@ -90,6 +97,34 @@ public class EventDetail extends AppCompatActivity implements View.OnClickListen
 
     private PrefUtil prefUtil;
 
+    private void initRelativeLayout(){
+        rlEventType = (RelativeLayout) findViewById(R.id.rlEventType);
+        rlEventDate= (RelativeLayout) findViewById(R.id.rlEventDate);
+        rlEventTime= (RelativeLayout) findViewById(R.id.rlEventTime);
+        rlEventRemind= (RelativeLayout) findViewById(R.id.rlEventRemind);
+        rlEventNotify= (RelativeLayout) findViewById(R.id.rlEventNotify);
+        rlEventDefault= (RelativeLayout) findViewById(R.id.rlEventDefault);
+
+        rlEventType.setOnClickListener(this);
+        rlEventDate.setOnClickListener(this);
+        rlEventTime.setOnClickListener(this);
+        rlEventRemind.setOnClickListener(this);
+
+
+        rlEventNotify.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                swEventNotify.setChecked(!swEventNotify.isChecked());
+            }
+        });
+        rlEventDefault.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                swDefaultEvent.setChecked(!swDefaultEvent.isChecked());
+            }
+        });
+
+    }
 
     private void init(){
 
@@ -107,6 +142,9 @@ public class EventDetail extends AppCompatActivity implements View.OnClickListen
         tvSetEvTime = (TextView) findViewById(R.id.tvSetEvTime);
         tvSetEvDate = (TextView) findViewById(R.id.tvSetEvDate);
         swEventNotify = (Switch) findViewById(R.id.swtEventNotify);
+        swDefaultEvent = (Switch) findViewById(R.id.swDefaultEvent);
+        imEventStatus = (ImageView)findViewById(R.id.imEventStatus);
+
 
         edtEventTitle = (EditText) findViewById(R.id.edtEventTitle);
 
@@ -199,6 +237,10 @@ public class EventDetail extends AppCompatActivity implements View.OnClickListen
 
         LocalBroadcastManager.getInstance(this).registerReceiver(changeGroup, new IntentFilter("CHANGE_GROUP"));
 
+
+        ////
+        initRelativeLayout();
+
         ////
 
         initValues();
@@ -234,7 +276,12 @@ public class EventDetail extends AppCompatActivity implements View.OnClickListen
                 tvEventDays.setText(event.days >= 0 ? event.days +"" : -event.days + "");
                 swEventNotify.setChecked(event.notify);
 
-                eventCategoryDialog.setCategory(event.type);
+                if(prefUtil.getString(R.string.pref_key_current_event) != null &&
+                        prefUtil.getString(R.string.pref_key_current_event).equals(event.id))
+                    swDefaultEvent.setChecked(true);
+
+
+                    eventCategoryDialog.setCategory(event.type);
                 eventRemindDialog.setReminder(event.remind);
 
                 //listPath = event.pictures;
@@ -246,8 +293,8 @@ public class EventDetail extends AppCompatActivity implements View.OnClickListen
                  *     <id, path> cua photo
                  * */
                 for(Map.Entry<String, String> e : event.pictures.entrySet()){
-                    listPath.put(e.getKey(), e.getValue());
-
+                    listPathInStorage.put(e.getKey(), e.getValue());
+                    // vi path nay la o tren firebase roi
                     photoListAdapter.add(
                             e.getKey(),
                             new PhotoElement(e.getKey(), 0, e.getValue())
@@ -287,20 +334,20 @@ public class EventDetail extends AppCompatActivity implements View.OnClickListen
     @Override
     public void onClick(View view) {
         switch (view.getId()){
-            case R.id.tvEventCategory:
+            case R.id.tvEventCategory:case R.id.rlEventType:
                 eventCategoryDialog.setCategory(eventCategoryDialog.getCategory());
                 eventCategoryDialog.show(getSupportFragmentManager(), "dialog");
 
 
                 break;
-            case R.id.tvEventRemind:
+            case R.id.tvEventRemind:case R.id.rlEventRemind:
                 eventRemindDialog.setReminder(eventRemindDialog.getReminder());
                 eventRemindDialog.show(getSupportFragmentManager(), "dialog");
                 break;
-            case R.id.tvSetEvTime:
+            case R.id.tvSetEvTime:case R.id.rlEventTime:
                 showTimePicker();
                 break;
-            case R.id.tvSetEvDate:
+            case R.id.tvSetEvDate:case R.id.rlEventDate:
                 showDatePicker();
 
                 break;
@@ -329,6 +376,21 @@ public class EventDetail extends AppCompatActivity implements View.OnClickListen
 
                         tvSetEvDate.setText(utils.getMonth(monthOfYear +1) + " " + dayOfMonth + ", " + year);
                         tvEventDate.setText(utils.getMonth(monthOfYear +1) + " " + dayOfMonth + ", " + year);
+
+                        // tính ngày còn lại hoặc ngày đã qua
+                        Calendar c = Calendar.getInstance();
+                        c.set(Calendar.YEAR, year);
+                        c.set(Calendar.MONTH, monthOfYear);
+                        c.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+                        int diffDay = utils.getDiffDays(c);
+                        tvEventDays.setText(Math.abs(diffDay) + "");
+                        if(diffDay <0){
+                            imEventStatus.setImageResource(R.drawable.ic_up_pink);
+                        }
+                        else{
+                            imEventStatus.setImageResource(R.drawable.ic_up_white);
+                        }
+
                     }
                 }, mYear, mMonth, mDay);
         datePickerDialog.show();
@@ -356,7 +418,7 @@ public class EventDetail extends AppCompatActivity implements View.OnClickListen
 
 
     }
-    private Map<String, String> listPathInStorage= new HashMap<>();
+
 
 
     /**
@@ -419,13 +481,16 @@ public class EventDetail extends AppCompatActivity implements View.OnClickListen
 
     private void saveNewEvent() throws JSONException {
         String eID;
+        JSONArray cmtArr;
         if(event != null){
             // chinh sua event
             eID = event.id;
+            cmtArr = event.commentArr;
         }
         else{
             // tao event moi
             eID = utils.generateEventId();
+            cmtArr = new JSONArray();
         }
         JSONObject event = new JSONObject();
 
@@ -453,8 +518,26 @@ public class EventDetail extends AppCompatActivity implements View.OnClickListen
 
         event.put("picture", list);
 
+        /**
+         * comment list
+         * */
+        event.put("comment", cmtArr);
+
 
         eventRef.child(eID).setValue(event.toString());
+
+        // kiem tra event default
+        if(swDefaultEvent.isChecked()){
+            prefUtil.put(R.string.pref_key_current_event, eID).apply();
+            /**
+             * local broadcast
+             * */
+            Intent intent = new Intent("CHANGE_DEFAULT_EVENT");
+            // You can also include some extra data.
+            intent.putExtra("message", eID);
+            LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
+
+        }
 
         // ẩn snackbar
         notificationUploading.dismiss();
@@ -468,16 +551,16 @@ public class EventDetail extends AppCompatActivity implements View.OnClickListen
     private void showNotificationForUploading(){
         notificationUploading = Snackbar.make(
                 findViewById(R.id.layout_add_event),
-                "Đang tải lên " + listPath.size() + " ảnh và tạo sự kiện mới",
+                "Đang tải lên " + listPath.size() + " ảnh.",
                 Snackbar.LENGTH_INDEFINITE);
 
-        notificationUploading.setAction("Ẩn", new View.OnClickListener() {
+        /*notificationUploading.setAction("Ẩn", new View.OnClickListener() {
             @Override
             public void onClick(View v)
             {
                 notificationUploading.dismiss();
             }
-        });
+        });*/
         //notificationUploading.setActionTextColor(getResources().getColor(R.color.white));
 
         //View view = notificationUploading.getView();
@@ -506,7 +589,7 @@ public class EventDetail extends AppCompatActivity implements View.OnClickListen
             for(int i = 0; i < paths.length; i++){
                 String id = utils.generatePhotoId();
                 PhotoElement element = new PhotoElement(id,0, paths[i].toString());
-                listPath.put(id, paths[i].toString());
+                listPath.put(id, paths[i].toString());  // path o local
                 photoListAdapter.add(
                         id,
                         element
@@ -542,6 +625,9 @@ public class EventDetail extends AppCompatActivity implements View.OnClickListen
         Log.i("TAGGGG", "result photo");
         if(listPath.containsKey(photo.id))
             listPath.remove(photo.id);
+
+        if(listPathInStorage.containsKey(photo.id))
+            listPathInStorage.remove(photo.id   );
 
         /**
          * remove bang key

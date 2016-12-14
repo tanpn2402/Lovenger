@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fillViewport="true"
-    android:background="@drawable/image_background_blur">
+    android:background="#2980b9">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -25,32 +25,43 @@
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="60dp"
                 android:layout_centerVertical="true"
                 android:gravity="center_horizontal">
 
-                <TextView
+                <RelativeLayout
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/textView1"
-                    android:text="lovesenger"
-                    android:textStyle="bold"
-                    android:ellipsize="marquee"
-                    android:singleLine="true"
-                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:layout_height="match_parent"
                     android:layout_centerVertical="true"
-                    android:layout_centerHorizontal="true" />
+                    android:layout_centerHorizontal="true">
 
-                <ImageView
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:id="@+id/imageView"
-                    android:layout_centerVertical="true"
-                    android:layout_toLeftOf="@+id/textView1"
-                    android:src="@mipmap/ic_launcher"
-                    android:scaleType="centerCrop"
-                    android:layout_marginRight="10dp" />
+                    <ImageView
+                        android:layout_width="60dp"
+                        android:layout_height="60dp"
+                        android:id="@+id/imageView3"
+                        android:src="@mipmap/ic_launcher"
+                        android:scaleType="centerCrop"
+                        android:layout_alignParentTop="true"
+                        android:layout_toLeftOf="@+id/textView30"
+                        android:layout_toStartOf="@+id/textView30" />
 
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/textView30"
+                        android:text="we do"
+                        android:textStyle="bold"
+                        android:ellipsize="marquee"
+                        android:singleLine="true"
+                        android:textAppearance="?android:attr/textAppearanceLarge"
+                        android:textColor="#fff"
+                        android:layout_centerVertical="true"
+                        android:layout_alignParentRight="true"
+                        android:layout_alignParentEnd="true"
+                        android:layout_marginRight="121dp"
+                        android:layout_marginEnd="121dp"
+                        android:textSize="28dp" />
+                </RelativeLayout>
             </RelativeLayout>
 
         </RelativeLayout>
@@ -60,7 +71,6 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:id="@+id/mainLayout">
-
             <com.tanpn.messenger.login.MyViewPager
                 xmlns:android="http://schemas.android.com/apk/res/android"
                 android:id="@+id/myViewPager"

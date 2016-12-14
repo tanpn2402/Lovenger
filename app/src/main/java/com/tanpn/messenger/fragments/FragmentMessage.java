@@ -291,7 +291,7 @@ public class FragmentMessage extends Fragment implements MessageListAdapter.OnEv
     private final int GALLERY_CODE = 2;
     private final int CAMERA_CODE = 3;
     private final int VOICE_CODE = 4;
-    private final int VIDEO_CODE = 4;
+    private final int VIDEO_CODE = 5;
 
     @Override
     public void onClick(View view) {
@@ -467,7 +467,7 @@ public class FragmentMessage extends Fragment implements MessageListAdapter.OnEv
 
                     // add to adapter
                     MessageListElement m = new MessageListElement(msg.toString());
-                    messageListAdapter.add(m);
+                    messageListAdapter.add(m); // upload xong mới thêm vào message
                     setupLastMessage( m.id);
                     Log.i("loi", "ok");
                 }
@@ -507,6 +507,7 @@ public class FragmentMessage extends Fragment implements MessageListAdapter.OnEv
                 if(msg != null)
                     try {
                         messageRef.child(msg.getString("id").toString()).setValue(msg.toString()); // upload leen database
+
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -605,6 +606,17 @@ public class FragmentMessage extends Fragment implements MessageListAdapter.OnEv
     @Override
     public void onCancelled(DatabaseError databaseError) {}
 
+    @Override
+    public void onPause() {
+        super.onPause();
+        //messageRef.removeEventListener(this);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        //messageRef.addChildEventListener(this);
+    }
 
     /**
      * change group

@@ -31,24 +31,27 @@
             android:text="12/100"
             android:id="@+id/tvPhotoIndex"
             android:layout_centerVertical="true"
-            android:layout_toRightOf="@+id/imageView6"
-            android:layout_toEndOf="@+id/imageView6"
+            android:layout_toRightOf="@+id/ibtBack"
+            android:layout_toEndOf="@+id/ibtBack"
             android:layout_marginLeft="10dp" />
 
-        <ImageView
+        <ImageButton
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:id="@+id/ibtEventDetail"
+            android:id="@+id/ibtDetail"
+            android:background="@drawable/image_button"
             android:src="@android:drawable/ic_menu_info_details"
             android:scaleType="center"
             android:layout_centerVertical="true"
             android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true" />
+            android:layout_alignParentEnd="true"
+            android:visibility="invisible" />
 
-        <ImageView
+        <ImageButton
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:id="@+id/imageView6"
+            android:id="@+id/ibtBack"
+            android:background="@drawable/image_button"
             android:src="@drawable/abc_ic_ab_back_material"
             android:scaleType="center"
             android:layout_centerVertical="true"
@@ -64,30 +67,34 @@
         android:layout_centerHorizontal="true"
         android:background="#00ffffff">
 
-        <ImageView
+        <ImageButton
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:id="@+id/ibtDraw"
+            android:background="@drawable/image_button"
             android:layout_centerVertical="true"
             android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true"
             android:src="@drawable/ic_draw_gray"
             android:scaleType="center"
-            android:layout_marginRight="10dp" />
+            android:layout_marginRight="10dp"
+            android:visibility="invisible" />
 
-        <ImageView
+        <ImageButton
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:id="@+id/imageView3"
+            android:id="@+id/ibtDelete"
+            android:background="@drawable/image_button"
             android:src="@android:drawable/ic_menu_delete"
             android:scaleType="center"
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true" />
 
-        <ImageView
+        <ImageButton
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:id="@+id/ibtEventShare"
+            android:id="@+id/ibtShare"
+            android:background="@drawable/image_button"
             android:src="@drawable/ic_send_gray"
             android:scaleType="center"
             android:layout_alignParentTop="true"

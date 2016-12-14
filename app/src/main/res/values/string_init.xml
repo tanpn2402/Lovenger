@@ -4,6 +4,7 @@
     <string translatable="false" name="pref_key_email">com.tanpn.messenger.pref.email</string>
     <string translatable="false" name="pref_key_username">com.tanpn.messenger.pref.username</string>
     <string translatable="false" name="pref_key_uid">com.tanpn.messenger.pref.uid</string>
+    <string translatable="false" name="pref_key_user_id">com.tanpn.messenger.pref.user_id</string>
     <string translatable="false" name="pref_key_user_photo_link">com.tanpn.messenger.pref.user_photo_link</string>
     <string translatable="false" name="pref_key_user_photo_name">com.tanpn.messenger.pref.user_photo_name</string>
 
@@ -13,6 +14,8 @@
     <string translatable="false" name="pref_key_groups">com.tanpn.messenger.groups</string>
     <string translatable="false" name="pref_key_current_groups">com.tanpn.messenger.current_groups</string>
     <string translatable="false" name="pref_key_default_group">com.tanpn.messenger.default_group</string>
+    <string translatable="false" name="pref_key_current_event">com.tanpn.messenger.current_event</string>
+    <string translatable="false" name="pref_key_current_event_photo">com.tanpn.messenger.current_event_photo</string>
 
 
 
@@ -25,6 +28,10 @@
 
     <string translatable="false" name="pref_key_main_menu_effect">com.tanpn.messenger.main_menu_effect</string>
     <string translatable="false" name="pref_key_photo_view_effect">com.tanpn.messenger.photo_view_effect</string>
+
+    <string translatable="false" name="pref_key_share_photo">com.tanpn.messenger.share_photo</string>
+    <string translatable="false" name="pref_key_share_voice">com.tanpn.messenger.share_voice</string>
+    <string translatable="false" name="pref_key_share_video">com.tanpn.messenger.share_video</string>
 
 
 </resources>

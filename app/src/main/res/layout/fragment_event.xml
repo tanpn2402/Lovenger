@@ -9,8 +9,14 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:id="@+id/layout"
         android:background="#386f58">
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/layout"
+            android:src="@drawable/image3"
+            android:scaleType="centerCrop"/>
 
 
         <RelativeLayout
@@ -29,14 +35,12 @@
                 android:layout_alignParentStart="true"
                 android:layout_marginLeft="15dp"
                 android:layout_marginStart="15dp"
-                android:src="@drawable/ic_heart_pink"
                 android:scaleType="fitCenter" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceLarge"
-                android:text="1410"
                 android:id="@+id/tvEventDays"
                 android:layout_centerVertical="true"
                 android:layout_toRightOf="@+id/imEventIcon"
@@ -50,7 +54,6 @@
                 android:layout_width="20dp"
                 android:layout_height="20dp"
                 android:id="@+id/imEventStatus"
-                android:src="@drawable/ic_day_pass"
                 android:layout_marginLeft="17dp"
                 android:layout_marginStart="17dp"
                 android:layout_centerVertical="true"
@@ -61,7 +64,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceLarge"
-                android:text="ngày ta đã yêu"
                 android:id="@+id/tvEventTitle"
                 android:textColor="#FFF"
                 android:layout_below="@+id/tvEventDays"

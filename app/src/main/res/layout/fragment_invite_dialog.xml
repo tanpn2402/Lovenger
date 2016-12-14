@@ -4,7 +4,7 @@
     android:layout_height="wrap_content"
     tools:context="com.tanpn.messenger.fragment_dialog.InviteDialog"
     android:orientation="vertical"
-    android:padding="10dp">
+    android:padding="20dp">
 
 
     <RelativeLayout
@@ -21,7 +21,8 @@
             android:layout_gravity="center_horizontal"
             android:textAlignment="center"
             android:layout_centerVertical="true"
-            android:layout_centerHorizontal="true" />
+            android:layout_centerHorizontal="true"
+            android:layout_marginLeft="20dp" />
 
         <ImageView
             android:layout_width="70dp"
@@ -68,7 +69,7 @@
             android:layout_centerVertical="true"
             android:layout_toRightOf="@+id/textView26"
             android:layout_toEndOf="@+id/textView26"
-            android:layout_marginLeft="2dp" />
+            android:layout_marginLeft="5dp" />
     </RelativeLayout>
 
     <RelativeLayout
@@ -93,10 +94,11 @@
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:text="12:56"
             android:id="@+id/tvTimeInvite"
-            android:layout_centerVertical="true"
+            android:layout_marginLeft="48dp"
+            android:layout_marginStart="48dp"
+            android:layout_alignParentTop="true"
             android:layout_toRightOf="@+id/textView27"
-            android:layout_toEndOf="@+id/textView27"
-            android:layout_marginLeft="2dp" />
+            android:layout_toEndOf="@+id/textView27" />
     </RelativeLayout>
 
     <RelativeLayout
@@ -116,11 +118,13 @@
             android:layout_width="150dp"
             android:layout_height="wrap_content"
             android:text="Đồng ý"
+            android:textColor="#fff"
             android:id="@+id/btnAccept"
             android:layout_alignParentTop="true"
             android:layout_alignLeft="@+id/relativeLayout10"
             android:layout_alignStart="@+id/relativeLayout10"
-            android:layout_marginLeft="30dp" />
+            android:layout_marginLeft="30dp"
+            android:background="@drawable/button_ok" />
 
         <Button
             android:layout_width="150dp"
@@ -130,7 +134,8 @@
             android:layout_alignParentTop="true"
             android:layout_toLeftOf="@+id/relativeLayout10"
             android:layout_toStartOf="@+id/relativeLayout10"
-            android:layout_marginRight="30dp" />
+            android:layout_marginRight="30dp"
+            android:background="@drawable/button_cancel" />
     </RelativeLayout>
 
 </LinearLayout>

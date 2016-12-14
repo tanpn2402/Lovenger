@@ -36,7 +36,7 @@
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
                 android:src="@drawable/abc_vector_test"
-                android:background="#00ffffff" />
+                android:background="@drawable/image_button" />
 
         </RelativeLayout>
 

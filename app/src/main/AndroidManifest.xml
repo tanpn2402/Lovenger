@@ -32,7 +32,9 @@
         <activity android:name=".photo.ActivityViewPhoto" />
         <activity android:name=".paint.ActivityPaint" />
         <activity android:name=".photo.GalleryPicker" />
-        <activity android:name=".event.EventView" />
+        <activity
+            android:name=".event.EventView"
+            android:windowSoftInputMode="stateHidden" />
         <activity android:name=".MainActivity" />
 
         <service
@@ -58,7 +60,8 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-        <activity android:name=".setting.InviteManager"></activity>
+        <activity android:name=".setting.InviteManager" />
+        <activity android:name=".photo.SharePhoto"></activity>
     </application>
 
 </manifest>
